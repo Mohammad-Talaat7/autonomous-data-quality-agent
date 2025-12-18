@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "adqa"
+version = "0.1.0"
+description = "Autonomous multi-agent system for data quality profiling, reasoning, and remediation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Mohammad T. Ismael" }
+]
+keywords = [
+    "data-quality",
+    "data-engineering",
+    "llm",
+    "ai-agents",
+    "mlops"
+]
+
+dependencies = [
+    "pandas>=2.0",
+    "polars>=0.20",
+    "pydantic>=2.5",
+    "sqlalchemy>=2.0",
+]
+
+[project.optional-dependencies]
+llm = [
+    "openai",
+    "google-generativeai",
+]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-ra -q"
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_unused_configs = true
+
