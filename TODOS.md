@@ -52,10 +52,10 @@ Build an **Autonomous Data Quality Agent** that profiles datasets, detects data 
 
 ### To-Do
 
-- [ ] Study SmartDataAI, PandasAI, llm4data, pandas-llm, LLM4EDA, LIDA, llm-auto-eda, klar-EDA
-- [ ] Document architecture, LLM dependency, explainability, safety gaps
+- [x] Study SmartDataAI, PandasAI, llm4data, pandas-llm, LLM4EDA, LIDA, llm-auto-eda, klar-EDA
+- [x] Document architecture, LLM dependency, explainability, safety gaps
 - [ ] Identify differentiators (advisory-first, traceability, confidence)
-- [ ] Write `RESEARCH.md`
+- [x] Write `RESEARCH.md`
 
 ---
 
