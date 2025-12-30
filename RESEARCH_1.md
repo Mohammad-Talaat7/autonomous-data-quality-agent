@@ -97,7 +97,7 @@ Libraries: LLM4EDA, lida by Microsoft, LLMAutoEDA (duplicated), klar-EDA, llm4da
 
 <hr/>
 
-# [klar-EDA]()
+# [klar-EDA](https://github.com/klarEDA/klar-EDA)
 A python library for automated EDA, with little AI insights
 - Last updated 5 months ago
 ### Architecture:
