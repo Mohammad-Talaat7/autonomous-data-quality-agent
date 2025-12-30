@@ -1,4 +1,4 @@
-Libraries: LLM4EDA, lida by Microsoft, LLMAutoEDA, klar-EDA
+Libraries: LLM4EDA, lida by Microsoft, LLMAutoEDA (duplicated), klar-EDA, llm4data
 
 # [LLM4EDA](https://github.com/agasheadwait/LLM4EDA)
 - Perform exploratory data analysis (EDA) and cleaning using openai API
@@ -58,7 +58,7 @@ Libraries: LLM4EDA, lida by Microsoft, LLMAutoEDA, klar-EDA
 ### Input stream types:
 - CSV
 ### Platforms:
-- PyPI
+- PyPI (lida)
 ### New features requested by users:
 - Work with PDF files
 - AWS Bedrock LLM APIs
@@ -68,7 +68,7 @@ Libraries: LLM4EDA, lida by Microsoft, LLMAutoEDA, klar-EDA
 
 <hr/>
 
-# [LLMAutoEDA](https://github.com/enesmanan/LLMAutoEDA)
+# [LLMAutoEDA](https://github.com/enesmanan/LLMAutoEDA) (duplicated)
 - Automated EDA tool powered by Large Language Models, providing in-depth insights and visualizations for your datasets.
 - Last updated a year ago
 ### Architecture:
@@ -89,7 +89,7 @@ Libraries: LLM4EDA, lida by Microsoft, LLMAutoEDA, klar-EDA
 ### Input stream types:
 - CSV
 ### Platforms:
-- PyPI, Jupyter Notebook Generate html file
+- PyPI (llm-auto-eda), Jupyter Notebook Generate html file
 ### New features requested by users:
 - Add OLLama support for local models
 ### Issues requested by users:
@@ -125,8 +125,38 @@ A python library for automated EDA, with little AI insights
 ### Input stream types:
 - CSV
 ### Platforms:
-- PyPI
+- None
 ### New features requested by users:
 - UI using Streamlit or Gradio.
+### Issues requested by users:
+- None
+
+<hr/>
+
+# [LLM4Data](https://github.com/worldbank/llm4data)
+- Development data and knowledge discovery.
+- Last updated a year ago
+### Architecture:
+1. Read the data using sqlalchemy (optional)
+2. LangChain to build Agent using Openai api to:
+2.1. Generate API URLs and SQL queries using openai
+2.2. Execute SQL queries by sqlalchemy
+### Frameworks:
+- numpy
+- pandas
+- sqlalchemy
+- langchain
+- pytest
+### Features:
+- Generates natural-language-driven API URLs and SQL queries for datasets (e.g., World Development Indicators).
+- Metadata augmentation to enhance data context (Explain the dataset).
+### AI providers:
+- Openai
+### Input stream types:
+- .db SQLite files (Optional for SQL quires)
+### Platforms:
+- PyPI (llm4data)
+### New features requested by users:
+- Multiple providers support
 ### Issues requested by users:
 - None
