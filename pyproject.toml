@@ -1,53 +1,174 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+
+# ============================================================
+# Project metadata
+# ============================================================
+
+[tool.poetry]
 name = "adqa"
-version = "0.1.0"
-description = "Autonomous multi-agent system for data quality profiling, reasoning, and remediation"
-readme = "README.md"
-requires-python = ">=3.10"
-license = { text = "MIT" }
+description = "Autonomous Data Quality Agent: profiling, detection, explanation, and fix proposals for data quality issues."
 authors = [
-    { name = "Mohammad T. Ismael" }
+  "Mohammad T. Ismael <mohamed.talaat.ismael@gmail.com>",
+  "Peter Gamil <peter7gamil@gmail.com>"
 ]
+license = "MIT"
+readme = "README.md"
+
+# Version is controlled dynamically via Git tags
+version = "0.0.0"
+
+packages = [{ include = "adqa", from = "src" }]
+
+homepage = "https://github.com/<org>/adqa"
+repository = "https://github.com/<org>/adqa"
+documentation = "https://github.com/<org>/adqa/tree/main/docs"
+
 keywords = [
-    "data-quality",
-    "data-engineering",
-    "llm",
-    "ai-agents",
-    "mlops"
+  "data-quality",
+  "data-engineering",
+  "ai-agent",
+  "llm",
+  "mlops",
+  "dataops"
 ]
 
-dependencies = [
-    "pandas>=2.0",
-    "polars>=0.20",
-    "pydantic>=2.5",
-    "sqlalchemy>=2.0",
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Topic :: Software Development :: Data Engineering",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12"
 ]
 
-[project.optional-dependencies]
+
+# ============================================================
+# Python version
+# ============================================================
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+
+# -----------------------------
+# Core data stack (always installed)
+# -----------------------------
+pandas = "^2.2"
+polars = "^0.20"
+numpy = "^1.26"
+
+sqlalchemy = "^2.0"
+pydantic = "^2.6"
+rich = "^13.7"
+loguru = "^0.7"
+
+
+# ============================================================
+# Optional dependencies (extras)
+# ============================================================
+
+[tool.poetry.extras]
+
+# Minimal install (default)
+core = []
+
+# LLM-powered reasoning & explanation
 llm = [
-    "openai",
-    "google-generativeai",
-]
-dev = [
-    "pytest",
-    "ruff",
-    "mypy",
+  "openai",
+  "litellm",
+  "tiktoken"
 ]
 
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-addopts = "-ra -q"
+# Database connectors
+databases = [
+  "psycopg[binary]",
+  "duckdb",
+  "pyarrow"
+]
+
+# Everything
+all = [
+  "openai",
+  "litellm",
+  "tiktoken",
+  "psycopg[binary]",
+  "duckdb",
+  "pyarrow"
+]
+
+
+# ============================================================
+# Development dependencies
+# ============================================================
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^5.0"
+
+ruff = "^0.3"
+black = "^24.1"
+mypy = "^1.8"
+pydoclint = "^0.5"
+
+pre-commit = "^3.6"
+types-requests = "^2.31"
+
+
+# ============================================================
+# Dynamic versioning via Git tags
+# ============================================================
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
+
+# Optional but recommended:
+# Shows versions like: 0.2.0.dev5+githash on non-tagged commits
+dirty = true
+
+
+# ============================================================
+# Tooling configuration
+# ============================================================
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "I"]
+target-version = "py312"
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 strict = true
 warn_unused_configs = true
+warn_return_any = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-ra -q"
+testpaths = ["tests"]
+
+
+# ============================================================
+# Coverage
+# ============================================================
+
+[tool.coverage.run]
+branch = true
+source = ["adqa"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
 

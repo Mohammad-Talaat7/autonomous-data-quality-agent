@@ -1,0 +1,83 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - "phase-*"
+      - "feature/**"
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+      - "phase-*"
+      
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry self add poetry-dynamic-versioning
+
+      - name: Install dependencies
+        run: |
+          poetry install --with dev
+
+      - name: Run tests with coverage
+        run: |
+          poetry run pytest \
+            --cov=src \
+            --cov-report=xml \
+            --cov-report=term
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+
+      # ---------------------------------
+      # Lint: ruff
+      # ---------------------------------
+      - name: Lint (ruff)
+        run: |
+          poetry run ruff check src tests
+          poetry run ruff format --check src tests
+
+      # ---------------------------------
+      # Formatting: black
+      # ---------------------------------
+      - name: Formatting (black)
+        run: |
+          poetry run black --check src tests
+
+      # ---------------------------------
+      # Docstring linting: pydoclint
+      # ---------------------------------
+      - name: Docstring linting
+        run: |
+          poetry run pydoclint src --style numpy
+
+      # ---------------------------------
+      # Type checking: mypy
+      # ---------------------------------
+      - name: Type checking
+        run: |
+          poetry run mypy src/adqa

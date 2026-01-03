@@ -54,7 +54,7 @@ Build an **Autonomous Data Quality Agent** that profiles datasets, detects data 
 
 - [x] Study SmartDataAI, PandasAI, llm4data, pandas-llm, LLM4EDA, LIDA, llm-auto-eda, klar-EDA
 - [x] Document architecture, LLM dependency, explainability, safety gaps
-- [ ] Identify differentiators (advisory-first, traceability, confidence)
+- [x] Identify differentiators (advisory-first, traceability, confidence)
 - [x] Write `RESEARCH.md`
 
 ---
@@ -65,9 +65,11 @@ Build an **Autonomous Data Quality Agent** that profiles datasets, detects data 
 
 ### To-Do
 
-- [ ] Core abstractions (DataSource, DatasetProfile, Rule, Metric, Issue)
-- [ ] pyproject.toml
-- [ ] GitHub Actions (lint, type-check, tests)
+- [x] Core abstractions (DataSource, DatasetProfile, Rule, Metric, Issue)
+- [x] pyproject.toml
+- [x] GitHub Actions (lint, type-check, tests)
+- [x] Determine the frameworks used in the project (sqlmodel, astor, litellm, poetry, [langchain,streamlit])
+- [x] Check Datatracer, DVC
 
 ---
 
