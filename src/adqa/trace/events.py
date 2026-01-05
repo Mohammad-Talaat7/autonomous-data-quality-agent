@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from adqa.trace.enums import (
@@ -30,7 +30,7 @@ class TraceEvent:
     severity: TraceSeverity = TraceSeverity.INFO
 
     name: str = ""
-    timestamp: datetime = field(default_factory=lambda: datetime.now(tz=timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(tz=UTC))
 
     inputs: dict[str, TraceValue] | None = None
     outputs: dict[str, TraceValue] | None = None
