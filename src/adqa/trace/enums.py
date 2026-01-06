@@ -13,6 +13,7 @@ class TraceComponent(str, Enum):
     AUDIT = "audit"
     DECISION = "decision"
 
+
 class TraceEventType(str, Enum):
     START = "start"
     END = "end"
