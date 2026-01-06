@@ -11,6 +11,7 @@ class TraceComponent(str, Enum):
     TRACE = "trace"
     LINEAGE = "lineage"
     AUDIT = "audit"
+    DECISION = "decision"
 
 
 class TraceEventType(str, Enum):
