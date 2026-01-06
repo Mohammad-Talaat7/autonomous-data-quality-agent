@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import unittest
-from uuid import uuid4
+from uuid import UUID, uuid4
 
+from adqa.trace.llm import DecisionRecord, LLMReasoningLayer
 from adqa.trace.context import TraceContext
 from adqa.trace.emitter import TraceEmitter
 from adqa.trace.enums import TraceComponent, TraceEventType
-from adqa.trace.llm import DecisionRecord, LLMReasoningLayer
 from adqa.trace.store.inmemory_store import InMemoryTraceStore
 
 
@@ -27,7 +27,7 @@ class TestLLMReasoningLayer(unittest.TestCase):
             model_name="test-model",
         )
         inputs = {"raw_data": "some value"}
-
+        
         event = self.reasoning_layer.record_decision(
             name="test_decision",
             decision=decision,
@@ -40,7 +40,7 @@ class TestLLMReasoningLayer(unittest.TestCase):
         self.assertEqual(event.name, "test_decision")
         self.assertEqual(event.inputs, inputs)
         self.assertEqual(event.outputs, decision.to_dict())
-
+        
         # Verify it was stored
         events = self.store.get(self.context.trace_id)
         self.assertEqual(len(events), 1)
@@ -51,7 +51,7 @@ class TestLLMReasoningLayer(unittest.TestCase):
         decision_event_id = uuid4()
         inputs = {"action": "fix"}
         outputs = {"status": "success"}
-
+        
         event = self.reasoning_layer.record_execution(
             name="apply_fix",
             decision_event_id=decision_event_id,
@@ -66,7 +66,7 @@ class TestLLMReasoningLayer(unittest.TestCase):
         self.assertEqual(event.name, "apply_fix")
         self.assertEqual(event.inputs, inputs)
         self.assertEqual(event.outputs, outputs)
-
+        
         # Verify it was stored
         events = self.store.get(self.context.trace_id)
         self.assertEqual(len(events), 1)

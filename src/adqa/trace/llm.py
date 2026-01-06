@@ -84,7 +84,7 @@ class LLMReasoningLayer:
 
         Args:
             name: Name of the execution step.
-            decision_event_id: Decision event ID authorizing the execution.
+            decision_event_id: The ID of the decision event that authorized this execution.
             inputs: Inputs to the execution.
             outputs: Outputs of the execution.
             component: The component performing the execution.
