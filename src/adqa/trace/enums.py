@@ -11,7 +11,6 @@ class TraceComponent(str, Enum):
     TRACE = "trace"
     LINEAGE = "lineage"
     AUDIT = "audit"
-    DECISION = "decision"
 
 
 class TraceEventType(str, Enum):
@@ -46,3 +45,10 @@ class TraceEventDict(TypedDict):
     inputs: dict[str, TraceValue] | None
     outputs: dict[str, TraceValue] | None
     metadata: dict[str, TraceValue]
+
+
+class ReasoningTraceEventDict(TraceEventDict):
+    execution_event_id: str
+    confidence: float
+    reasons: list[str]
+    evidence: dict[str, TraceValue]
