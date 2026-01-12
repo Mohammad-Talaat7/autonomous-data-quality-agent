@@ -30,6 +30,7 @@ jobs:
         run: |
           pipx install poetry
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry self add poetry-dynamic-versioning
           # IT should work with both Github Actions and Act
 
       - name: Set up Python ${{ matrix.python-version }}
