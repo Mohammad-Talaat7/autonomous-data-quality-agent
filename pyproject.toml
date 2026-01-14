@@ -128,6 +128,8 @@ types-requests = "^2.31"
 # ============================================================
 # Dynamic versioning via Git tags
 # ============================================================
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.7.1"
 
 [tool.poetry-dynamic-versioning]
 enable = true
