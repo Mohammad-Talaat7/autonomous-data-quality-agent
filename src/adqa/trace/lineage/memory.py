@@ -1,7 +1,6 @@
 # src/adqa/trace/lineage/memory.py
 
 from collections import defaultdict
-from typing import DefaultDict
 from uuid import UUID
 
 from adqa.trace.lineage.adapter import LineageAdapter
@@ -15,7 +14,7 @@ class InMemoryLineageAdapter(LineageAdapter):
     """
 
     def __init__(self) -> None:
-        self._nodes: DefaultDict[UUID, list[LineageNode]] = defaultdict(list)
+        self._nodes: defaultdict[UUID, list[LineageNode]] = defaultdict(list)
 
     def start_trace(self, trace_id: UUID) -> None:
         self._nodes.setdefault(trace_id, [])

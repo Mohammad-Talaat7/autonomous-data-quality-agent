@@ -1,7 +1,7 @@
 # src/adqa/trace/lineage/adapter.py
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from collections.abc import Iterable
 from uuid import UUID
 
 from adqa.trace.lineage.model import LineageNode

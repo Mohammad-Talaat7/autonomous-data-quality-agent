@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from adqa.trace.enums import TraceValue
@@ -23,4 +23,4 @@ class LineageNode:
     trace_id: UUID = field(default_factory=uuid4)
 
     metadata: dict[str, TraceValue] = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=lambda: datetime.now(tz=timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(tz=UTC))

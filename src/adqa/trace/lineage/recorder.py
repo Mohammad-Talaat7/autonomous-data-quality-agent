@@ -1,11 +1,11 @@
 # src/adqa/trace/lineage/recorder.py
 
-from typing import Iterable
+from collections.abc import Iterable
 from uuid import UUID
 
+from adqa.trace.enums import TraceValue
 from adqa.trace.lineage.adapter import LineageAdapter
 from adqa.trace.lineage.model import LineageNode
-from adqa.trace.enums import TraceValue
 
 
 class LineageRecorder:
