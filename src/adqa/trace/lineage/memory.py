@@ -3,8 +3,8 @@
 from collections import defaultdict
 from uuid import UUID
 
-from adqa.trace.lineage.adapter import LineageAdapter
-from adqa.trace.lineage.model import LineageNode
+from .adapter import LineageAdapter
+from .model import LineageNode
 
 
 class InMemoryLineageAdapter(LineageAdapter):

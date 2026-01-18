@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from uuid import UUID
 
-from adqa.trace.events import TraceEvent
+from ..events import TraceEvent
 
 
 class TraceStore(ABC):

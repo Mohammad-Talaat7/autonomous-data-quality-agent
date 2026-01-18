@@ -4,8 +4,8 @@ from collections import defaultdict
 from typing import override
 from uuid import UUID
 
-from adqa.trace.events import TraceEvent
-from adqa.trace.store.base import TraceStore
+from ..events import TraceEvent
+from .base import TraceStore
 
 
 class InMemoryTraceStore(TraceStore):

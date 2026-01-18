@@ -2,10 +2,17 @@
 
 from collections.abc import Generator
 from contextlib import contextmanager
+from typing import TypedDict
 from uuid import UUID
 
-from adqa.trace.enums import TraceValue
-from adqa.trace.lineage.recorder import LineageRecorder
+from ..enums import TraceValue
+from .recorder import LineageRecorder
+
+
+class LineageStepContext(TypedDict):
+    inputs: TraceValue | None
+    outputs: TraceValue | None
+    metadata: dict[str, TraceValue]
 
 
 @contextmanager
@@ -14,19 +21,24 @@ def lineage_step(
     *,
     trace_id: UUID,
     operation: str,
-    inputs: list[str],
-    outputs: list[str],
+    inputs: TraceValue | None,
+    outputs: TraceValue | None,
     metadata: dict[str, TraceValue] | None = None,
-) -> Generator[None, None, None]:
+) -> Generator[LineageStepContext, None, None]:
     """
     Context manager for automatic lineage recording
     around a data transformation.
     """
-    yield
+    ctx: LineageStepContext = {
+        "inputs": inputs,
+        "outputs": outputs,
+        "metadata": metadata or {},
+    }
+    yield ctx
     recorder.record(
         trace_id=trace_id,
         operation=operation,
-        inputs=inputs,
-        outputs=outputs,
-        metadata=metadata,
+        inputs=ctx["inputs"],
+        outputs=ctx["outputs"],
+        metadata=ctx["metadata"],
     )

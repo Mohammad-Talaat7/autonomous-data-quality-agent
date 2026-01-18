@@ -6,14 +6,9 @@ from pathlib import Path
 from typing import cast, override
 from uuid import UUID
 
-from adqa.trace.enums import (
-    TraceComponent,
-    TraceEventDict,
-    TraceEventType,
-    TraceSeverity,
-)
-from adqa.trace.events import TraceEvent
-from adqa.trace.store.base import TraceStore
+from ..enums import TraceComponent, TraceEventDict, TraceEventType, TraceSeverity
+from ..events import TraceEvent
+from .base import TraceStore
 
 
 class JSONTraceStore(TraceStore):

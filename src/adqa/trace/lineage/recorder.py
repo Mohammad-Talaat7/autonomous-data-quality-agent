@@ -3,9 +3,9 @@
 from collections.abc import Iterable
 from uuid import UUID
 
-from adqa.trace.enums import TraceValue
-from adqa.trace.lineage.adapter import LineageAdapter
-from adqa.trace.lineage.model import LineageNode
+from ..enums import TraceValue
+from .adapter import LineageAdapter
+from .model import LineageNode
 
 
 class LineageRecorder:
@@ -19,8 +19,8 @@ class LineageRecorder:
         *,
         enabled: bool = False,
     ) -> None:
-        self._adapter = adapter
-        self._enabled = enabled
+        self._adapter: LineageAdapter | None = adapter
+        self._enabled: bool = enabled
 
     @property
     def enabled(self) -> bool:
@@ -43,8 +43,8 @@ class LineageRecorder:
         *,
         trace_id: UUID,
         operation: str,
-        inputs: list[str],
-        outputs: list[str],
+        inputs: TraceValue | None,
+        outputs: TraceValue | None,
         metadata: dict[str, TraceValue] | None = None,
     ) -> None:
         if not self._enabled or self._adapter is None:

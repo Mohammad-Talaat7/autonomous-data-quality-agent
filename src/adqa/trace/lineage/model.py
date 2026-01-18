@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
-from adqa.trace.enums import TraceValue
+from ..enums import TraceValue
 
 
 @dataclass(frozen=True)
@@ -16,8 +16,8 @@ class LineageNode:
     """
 
     operation: str
-    inputs: list[str]
-    outputs: list[str]
+    inputs: TraceValue | None
+    outputs: TraceValue | None
 
     node_id: UUID = field(default_factory=uuid4)
     trace_id: UUID = field(default_factory=uuid4)

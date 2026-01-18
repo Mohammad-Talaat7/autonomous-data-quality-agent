@@ -5,14 +5,14 @@ from dataclasses import dataclass, field
 from typing import override
 from uuid import UUID, uuid4
 
-from adqa.trace.enums import (
+from .enums import (
     ReasoningTraceEventDict,
     TraceComponent,
     TraceEventType,
     TraceSeverity,
     TraceValue,
 )
-from adqa.trace.events import TraceEvent
+from .events import TraceEvent
 
 
 class ReasonCode(str):

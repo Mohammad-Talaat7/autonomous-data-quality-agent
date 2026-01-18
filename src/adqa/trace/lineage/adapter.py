@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from uuid import UUID
 
-from adqa.trace.lineage.model import LineageNode
+from .model import LineageNode
 
 
 class LineageAdapter(ABC):

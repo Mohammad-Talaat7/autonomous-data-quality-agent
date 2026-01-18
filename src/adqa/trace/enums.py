@@ -19,6 +19,9 @@ class TraceEventType(str, Enum):
     RESULT = "result"
     ERROR = "error"
     DECISION = "decision"
+    EXECUTION = "execution"
+    CHECK = "check"
+    PROPOSAL = "proposal"
 
 
 class TraceSeverity(str, Enum):
@@ -30,7 +33,7 @@ class TraceSeverity(str, Enum):
 
 TracePrimitive = str | int | float | bool | None
 
-TraceValue = TracePrimitive | list[TracePrimitive] | dict[str, TracePrimitive]
+TraceValue = TracePrimitive | list["TraceValue"] | dict[str, "TraceValue"]
 
 
 class TraceEventDict(TypedDict):
