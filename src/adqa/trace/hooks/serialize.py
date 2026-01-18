@@ -8,10 +8,10 @@ def to_trace_value(v: object) -> TraceValue:
     """
     recursively converts an arbitrary object into a TraceValue.
     """
-    if v is None or isinstance(v, (str, int, float, bool)):
+    if v is None or isinstance(v, str | int | float | bool):
         return v
 
-    if isinstance(v, Sequence) and not isinstance(v, (str, bytes)):
+    if isinstance(v, Sequence) and not isinstance(v, str | bytes):
         return [to_trace_value(x) for x in v]
 
     if isinstance(v, Mapping):
