@@ -1,0 +1,24 @@
+name: docs
+
+# on: { push: { paths: ['docs/**'] } }
+on: workflow_dispatch # Manual only for now
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        # Clones your repository into the runner
+
+      - run: pip install mkdocs-material
+        # Installs MkDocs + Material theme
+
+      - run: mkdocs build -f docs/mkdocs.yml
+        # Builds the static site into ./site
+
+      - uses: peaceiris/actions-gh-pages@v3
+        # Pushes ./site to the gh-pages branch
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
