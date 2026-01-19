@@ -5,10 +5,6 @@ nav:
   - Core: core.md
   - LLM: llm.md
   - Trace: trace.md
-  - Agents: agents.md
-  - Core: core.md
-  - LLM: llm.md
-  - Trace: trace.md
 theme:
   name: material
 plugins:
