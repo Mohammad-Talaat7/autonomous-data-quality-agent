@@ -86,9 +86,9 @@ Build an **Autonomous Data Quality Agent** that profiles datasets, detects data 
 
 ### To-Do
 
-- [ ] Define Trace schema
-- [ ] Implement Trace system
-- [ ] Integrate tracing hooks
+- [x] Define Trace schema
+- [x] Implement Trace system
+- [x] Integrate tracing hooks
 
 ---
 
