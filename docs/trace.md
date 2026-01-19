@@ -1,121 +1,82 @@
-# Trace System
 
-The `adqa.trace` package provides the core infrastructure for tracing, lineage, reasoning, and auditing. It is designed to be deterministic, replayable, and backend-agnostic.
+# Tracing System (ADQA)
 
-## Key Concepts
+## Overview
 
-- **TraceContext**: Identifies a single execution scope (trace ID, user, dataset).
-- **TraceEvent**: An atomic unit of observability (start, end, result, error).
-- **TraceStore**: Persistent storage for events (Memory, JSON, DB).
-- **TraceEmitter**: Handles the emission of events to the store.
-- **LineageRecorder**: Tracks data transformation graphs.
+The ADQA tracing system provides **deterministic, structured, and backend-agnostic execution tracing** for data quality workflows.
 
-## Setup
+It is designed to answer questions like:
 
-To use the tracing system, you first need to initialize the core components and set up the context.
+- What happened?
+- Why did it happen?
+- What data and decisions led to this outcome?
+- Can this be replayed or audited deterministically?
 
-```python
-from adqa.trace.context import TraceContext
-from adqa.trace.emitter import TraceEmitter
-from adqa.trace.store.inmemory_store import InMemoryTraceStore
-from adqa.trace.lineage.memory import InMemoryLineageAdapter
-from adqa.trace.lineage.recorder import LineageRecorder
-from adqa.trace.hooks.context import set_current_emitter
-from adqa.trace.hooks.lineage_context import set_current_lineage_recorder
+This system is **not a logger** and **not an observability tool**. It is execution-aware infrastructure that captures events, lineage, reasoning metadata, and audit-ready summaries.
 
-# 1. Initialize Storage
-trace_store = InMemoryTraceStore()
-lineage_adapter = InMemoryLineageAdapter()
+## Design Principles
 
-# 2. Create Context
-context = TraceContext()  # Generates a unique trace_id
+1. Tracing is structured, not textual
+2. Lineage is first-class
+3. Tracing is write-only at runtime
+4. Interpretation happens later
+5. No LLM dependency in core tracing
+6. Backend-agnostic storage
+7. Low coupling to user code
 
-# 3. Initialize Emitter and Recorder
-emitter = TraceEmitter(context, store=trace_store, store_traces=True)
-lineage = LineageRecorder(adapter=lineage_adapter, enabled=True)
-lineage.start_trace(context.trace_id)
+## Architecture
 
-# 4. Set Implicit Context (Recommended)
-# This allows decorators to work without manually passing 'emitter' or 'lineage'
-set_current_emitter(emitter)
-set_current_lineage_recorder(lineage)
+```
+User Code
+   |
+Execution Hooks
+   |
+Trace Core
+   |
+Lineage + Store
+   |
+Audit Layer
 ```
 
-## Execution Tracing (`@trace_*`)
+## Core Concepts
 
-Use decorators to trace specific types of logic. These hooks automatically record `start` (execution) and `success/failure` events, including arguments and return values.
+### Trace Context
+Defines execution boundaries and owns the trace lifecycle.
 
-### Available Decorators
-- `@trace_metric`: For metric calculations.
-- `@trace_rule`: For data quality checks.
-- `@trace_fix`: For remediation proposals.
+### Trace Events
+Structured events such as START, END, and ERROR.
 
-### Example
+### Execution Hooks
+Decorators that automatically manage tracing.
 
-```python
-from adqa.trace.hooks.decorators import trace_metric, trace_rule
+### Lineage
+Captures data and decision flow.
 
-@trace_metric()
-def calculate_completeness(column_data: list) -> float:
-    if not column_data:
-        return 0.0
-    return len([x for x in column_data if x is not None]) / len(column_data)
+### Trace Stores
+Persist trace data (InMemory, JSON).
 
-@trace_rule()
-def check_threshold(metric_value: float, threshold: float) -> bool:
-    return metric_value >= threshold
+### Audit Layer
+Produces deterministic human-readable reports.
 
-# Usage
-score = calculate_completeness([1, 2, None, 4])  # Automatically traced
-is_valid = check_threshold(score, 0.9)          # Automatically traced
-```
+## Happy Path
 
-## Lineage Tracing (`@trace_lineage`)
+1. Function called
+2. Trace context opened
+3. START event emitted
+4. Inputs recorded
+5. Function executes
+6. Outputs recorded
+7. END event emitted
+8. Context closed
 
-Use `@trace_lineage` to track data transformations. This records operations, inputs (arguments), outputs (return values), and metadata.
-
-### Features
-- **Automatic Input Capture**: Captures function arguments.
-- **Automatic Output Capture**: Captures return values (can be disabled with `capture_output=False`).
-- **Metadata**: Attach static metadata to the lineage node.
-- **Implicit Context**: Works seamlessly with `set_current_lineage_recorder`.
-
-### Example
+## Example Usage
 
 ```python
-from adqa.trace.hooks.decorators import trace_lineage
-
-@trace_lineage(
-    operation="clean_text_column",
-    metadata={"strategy": "lowercase_strip"}
-)
-def clean_names(names: list[str]) -> list[str]:
-    return [n.strip().lower() for n in names]
-
-# Usage
-cleaned = clean_names(["  Alice ", "BOB"])
-
-# Result in LineageRecorder:
-# Node(
-#   operation="clean_text_column",
-#   inputs={"args": [["  Alice ", "BOB"]], "kwargs": {}},
-#   outputs=["alice", "bob"],
-#   metadata={"strategy": "lowercase_strip"}
-# )
+@trace_execution(trace_context=ctx, operation="validate_schema")
+def validate_schema(data, schema):
+    ...
 ```
 
-## Accessing Traces and Lineage
+## Summary
 
-After execution, you can retrieve the recorded data from the stores.
-
-```python
-# 1. Retrieve Trace Events
-events = trace_store.get(context.trace_id)
-for event in events:
-    print(f"[{event.timestamp}] {event.name} ({event.event_type}): {event.outputs}")
-
-# 2. Retrieve Lineage Graph
-nodes = lineage_adapter.get(context.trace_id)
-for node in nodes:
-    print(f"Op: {node.operation} -> Outputs: {node.outputs}")
-```
+The tracing system is deterministic, auditable, and extensible.
