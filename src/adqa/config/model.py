@@ -5,6 +5,7 @@ from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
+from ..data_ingress.config import DataSourceConfig
 from .errors import ConfigError
 
 
@@ -25,6 +26,7 @@ class ADQAConfig(BaseModel):
     ml_enabled: bool
     trace_store: TraceStoreType | None
     execution_mode: ExecutionMode
+    data_source: DataSourceConfig
 
     model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
 
