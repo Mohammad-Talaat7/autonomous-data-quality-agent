@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing_extensions import override
+from typing import override
 from uuid import UUID, uuid4
 
 from .enums import (

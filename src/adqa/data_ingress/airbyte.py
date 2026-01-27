@@ -14,8 +14,8 @@ class AirByteSource:
         dfs = {}
         for stream_name, stream_data in result.items():
             df = stream_data.to_pandas()
-            # Drop the last 3 columns added by AirByte
-            if len(df.columns) >= 3:
+            # Drop the last 3 columns added by AirByte this start with "_airbyte_"
+            if len(df.columns) >= 3 and all(c.startswith("_airbyte_") for c in df.columns[-3:]):
                 df = df.iloc[:, :-3]
             dfs[stream_name] = df
         return dfs

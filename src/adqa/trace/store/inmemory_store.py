@@ -1,7 +1,7 @@
 # src/adqa/trace/store/memory.py
 
 from collections import defaultdict
-from typing_extensions import override
+from typing import override
 from uuid import UUID
 
 from ..events import TraceEvent

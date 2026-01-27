@@ -3,8 +3,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import cast
-from typing_extensions import override
+from typing import cast, override
 from uuid import UUID
 
 from ..enums import TraceComponent, TraceEventDict, TraceEventType, TraceSeverity

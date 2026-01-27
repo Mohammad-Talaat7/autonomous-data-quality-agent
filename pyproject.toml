@@ -51,7 +51,7 @@ classifiers = [
 # ============================================================
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.12"
+python = ">=3.12.3,<3.13"
 
 # -----------------------------
 # Core data stack (always installed)
@@ -64,7 +64,6 @@ sqlalchemy = "^2.0"
 pydantic = "^2.6"
 rich = "^13.7"
 loguru = "^0.7"
-typing-extensions = "^4.9"
 
 
 # ============================================================
