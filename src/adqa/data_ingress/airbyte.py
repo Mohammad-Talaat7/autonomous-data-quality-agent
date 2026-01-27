@@ -1,14 +1,15 @@
 import airbyte as _ab
+from typing import Dict, Any
 
 
 class AirByteSource:
-    def __init__(self, source):
+    def __init__(self, source: Any) -> None:
         self._source = source
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         return getattr(self._source, name)
 
-    def read(self):
+    def read(self) -> Dict[str, Any]:
         result = self._source.read()
         dfs = {}
         for stream_name, stream_data in result.items():
@@ -22,10 +23,10 @@ class AirByteSource:
 
 # Create a module-like object for ab
 class ABModule:
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         return getattr(_ab, name)
 
-    def get_source(self, *args, **kwargs):
+    def get_source(self, *args: Any, **kwargs: Any) -> AirByteSource:
         return AirByteSource(_ab.get_source(*args, **kwargs))
 
 
