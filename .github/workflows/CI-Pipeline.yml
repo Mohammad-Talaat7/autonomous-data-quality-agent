@@ -29,7 +29,6 @@ jobs:
       - name: Install Poetry
         run: |
           pipx install poetry
-          # pipx ensurepath
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           poetry self add poetry-dynamic-versioning
           # IT should work with both Github Actions and Act
