@@ -7027,4 +7027,4 @@ llm = ["litellm", "openai", "tiktoken"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.12"
-content-hash = "23f761aa04129aa84c072edd392826696d5b06ff5f05fadb51a44ad34d4bc6bf"
+content-hash = "40a36e905809eebf2f08bf0e0144dfdee2258bd52d6085895e9c99ddf6ca41aa"

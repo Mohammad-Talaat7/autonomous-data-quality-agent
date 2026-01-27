@@ -1,7 +1,7 @@
 # src/adqa/trace/noop.py
 
 from collections.abc import Iterable
-from typing import override
+from typing_extensions import override
 from uuid import UUID
 
 from .enums import TraceValue

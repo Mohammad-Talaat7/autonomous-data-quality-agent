@@ -28,10 +28,8 @@ jobs:
       
       - name: Install Poetry
         run: |
-          pipx install poetry
+          curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          poetry self add poetry-dynamic-versioning
-          # IT should work with both Github Actions and Act
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
