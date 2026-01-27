@@ -36,13 +36,13 @@ source = ab.get_source(
 # Validate the connection and select all available data streams
 source.check()               # Validates the connection
 source.select_all_streams()  # Selects all available data streams
-result = source.read()      # Reads the data
+result = source.read()      # Reads the data as a dict of DataFrames
 
 # List available streams
-print("Available streams:", list(result.streams.keys()))
+print("Available streams:", list(result.keys()))
 
-# Convert the result to a dataframe and display the first few rows
-df = result["users"].to_pandas()
+# Get the dataframe and display the first few rows
+df = result["users"]
 print(df.head())
 ```
 
@@ -70,10 +70,10 @@ source = ab.get_source(
 # Validate connection, select streams, and read data
 source.check()
 source.select_all_streams()
-result = source.read()
+result = source.read()  # result is a dict of DataFrames
 
-# Convert the result to a dataframe and display the first few rows
-df = result['epidemiology'].to_pandas()  # Use the same name as dataset_name
+# Get the dataframe and display the first few rows
+df = result['epidemiology']  # Use the same name as dataset_name
 print(df.head())
 ```
 
@@ -101,9 +101,9 @@ source = ab.get_source(
 # Validate connection, select streams, and read data
 source.check()
 source.select_all_streams()
-result = source.read()
+result = source.read()  # result is a dict of DataFrames
 
-# Convert the result to a dataframe and display the first few rows
-df = result['local'].to_pandas()  # Use the same name as dataset_name
+# Get the dataframe and display the first few rows
+df = result['local']  # Use the same name as dataset_name
 print(df.head())
 ```
