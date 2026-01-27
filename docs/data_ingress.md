@@ -5,7 +5,7 @@ ADQA uses the PyAirByte library for data ingestion, which supports 600+ connecto
 You can explore available PyAirByte connectors by visiting [AirByte Connectors](https://airbyte.com/connectors) or by running the following code:
 
 ```python
-import airbyte as ab  # change the import from adqa later after you integrate PyAirByte in ADQA
+from adqa.data_ingress.airbyte import ab
 
 connectors = ab.get_available_connectors()
 print(connectors)
@@ -22,7 +22,7 @@ Below are several examples demonstrating how to use PyAirByte for different data
 ### Example 1: Using Faker Source for Test Data
 
 ```python
-import airbyte as ab
+from adqa.data_ingress.airbyte import ab
 import pandas as pd
 
 # Create a source using the faker connector to generate test data
@@ -34,8 +34,8 @@ source = ab.get_source(
 )
 
 # Validate the connection and select all available data streams
-source.check()              # Validates the connection
-source.select_all_streams() # Selects all available data streams
+source.check()               # Validates the connection
+source.select_all_streams()  # Selects all available data streams
 result = source.read()      # Reads the data
 
 # List available streams
@@ -49,7 +49,7 @@ print(df.head())
 ### Example 2: Reading CSV Data from HTTPS URL
 
 ```python
-import airbyte as ab
+from adqa.data_ingress.airbyte import ab
 import pandas as pd
 
 # Create a source to read CSV data from a remote HTTPS URL
@@ -80,19 +80,19 @@ print(df.head())
 ### Example 3: Reading Local CSV File
 
 ```python
-import airbyte as ab
+from adqa.data_ingress.airbyte import ab
 import pandas as pd
 
 # Create a source to read CSV data from a local file
 source = ab.get_source(
     "source-file",
     config={
-        "dataset_name": "Orders",        # Name for the dataset
+        "dataset_name": "local",        # Name for the dataset
         "provider": {
             "storage": "local",          # Data is stored locally
             "user_agent": False          # Disable user agent
         },
-        "url": "/root/autonomous-data-quality-agent/parts/Orders.csv",
+        "url": "path/to/your/local/file.csv",
         "format": "csv"                 # File format is CSV
     },
     install_if_missing=True,
@@ -104,5 +104,6 @@ source.select_all_streams()
 result = source.read()
 
 # Convert the result to a dataframe and display the first few rows
-df = result['Orders'].to_pandas()  # Use the same name as dataset_name
+df = result['local'].to_pandas()  # Use the same name as dataset_name
 print(df.head())
+```

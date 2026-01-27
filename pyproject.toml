@@ -51,7 +51,7 @@ classifiers = [
 # ============================================================
 
 [tool.poetry.dependencies]
-python = ">=3.12,<3.13"
+python = ">=3.11,<3.12"
 
 # -----------------------------
 # Core data stack (always installed)
@@ -77,7 +77,7 @@ tiktoken = { version = "^0.6", optional = true }
 psycopg = { version = "^3.1", extras = ["binary"], optional = true }
 duckdb = ">=1.4.3,<2.0.0"
 pyarrow = ">=16.1,<22.0"
-airbyte = "0.35.7"
+airbyte = "^0.36.1"
 
 [tool.poetry.extras]
 

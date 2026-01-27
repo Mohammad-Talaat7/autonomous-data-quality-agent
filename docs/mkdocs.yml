@@ -5,6 +5,7 @@ nav:
   - Core: core.md
   - LLM: llm.md
   - Trace: trace.md
+  - Data Ingress: data_ingress.md
 theme:
   name: material
 plugins:

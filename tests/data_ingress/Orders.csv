@@ -1,0 +1,301 @@
+order_id,timestamp,item_name,item_category,base_price,sale,sale_price,quantity,currency,order_status,review_comments,order_service
+ord0001,2025-01-17 21:50:00,lemonade,beverage,2.0,standard,2.0,2,usd,cancelled,no review,dine-in
+ord0002,2025-02-02 13:26:00,brownie,dessert,4.0,standard,4.0,3,usd,delivered,great dessert,doordash
+ord0003,2025-03-18 06:59:00,margherita pizza,main course,11.0,standard,11.0,1,usd,delivered,fresh and cheesy,hungrypanda
+ord0004,2025-03-17 07:44:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,could use more cheese,dine-in
+ord0005,2025-03-08 07:00:00,chicken wings,appetizer,8.0,standard,8.0,1,usd,refunded,got refund for wrong item,ubereats
+ord0006,2025-01-23 23:54:00,margherita pizza,main course,11.0,standard,11.0,2,usd,delivered,crust was too hard,hungrypanda
+ord0007,2025-01-15 18:34:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,amazing,doordash
+ord0008,2025-02-16 18:31:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,spicy and delicious,hungrypanda
+ord0009,2025-02-25 14:58:00,brownie,dessert,4.0,standard,4.0,2,usd,delivered,great dessert,dine-in
+ord0010,2025-02-13 05:17:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,could use more cheese,dine-in
+ord0011,2025-01-12 16:16:00,margherita pizza,main course,5.0,10% off,5.0,3,usd,cancelled,order was cancelled,ubereats
+ord0012,2025-01-07 17:03:00,soft drink,beverage,2.0,standard,2.0,3,usd,refunded,item was cold requested refund,doordash
+ord0013,2025-03-21 22:51:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,tasty and juicy,doordash
+ord0014,2025-02-25 04:10:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,too sour,doordash
+ord0015,2025-02-10 15:29:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,tasty and juicy,ubereats
+ord0016,2025-01-06 09:08:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,would order again,hungrypanda
+ord0017,2025-03-24 04:03:00,cheese cake,dessert,4.0,standard,4.0,3,usd,cancelled,no review,ubereats
+ord0018,2025-02-09 06:42:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,just a regular soda ,hungrypanda
+ord0019,2025-01-22 20:09:00,caesar salad,salad,7.0,standard,7.0,1,usd,cancelled,had to cancel last minute,dine-in
+ord0020,2025-03-05 05:56:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,tasty and juicy,ubereats
+ord0021,2025-03-08 08:14:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,too soft for my liking not sure,hungrypanda
+ord0022,2025-01-14 12:42:00,caesar salad,salad,7.0,10% off,6.0,2,usd,delivered,light and healthy,doordash
+ord0023,2025-03-06 11:00:00,caesar salad,salad,7.0,standard,7.0,2,usd,delivered,could use more dressing,hungrypanda
+ord0024,2025-02-07 10:57:00,cheese burger,main course,9.0,standard,9.0,2,usd,delivered,could use more cheese,doordash
+ord0025,2025-01-02 23:07:00,lemonade,beverage,2.0,standard,2.0,3,usd,cancelled,no review,dine-in
+ord0026,2025-01-14 13:07:00,chocolate cake,dessert,5.0,10% off,4.0,3,usd,delivered,heavenly,dine-in
+ord0027,2025-02-03 00:16:00,grilled burger,main course,9.0,standard,9.0,1,usd,cancelled,had to cancel last minute,ubereats
+ord0028,2025-03-31 21:55:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,delivered,heavenly,dine-in
+ord0029,2025-01-29 23:01:00,grilled burger,main course,9.0,standard,9.0,3,usd,refunded,got refund for wrong item,doordash
+ord0030,2025-03-11 23:37:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,zesty and cool,dine-in
+ord0031,2025-01-30 06:20:00,cheese cake,dessert,4.0,standard,4.0,1,usd,cancelled,no review,dine-in
+ord0032,2025-02-01 12:08:00,grilled burger,main course,9.0,standard,9.0,1,usd,cancelled,no review,doordash
+ord0033,2025-03-12 16:36:00,soft drink,beverage,2.0,standard,2.0,1,usd,cancelled,had to cancel last minute,doordash
+ord0034,2025-01-18 16:27:00,brownie,dessert,4.0,standard,4.0,1,usd,cancelled,order was cancelled,hungrypanda
+ord0035,2025-03-11 05:38:00,margherita pizza,main course,11.0,standard,11.0,1,usd,delivered,crust was too hard,hungrypanda
+ord0036,2025-03-23 15:33:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,creamy and smooth,ubereats
+ord0037,2025-02-21 23:16:00,lemonade,beverage,2.0,standard,2.0,1,usd,cancelled,had to cancel last minute not sure,hungrypanda
+ord0038,2025-02-12 18:20:00,caesar salad,salad,7.0,standard,7.0,2,usd,cancelled,order was cancelled,ubereats
+ord0039,2025-02-27 13:08:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,loved it,doordash
+ord0040,2025-01-07 15:49:00,margherita pizza,main course,11.0,10% off,10.0,2,usd,delivered,crust was too hard ,ubereats
+ord0041,2025-03-30 04:51:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,amazing,dine-in
+ord0042,2025-03-28 10:31:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,refreshing ,dine-in
+ord0043,2025-01-11 11:13:00,margherita pizza,main course,11.0,10% off,10.0,2,usd,delivered,very satisfying so bad,doordash
+ord0044,2025-02-13 19:43:00,brownie,dessert,4.0,standard,4.0,2,usd,delivered,rich and gooey ,doordash
+ord0045,2025-02-10 11:52:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,great dessert so bad,hungrypanda
+ord0046,2025-03-06 17:36:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,refreshing ,hungrypanda
+ord0047,2025-02-05 06:39:00,brownie,dessert,4.0,standard,4.0,3,usd,cancelled,no review,ubereats
+ord0048,2025-02-12 09:32:00,caesar salad,salad,7.0,standard,7.0,3,usd,delivered,could use more dressing,ubereats
+ord0049,2025-03-24 22:56:00,cheese cake,dessert,4.0,standard,4.0,2,usd,delivered,too soft for my liking,hungrypanda
+ord0050,2025-02-28 04:31:00,caesar salad,salad,7.0,standard,7.0,1,usd,delivered,crisp and fresh,dine-in
+ord0051,2025-03-10 22:14:00,cheese burger,main course,9.0,standard,9.0,1,usd,refunded,refund processed quickly not sure,doordash
+ord0052,2025-03-13 17:40:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,could use more cheese ,ubereats
+ord0053,2025-03-12 03:53:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,amazing ,ubereats
+ord0054,2025-02-09 12:00:00,brownie,dessert,4.0,standard,4.0,2,usd,delivered,rich and gooey,hungrypanda
+ord0055,2025-01-14 19:49:00,grilled burger,main course,9.0,standard,9.0,3,usd,delivered,would order again,doordash
+ord0056,2025-01-18 13:40:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,too salty,ubereats
+ord0057,2025-01-20 20:29:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,cancelled,had to cancel last minute,doordash
+ord0058,2025-02-10 23:13:00,margherita pizza,main course,11.0,standard,11.0,2,usd,delivered,crust was too hard ,doordash
+ord0059,2025-03-22 22:55:00,grilled burger,main course,9.0,standard,9.0,3,usd,delivered,too dry for my taste,doordash
+ord0060,2025-01-29 00:19:00,caesar salad,salad,7.0,standard,7.0,2,usd,refunded,got refund for wrong item not sure,hungrypanda
+ord0061,2025-01-14 20:46:00,lemonade,beverage,2.0,standard,2.0,1,usd,delivered,too sour,hungrypanda
+ord0062,2025-03-12 14:14:00,margherita pizza,main course,11.0,standard,11.0,2,usd,delivered,fresh and cheesy,ubereats
+ord0063,2025-02-02 02:15:00,margherita pizza,main course,11.0,standard,11.0,3,usd,delivered,fresh and cheesy,doordash
+ord0064,2025-01-31 05:40:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,too dry for my taste so bad,hungrypanda
+ord0065,2025-03-14 05:34:00,margherita pizza,main course,11.0,standard,11.0,2,usd,cancelled,had to cancel last minute,doordash
+ord0066,2025-03-04 10:42:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,cancelled,no review,ubereats
+ord0067,2025-03-19 10:56:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,spicy and delicious,doordash
+ord0068,2025-01-09 16:48:00,grilled burger,main course,9.0,standard,9.0,3,usd,cancelled,order was cancelled,hungrypanda
+ord0069,2025-02-13 02:39:00,cheese cake,dessert,4.0,standard,4.0,3,usd,refunded,refund processed quickly ,dine-in
+ord0070,2025-03-01 04:23:00,soft drink,beverage,2.0,standard,2.0,2,usd,delivered,just a regular soda ,ubereats
+ord0071,2025-03-28 18:13:00,nan,dessert,4.0,standard,4.0,3,usd,cancelled,order was cancelled,dine-in
+ord0072,2025-01-26 21:38:00,cheese cake,dessert,4.0,standard,4.0,2,usd,delivered,amazing,doordash
+ord0073,2025-02-23 07:19:00,grilled burger,main course,9.0,standard,9.0,2,usd,cancelled,had to cancel last minute,ubereats
+ord0074,2025-03-19 01:46:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,too salty,dine-in
+ord0075,2025-02-21 15:48:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,cancelled,no review,doordash
+ord0076,2025-03-02 13:10:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,amazing ,hungrypanda
+ord0077,2025-03-18 04:20:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,zesty and cool,doordash
+ord0078,2025-03-15 10:43:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,zesty and cool,hungrypanda
+ord0079,2025-03-06 23:56:00,grilled burger,main course,9.0,standard,9.0,1,usd,delivered,perfectly grilled ,doordash
+ord0080,2025-01-29 08:02:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,too salty,dine-in
+ord0081,2025-01-16 15:53:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,loved it,doordash
+ord0082,2025-03-14 11:11:00,cheese burger,main course,9.0,standard,9.0,2,usd,delivered,tasty and juicy,doordash
+ord0083,2025-03-16 12:51:00,caesar salad,salad,7.0,standard,7.0,3,usd,delivered,crisp and fresh,hungrypanda
+ord0084,2025-01-21 04:45:00,cheese burger,main course,9.0,standard,9.0,3,usd,refunded,refund processed quickly,hungrypanda
+ord0085,2025-03-14 07:15:00,grilled burger,main course,9.0,standard,9.0,3,usd,cancelled,no review,doordash
+ord0086,2025-01-07 07:12:00,cheese burger,main course,9.0,10% off,8.0,2,usd,refunded,got refund for wrong item so bad,doordash
+ord0087,2025-01-11 01:59:00,cheese burger,main course,9.0,10% off,8.0,3,usd,delivered,tasty and juicy,dine-in
+ord0088,2025-02-10 01:49:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,great dessert ,hungrypanda
+ord0089,2025-03-31 01:24:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,great dessert,dine-in
+ord0090,2025-01-18 06:51:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,crispy and flavorful,dine-in
+ord0091,2025-02-28 23:43:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,just a regular soda,hungrypanda
+ord0092,2025-03-29 16:53:00,soft drink,beverage,2.0,standard,2.0,2,usd,cancelled,had to cancel last minute ,ubereats
+ord0093,2025-03-04 03:40:00,cheese cake,dessert,4.0,standard,4.0,1,usd,refunded,item was cold requested refund,dine-in
+ord0094,2025-02-13 16:26:00,lemonade,beverage,2.0,standard,2.0,1,usd,delivered,delightful drink,dine-in
+ord0095,2025-03-24 04:57:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,too sour,doordash
+ord0096,2025-02-19 09:57:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,heavenly,ubereats
+ord0097,2025-01-09 05:45:00,cheese burger,main course,9.0,10% off,8.0,1,usd,refunded,got refund for wrong item ,doordash
+ord0098,2025-03-30 03:32:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,creamy and smooth,doordash
+ord0099,2025-01-27 20:10:00,brownie,dessert,4.0,standard,4.0,3,usd,cancelled,no review,dine-in
+ord0100,2025-01-09 17:02:00,cheese burger,main course,9.0,10% off,8.0,1,usd,cancelled,order was cancelled not sure,hungrypanda
+ord0101,2025-01-18 07:21:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,too salty,dine-in
+ord0102,2025-03-03 23:50:00,brownie,dessert,4.0,standard,4.0,2,usd,delivered,great dessert,ubereats
+ord0103,2025-03-20 14:36:00,brownie,dessert,4.0,standard,4.0,2,usd,delivered,rich and gooey ,ubereats
+ord0104,2025-03-21 08:03:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,just a regular soda,hungrypanda
+ord0105,2025-03-10 22:59:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,tasty and juicy,ubereats
+ord0106,2025-02-15 16:24:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,would order again,ubereats
+ord0107,2025-01-05 11:58:00,grilled burger,main course,9.0,standard,9.0,1,usd,delivered,perfectly grilled ,ubereats
+ord0108,2025-02-10 06:06:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,cancelled,had to cancel last minute not sure,dine-in
+ord0109,2025-02-19 08:00:00,cheese burger,main course,9.0,standard,9.0,1,usd,cancelled,order was cancelled,doordash
+ord0110,2025-01-10 20:18:00,lemonade,beverage,2.0,standard,2.0,1,usd,cancelled,order was cancelled,dine-in
+ord0111,2025-01-13 09:20:00,cheese cake,dessert,4.0,standard,4.0,3,usd,cancelled,order was cancelled,dine-in
+ord0112,2025-02-10 19:44:00,margherita pizza,main course,11.0,standard,11.0,2,usd,delivered,very satisfying,dine-in
+ord0113,2025-03-10 06:22:00,chocolate cake,dessert,5.0,standard,5.0,1,usd,cancelled,no review,ubereats
+ord0114,2025-01-29 13:34:00,margherita pizza,main course,11.0,standard,11.0,1,usd,delivered,crust was too hard,dine-in
+ord0115,2025-01-01 18:45:00,chicken wings,appetizer,8.0,10% off,7.0,1,usd,delivered,spicy and delicious,ubereats
+ord0116,2025-03-28 18:45:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,would order again not sure,dine-in
+ord0117,2025-03-03 14:17:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,overbaked this time ,hungrypanda
+ord0118,2025-01-02 17:46:00,cheese burger,main course,9.0,10% off,8.0,1,usd,delivered,tasty and juicy,ubereats
+ord0119,2025-01-07 15:29:00,caesar salad,salad,7.0,10% off,6.0,1,usd,cancelled,order was cancelled,hungrypanda
+ord0120,2025-02-09 06:40:00,grilled burger,main course,9.0,standard,9.0,2,usd,cancelled,order was cancelled,hungrypanda
+ord0121,2025-01-15 15:58:00,chocolate cake,dessert,5.0,10% off,4.0,3,usd,refunded,got refund for wrong item not sure,ubereats
+ord0122,2025-01-02 03:17:00,soft drink,beverage,2.0,standard,2.0,2,usd,delivered,refreshing,ubereats
+ord0123,2025-03-09 09:17:00,margherita pizza,main course,11.0,standard,11.0,3,usd,delivered,crust was too hard,hungrypanda
+ord0124,2025-01-04 00:39:00,soft drink,beverage,2.0,standard,2.0,2,usd,cancelled,order was cancelled,ubereats
+ord0125,2025-01-01 19:13:00,cheese burger,main course,9.0,10% off,8.0,2,usd,delivered,loved it,ubereats
+ord0126,2025-03-23 20:47:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,refreshing,doordash
+ord0127,2025-02-19 17:55:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,great dessert,dine-in
+ord0128,2025-02-28 18:50:00,soft drink,beverage,2.0,standard,2.0,3,usd,cancelled,no review,dine-in
+ord0129,2025-01-30 14:01:00,nan,beverage,2.0,standard,2.0,3,usd,delivered,too sour,hungrypanda
+ord0130,2025-01-26 22:11:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,could use more cheese,doordash
+ord0131,2025-03-07 03:39:00,cheese cake,dessert,4.0,standard,4.0,2,usd,delivered,creamy and smooth,ubereats
+ord0132,2025-02-15 14:04:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,spicy and delicious,doordash
+ord0133,2025-01-07 23:34:00,chicken wings,appetizer,8.0,10% off,7.0,1,usd,delivered,spicy and delicious,dine-in
+ord0134,2025-03-27 13:51:00,cheese cake,dessert,4.0,standard,4.0,3,usd,cancelled,had to cancel last minute,ubereats
+ord0135,2025-03-02 16:55:00,grilled burger,main course,9.0,standard,9.0,3,usd,delivered,perfectly grilled,hungrypanda
+ord0136,2025-02-08 04:46:00,grilled burger,main course,9.0,standard,9.0,1,usd,delivered,would order again ,ubereats
+ord0137,2025-02-21 06:55:00,caesar salad,salad,7.0,standard,7.0,1,usd,delivered,light and healthy,ubereats
+ord0138,2025-03-21 11:33:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,spicy and delicious not sure,ubereats
+ord0139,2025-03-21 17:17:00,grilled burger,main course,9.0,standard,9.0,1,usd,delivered,perfectly grilled,doordash
+ord0140,2025-01-15 11:30:00,cheese burger,main course,9.0,10% off,8.0,3,usd,cancelled,no review,ubereats
+ord0141,2025-01-28 05:34:00,cheese cake,dessert,4.0,standard,4.0,1,usd,cancelled,order was cancelled,ubereats
+ord0142,2025-01-28 08:04:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,crispy and flavorful,dine-in
+ord0143,2025-01-06 11:50:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,chilled well,hungrypanda
+ord0144,2025-02-25 21:33:00,margherita pizza,main course,11.0,standard,11.0,2,usd,delivered,fresh and cheesy,doordash
+ord0145,2025-03-15 09:25:00,caesar salad,salad,7.0,standard,7.0,1,usd,cancelled,order was cancelled,doordash
+ord0146,2025-03-31 23:12:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,just a regular soda ,hungrypanda
+ord0147,2025-01-24 18:05:00,margherita pizza,main course,11.0,standard,11.0,2,usd,refunded,item was cold requested refund,dine-in
+ord0148,2025-02-09 04:25:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,too soft for my liking,doordash
+ord0149,2025-03-28 10:43:00,lemonade,beverage,2.0,standard,2.0,2,usd,delivered,too sour,ubereats
+ord0150,2025-02-25 16:00:00,chocolate cake,dessert,5.0,standard,5.0,1,usd,delivered,moist and rich ,hungrypanda
+ord0151,2025-01-01 13:53:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,rich and gooey,dine-in
+ord0152,2025-01-26 21:24:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,too soft for my liking so bad,hungrypanda
+ord0153,2025-02-15 22:48:00,caesar salad,salad,7.0,standard,7.0,3,usd,delivered,light and healthy,ubereats
+ord0154,2025-02-20 10:04:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,could use more cheese,dine-in
+ord0155,2025-01-14 13:38:00,cheese cake,dessert,4.0,standard,4.0,2,usd,delivered,amazing,doordash
+ord0156,2025-03-11 10:56:00,lemonade,beverage,2.0,standard,2.0,3,usd,cancelled,had to cancel last minute,hungrypanda
+ord0157,2025-02-01 16:51:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,perfectly grilled,ubereats
+ord0158,2025-03-12 22:37:00,brownie,dessert,4.0,standard,4.0,3,usd,delivered,rich and gooey,ubereats
+ord0159,2025-01-09 03:13:00,margherita pizza,main course,11.0,10% off,10.0,2,usd,delivered,fresh and cheesy,hungrypanda
+ord0160,2025-03-26 01:44:00,grilled burger,main course,9.0,standard,9.0,3,usd,delivered,perfectly grilled,doordash
+ord0161,2025-02-20 00:58:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,too soft for my liking,doordash
+ord0162,2025-02-19 03:36:00,lemonade,beverage,2.0,standard,2.0,2,usd,delivered,delightful drink,doordash
+ord0163,2025-03-18 14:43:00,chicken wings,appetizer,5.0,standard,5.0,3,usd,refunded,got refund for wrong item,dine-in
+ord0164,2025-02-09 17:17:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,heavenly,hungrypanda
+ord0165,2025-01-07 22:53:00,lemonade,beverage,2.0,standard,2.0,3,usd,cancelled,no review,dine-in
+ord0166,2025-01-29 05:19:00,grilled burger,main course,9.0,standard,9.0,3,usd,cancelled,order was cancelled not sure,ubereats
+ord0167,2025-03-21 19:53:00,margherita pizza,main course,11.0,standard,11.0,1,usd,delivered,fresh and cheesy,doordash
+ord0168,2025-03-20 10:07:00,brownie,dessert,4.0,standard,4.0,3,usd,refunded,refund processed quickly,doordash
+ord0169,2025-01-12 13:05:00,margherita pizza,main course,11.0,10% off,10.0,1,usd,delivered,fresh and cheesy,hungrypanda
+ord0170,2025-02-06 18:18:00,lemonade,beverage,2.0,standard,2.0,1,usd,refunded,item was cold requested refund,ubereats
+ord0171,2025-02-14 20:00:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,moist and rich,hungrypanda
+ord0172,2025-03-15 19:05:00,lemonade,beverage,2.0,standard,2.0,2,usd,delivered,delightful drink,hungrypanda
+ord0173,2025-03-12 04:40:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,delivered,overbaked this time,hungrypanda
+ord0174,2025-01-20 05:11:00,cheese burger,main course,9.0,standard,9.0,1,usd,refunded,refund processed quickly,ubereats
+ord0175,2025-02-03 12:41:00,brownie,dessert,4.0,standard,4.0,1,usd,cancelled,order was cancelled,hungrypanda
+ord0176,2025-03-31 08:33:00,margherita pizza,main course,11.0,standard,11.0,2,usd,cancelled,no review,ubereats
+ord0177,2025-03-16 05:36:00,soft drink,beverage,2.0,standard,2.0,2,usd,delivered,chilled well,dine-in
+ord0178,2025-02-12 14:44:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,too soft for my liking,dine-in
+ord0179,2025-02-16 18:09:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,could use more cheese,ubereats
+ord0180,2025-03-06 23:04:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,creamy and smooth,ubereats
+ord0181,2025-01-05 03:13:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,rich and gooey not sure,doordash
+ord0182,2025-03-22 17:15:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,spicy and delicious,ubereats
+ord0183,2025-02-28 02:44:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,a bit too sweet ,ubereats
+ord0184,2025-02-17 11:44:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,great dessert so bad,doordash
+ord0185,2025-01-05 04:24:00,caesar salad,salad,7.0,10% off,6.0,3,usd,delivered,crisp and fresh,dine-in
+ord0186,2025-01-04 09:02:00,cheese burger,main course,9.0,10% off,8.0,3,usd,delivered,tasty and juicy,hungrypanda
+ord0187,2025-03-20 00:19:00,cheese cake,dessert,4.0,standard,4.0,2,usd,cancelled,no review,doordash
+ord0188,2025-02-11 13:43:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,zesty and cool,ubereats
+ord0189,2025-02-22 22:12:00,caesar salad,salad,7.0,standard,7.0,2,usd,delivered,crisp and fresh,hungrypanda
+ord0190,2025-02-08 13:28:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,creamy and smooth ,doordash
+ord0191,2025-02-03 04:35:00,margherita pizza,main course,11.0,standard,11.0,1,usd,refunded,refund processed quickly ,hungrypanda
+ord0192,2025-01-14 11:24:00,cheese burger,main course,9.0,10% off,8.0,2,usd,refunded,got refund for wrong item,hungrypanda
+ord0193,2025-01-01 21:07:00,cheese burger,main course,9.0,10% off,8.0,1,usd,delivered,tasty and juicy not sure,doordash
+ord0194,2025-02-19 23:06:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,refreshing,hungrypanda
+ord0195,2025-02-09 07:18:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,chilled well,doordash
+ord0196,2025-02-02 13:22:00,margherita pizza,main course,11.0,standard,11.0,3,usd,delivered,very satisfying so bad,ubereats
+ord0197,2025-02-07 05:48:00,margherita pizza,main course,11.0,standard,11.0,2,usd,delivered,very satisfying,doordash
+ord0198,2025-02-06 14:46:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,amazing,doordash
+ord0199,2025-01-25 19:56:00,cheese cake,dessert,4.0,standard,4.0,2,usd,refunded,item was cold requested refund not sure,dine-in
+ord0200,2025-03-09 12:18:00,margherita pizza,main course,11.0,standard,11.0,1,usd,cancelled,no review,ubereats
+ord0201,2025-03-01 08:54:00,cheese cake,dessert,4.0,standard,4.0,2,usd,refunded,refund processed quickly,ubereats
+ord0202,2025-03-10 04:11:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,moist and rich,ubereats
+ord0203,2025-01-31 16:30:00,cheese burger,main course,9.0,standard,9.0,2,usd,delivered,tasty and juicy,doordash
+ord0204,2025-01-27 19:35:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,tasty and juicy,dine-in
+ord0205,2025-03-21 17:34:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,spicy and delicious,hungrypanda
+ord0206,2025-01-05 00:14:00,margherita pizza,main course,11.0,10% off,10.0,1,usd,delivered,very satisfying,hungrypanda
+ord0207,2025-01-23 08:49:00,soft drink,beverage,2.0,standard,2.0,3,usd,cancelled,no review,ubereats
+ord0208,2025-02-19 05:37:00,caesar salad,salad,7.0,standard,7.0,1,usd,delivered,crisp and fresh ,ubereats
+ord0209,2025-01-02 04:20:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,too sour ,doordash
+ord0210,2025-01-22 10:36:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,delightful drink,ubereats
+ord0211,2025-02-17 00:00:00,margherita pizza,main course,11.0,standard,11.0,3,usd,delivered,fresh and cheesy,ubereats
+ord0212,2025-03-22 07:21:00,caesar salad,salad,7.0,standard,7.0,2,usd,delivered,crisp and fresh,dine-in
+ord0213,2025-01-26 23:52:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,delivered,heavenly so bad,ubereats
+ord0214,2025-01-08 18:50:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,delightful drink not sure,doordash
+ord0215,2025-03-30 17:58:00,margherita pizza,main course,11.0,standard,11.0,1,usd,delivered,fresh and cheesy,hungrypanda
+ord0216,2025-01-27 20:51:00,margherita pizza,main course,11.0,standard,11.0,1,usd,refunded,refund processed quickly,hungrypanda
+ord0217,2025-01-05 00:48:00,caesar salad,salad,7.0,10% off,6.0,1,usd,delivered,crisp and fresh ,ubereats
+ord0218,2025-02-11 23:03:00,cheese burger,main course,9.0,standard,9.0,2,usd,delivered,tasty and juicy,ubereats
+ord0219,2025-02-26 00:29:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,loved it,doordash
+ord0220,2025-03-25 10:01:00,brownie,dessert,4.0,standard,4.0,1,usd,delivered,great dessert,ubereats
+ord0221,2025-02-13 15:08:00,grilled burger,main course,9.0,standard,9.0,3,usd,delivered,perfectly grilled,hungrypanda
+ord0222,2025-03-17 19:00:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,heavenly,dine-in
+ord0223,2025-01-31 20:24:00,brownie,dessert,4.0,standard,4.0,3,usd,delivered,great dessert,dine-in
+ord0224,2025-02-17 05:35:00,soft drink,beverage,2.0,standard,2.0,2,usd,refunded,refund processed quickly,ubereats
+ord0225,2025-03-20 03:39:00,cheese cake,dessert,4.0,standard,4.0,2,usd,delivered,too soft for my liking,dine-in
+ord0226,2025-01-09 20:04:00,caesar salad,salad,7.0,10% off,6.0,1,usd,delivered,could use more dressing ,ubereats
+ord0227,2025-02-21 14:53:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,chilled well,ubereats
+ord0228,2025-01-20 05:51:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,refreshing,ubereats
+ord0229,2025-03-16 00:09:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,delightful drink,hungrypanda
+ord0230,2025-03-21 00:14:00,soft drink,beverage,2.0,standard,2.0,2,usd,delivered,just a regular soda,hungrypanda
+ord0231,2025-03-12 13:49:00,caesar salad,salad,7.0,standard,7.0,1,usd,cancelled,order was cancelled,dine-in
+ord0232,2025-02-18 13:08:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,delivered,heavenly,dine-in
+ord0233,2025-02-13 17:07:00,chicken wings,appetizer,8.0,standard,8.0,2,usd,delivered,too salty ,doordash
+ord0234,2025-03-08 23:02:00,brownie,dessert,4.0,standard,4.0,3,usd,refunded,got refund for wrong item,ubereats
+ord0235,2025-03-13 17:31:00,grilled burger,main course,9.0,standard,9.0,1,usd,delivered,would order again ,ubereats
+ord0236,2025-02-18 07:52:00,cheese burger,main course,9.0,standard,9.0,2,usd,cancelled,had to cancel last minute,ubereats
+ord0237,2025-03-11 09:46:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,creamy and smooth,dine-in
+ord0238,2025-01-27 11:49:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,delightful drink ,dine-in
+ord0239,2025-01-15 20:31:00,chicken wings,appetizer,8.0,10% off,7.0,3,usd,delivered,too salty,dine-in
+ord0240,2025-01-01 05:20:00,cheese burger,main course,9.0,10% off,8.0,1,usd,delivered,could use more cheese,doordash
+ord0241,2025-02-22 03:45:00,cheese cake,dessert,4.0,standard,4.0,2,usd,refunded,item was cold requested refund,hungrypanda
+ord0242,2025-02-11 07:56:00,grilled burger,main course,9.0,standard,9.0,3,usd,delivered,perfectly grilled,ubereats
+ord0243,2025-03-10 14:20:00,brownie,dessert,4.0,standard,4.0,3,usd,refunded,refund processed quickly ,ubereats
+ord0244,2025-03-10 03:02:00,soft drink,beverage,2.0,standard,2.0,2,usd,cancelled,order was cancelled,ubereats
+ord0245,2025-01-29 14:30:00,lemonade,beverage,2.0,standard,2.0,2,usd,cancelled,no review,dine-in
+ord0246,2025-02-10 06:25:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,would order again,doordash
+ord0247,2025-03-27 17:50:00,margherita pizza,main course,11.0,standard,11.0,3,usd,cancelled,order was cancelled,dine-in
+ord0248,2025-01-17 07:50:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,creamy and smooth,dine-in
+ord0249,2025-02-27 19:14:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,too salty,doordash
+ord0250,2025-03-07 09:14:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,would order again,hungrypanda
+ord0251,2025-01-12 13:34:00,chocolate cake,dessert,5.0,10% off,4.0,1,usd,delivered,heavenly,dine-in
+ord0252,2025-03-09 07:09:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,cancelled,no review,dine-in
+ord0253,2025-02-07 12:20:00,brownie,dessert,4.0,standard,4.0,2,usd,refunded,refund processed quickly,hungrypanda
+ord0254,2025-01-22 13:45:00,caesar salad,salad,7.0,standard,7.0,3,usd,delivered,crisp and fresh,doordash
+ord0255,2025-02-13 06:02:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,cancelled,no review,ubereats
+ord0256,2025-01-21 10:14:00,soft drink,beverage,2.0,standard,2.0,2,usd,delivered,refreshing,hungrypanda
+ord0257,2025-01-01 19:10:00,chocolate cake,dessert,5.0,10% off,4.0,2,usd,delivered,heavenly,ubereats
+ord0258,2025-02-05 07:58:00,caesar salad,salad,7.0,standard,7.0,2,usd,delivered,crisp and fresh not sure,dine-in
+ord0259,2025-02-26 04:50:00,caesar salad,salad,7.0,standard,7.0,2,usd,delivered,light and healthy,doordash
+ord0260,2025-02-12 06:51:00,caesar salad,salad,7.0,standard,7.0,3,usd,delivered,could use more dressing,ubereats
+ord0261,2025-02-14 16:09:00,grilled burger,main course,9.0,standard,9.0,1,usd,refunded,refund processed quickly,ubereats
+ord0262,2025-03-09 19:40:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,loved it,hungrypanda
+ord0263,2025-01-23 00:11:00,soft drink,beverage,2.0,standard,2.0,1,usd,delivered,refreshing,ubereats
+ord0264,2025-01-28 12:50:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,chilled well,ubereats
+ord0265,2025-03-30 13:29:00,lemonade,beverage,2.0,standard,2.0,3,usd,refunded,refund processed quickly,hungrypanda
+ord0266,2025-02-24 10:40:00,nan,beverage,2.0,standard,2.0,1,usd,cancelled,no review,doordash
+ord0267,2025-01-15 02:42:00,cheese cake,dessert,4.0,standard,4.0,1,usd,delivered,amazing,doordash
+ord0268,2025-02-06 04:33:00,cheese burger,main course,9.0,standard,9.0,1,usd,cancelled,had to cancel last minute,doordash
+ord0269,2025-03-16 07:12:00,lemonade,beverage,2.0,standard,2.0,2,usd,refunded,item was cold requested refund ,hungrypanda
+ord0270,2025-01-06 02:24:00,chocolate cake,dessert,5.0,10% off,4.0,2,usd,delivered,heavenly,ubereats
+ord0271,2025-02-01 02:50:00,soft drink,beverage,2.0,standard,2.0,3,usd,delivered,chilled well,dine-in
+ord0272,2025-01-07 08:30:00,cheese burger,main course,9.0,10% off,8.0,2,usd,cancelled,order was cancelled so bad,ubereats
+ord0273,2025-02-17 02:38:00,chocolate cake,dessert,5.0,standard,5.0,3,usd,delivered,heavenly,dine-in
+ord0274,2025-03-16 19:39:00,cheese cake,dessert,4.0,standard,4.0,2,usd,delivered,too soft for my liking,dine-in
+ord0275,2025-02-03 05:34:00,cheese burger,main course,9.0,standard,9.0,2,usd,cancelled,order was cancelled,ubereats
+ord0276,2025-02-23 07:32:00,grilled burger,main course,9.0,standard,9.0,2,usd,delivered,perfectly grilled not sure,hungrypanda
+ord0277,2025-01-10 22:23:00,chicken wings,appetizer,8.0,10% off,7.0,1,usd,delivered,spicy and delicious,doordash
+ord0278,2025-03-29 04:43:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,delightful drink ,ubereats
+ord0279,2025-02-24 13:49:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,delivered,overbaked this time ,ubereats
+ord0280,2025-03-29 14:25:00,lemonade,beverage,2.0,standard,2.0,3,usd,delivered,delightful drink ,ubereats
+ord0281,2025-03-31 16:23:00,chicken wings,appetizer,8.0,standard,8.0,3,usd,delivered,spicy and delicious,hungrypanda
+ord0282,2025-01-23 14:16:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,could use more cheese,ubereats
+ord0283,2025-03-10 19:46:00,lemonade,beverage,2.0,standard,2.0,3,usd,refunded,item was cold requested refund,hungrypanda
+ord0284,2025-03-06 22:27:00,chocolate cake,dessert,5.0,standard,5.0,2,usd,delivered,moist and rich,doordash
+ord0285,2025-03-21 11:40:00,caesar salad,salad,7.0,standard,7.0,3,usd,delivered,crisp and fresh so bad,hungrypanda
+ord0286,2025-01-01 00:30:00,chicken wings,appetizer,8.0,10% off,7.0,1,usd,delivered,spicy and delicious,doordash
+ord0287,2025-01-10 15:45:00,brownie,dessert,4.0,standard,4.0,2,usd,delivered,rich and gooey ,hungrypanda
+ord0288,2025-01-23 22:20:00,lemonade,beverage,2.0,standard,2.0,2,usd,delivered,too sour not sure,hungrypanda
+ord0289,2025-03-09 17:37:00,cheese burger,main course,9.0,standard,9.0,3,usd,delivered,could use more cheese,dine-in
+ord0290,2025-03-18 21:32:00,margherita pizza,main course,11.0,standard,11.0,2,usd,refunded,got refund for wrong item,dine-in
+ord0291,2025-02-11 11:00:00,cheese cake,dessert,4.0,standard,4.0,3,usd,delivered,creamy and smooth ,dine-in
+ord0292,2025-03-13 21:58:00,cheese burger,main course,9.0,standard,9.0,2,usd,delivered,tasty and juicy,ubereats
+ord0293,2025-01-03 07:28:00,cheese cake,dessert,4.0,standard,4.0,3,usd,cancelled,order was cancelled,ubereats
+ord0294,2025-02-28 16:00:00,cheese burger,main course,9.0,standard,9.0,1,usd,delivered,could use more cheese not sure,hungrypanda
+ord0295,2025-02-22 14:33:00,brownie,dessert,4.0,standard,4.0,3,usd,cancelled,had to cancel last minute so bad,ubereats
+ord0296,2025-03-12 11:14:00,lemonade,beverage,2.0,standard,2.0,1,usd,delivered,too sour,doordash
+ord0297,2025-03-10 09:14:00,caesar salad,salad,7.0,standard,7.0,1,usd,delivered,crisp and fresh,doordash
+ord0298,2025-01-12 08:33:00,chocolate cake,dessert,5.0,10% off,4.0,2,usd,delivered,overbaked this time,doordash
+ord0299,2025-02-28 19:28:00,grilled burger,main course,9.0,standard,9.0,3,usd,cancelled,had to cancel last minute,dine-in
+ord0300,2025-03-06 02:39:00,margherita pizza,main course,11.0,standard,11.0,1,usd,delivered,crust was too hard,dine-in

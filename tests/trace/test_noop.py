@@ -1,5 +1,3 @@
-# tests/trace/test_noop.py
-
 from uuid import uuid4
 
 from adqa.trace.events import TraceEvent

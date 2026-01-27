@@ -138,6 +138,8 @@ celerybeat.pid
 .env
 .envrc
 .venv
+# PyAirByte make virtual environment for each connector in the first run
+.venv*/ 
 env/
 venv/
 ENV/
