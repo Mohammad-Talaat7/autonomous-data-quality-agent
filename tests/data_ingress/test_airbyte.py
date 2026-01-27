@@ -1,5 +1,6 @@
 import pytest
-# pytest.skip("Disabled", allow_module_level=True) # Disable if needed, as it takes some time to test.
+# Disable if needed, as it takes some time to test.
+# pytest.skip("Disabled", allow_module_level=True)
 
 import pandas as pd
 from adqa.data_ingress.airbyte import ab
@@ -8,6 +9,7 @@ from pathlib import Path
 
 csv_path = Path(__file__).parent / "Orders.csv"
 
+
 def test_source_faker():
     source = ab.get_source(
         "source-faker",
@@ -15,6 +17,7 @@ def test_source_faker():
         install_if_missing=True,
     )
     source.check()
+
 
 def test_source_faker_read():
     source = ab.get_source(
@@ -29,6 +32,7 @@ def test_source_faker_read():
     for df in result.values():
         assert isinstance(df, pd.DataFrame)
 
+
 def test_source_local():
     source = ab.get_source(
         "source-file",
@@ -38,11 +42,12 @@ def test_source_local():
                 "storage": "local",
             },
             "url": str(csv_path),
-            "format": "csv"
+            "format": "csv",
         },
         install_if_missing=True,
     )
     source.check()
+
 
 def test_source_local_read():
     source = ab.get_source(
@@ -53,7 +58,7 @@ def test_source_local_read():
                 "storage": "local",
             },
             "url": str(csv_path),
-            "format": "csv"
+            "format": "csv",
         },
         install_if_missing=True,
     )

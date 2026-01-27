@@ -1,7 +1,7 @@
 """
 Autonomous Data Quality Agent (ADQA) Library.
 
-This library automatically disables telemetry tracking for all dependencies e.g. (PyAirbyte)
+Disables telemetry tracking for all dependencies e.g. (PyAirbyte)
 by setting the DO_NOT_TRACK environment variable.
 """
 
