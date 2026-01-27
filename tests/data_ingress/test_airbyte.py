@@ -14,7 +14,7 @@ def test_source_faker():
     source = ab.get_source(
         "source-faker",
         config={"count": 50},
-        docker_image=True,
+        use_python="3.11",
         install_if_missing=True,
     )
     source.check()
@@ -24,7 +24,7 @@ def test_source_faker_read():
     source = ab.get_source(
         "source-faker",
         config={"count": 50},
-        docker_image=True,
+        use_python="3.11",
         install_if_missing=True,
     )
     source.check()
@@ -46,9 +46,8 @@ def test_source_local():
             "url": str(csv_path),
             "format": "csv",
         },
-        # use_python="3.11",
-        docker_image=True,
-        install_if_missing=True
+        use_python="3.11",
+        install_if_missing=True,
     )
     source.check()
 
@@ -65,7 +64,7 @@ def test_source_local_read():
             "format": "csv",
         },
         use_python="3.11",
-        install_if_missing=True
+        install_if_missing=True,
     )
     source.check()
     source.select_all_streams()

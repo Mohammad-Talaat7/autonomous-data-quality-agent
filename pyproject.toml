@@ -51,7 +51,7 @@ classifiers = [
 # ============================================================
 
 [tool.poetry.dependencies]
-python = ">=3.12,<3.13"
+python = ">=3.11,<3.13"
 
 # -----------------------------
 # Core data stack (always installed)
@@ -78,7 +78,6 @@ airbyte = "^0.36.1"
 # ============================================================
 # Optional dependencies (extras)
 # ============================================================
-
 [tool.poetry.extras]
 
 # Minimal install (default)
@@ -120,7 +119,7 @@ pytest-cov = "^5.0"
 ruff = "^0.3"
 black = "^24.1"
 mypy = "^1.8"
-pydoclint = "^0.5"
+pydoclint = "^0.8.3"
 
 pre-commit = "^3.6"
 types-requests = "^2.31"
