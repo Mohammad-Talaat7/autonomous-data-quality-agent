@@ -17,3 +17,4 @@ class DataSourceType(Enum):
     DATAFRAME = "dataframe"  # in-memory
 
     WAREHOUSE = "warehouse"  # BigQuery / Snowflake / etc
+    AIRBYTE = "airbyte"  # universal reader

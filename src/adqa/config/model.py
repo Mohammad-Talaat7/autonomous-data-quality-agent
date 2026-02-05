@@ -1,12 +1,17 @@
 # adqa/config/model.py
 
+from dataclasses import dataclass
 from enum import Enum
-from typing import ClassVar
+from typing import Any, ClassVar, TypeAlias
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from ..data_ingress.config import DataSourceConfig
+from ..data_ingress.datasource import DataSource
 from .errors import ConfigError
+
+JsonValue: TypeAlias = (
+    dict[str, "JsonValue"] | list["JsonValue"] | str | int | float | bool | None
+)
 
 
 class ExecutionMode(str, Enum):
@@ -20,15 +25,46 @@ class TraceStoreType(str, Enum):
     JSONL = "jsonl"
 
 
-class ADQAConfig(BaseModel):
-    tracing_enabled: bool
-    lineage_enabled: bool
-    ml_enabled: bool
-    trace_store: TraceStoreType | None
-    execution_mode: ExecutionMode
-    data_source: DataSourceConfig
+@dataclass
+class ConfigSnapshot:
+    config: ADQAConfig
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(frozen=True)
+    def to_json(self) -> dict[str, JsonValue]:
+        return self.config.model_dump(mode="json")
+
+    def hash(self) -> str:
+        import hashlib
+        import json
+
+        s = json.dumps(self.to_json(), sort_keys=True)
+        return hashlib.sha256(s.encode()).hexdigest()
+
+
+def snapshot_from_config(config: ADQAConfig) -> ConfigSnapshot:
+    return ConfigSnapshot(config)
+
+
+class ADQAConfig(BaseModel):
+    data_source: DataSource
+    tracing_enabled: bool = False
+    lineage_enabled: bool = False
+    ml_enabled: bool = False
+    trace_store: TraceStoreType | None = None
+    execution_mode: ExecutionMode = ExecutionMode.ADVISORY
+
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        frozen=True, arbitrary_types_allowed=True
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def set_defaults(cls, data: dict[str, Any]) -> dict[str, Any]:
+        tracing = data.get("tracing_enabled", False)
+        if tracing and data.get("trace_store") is None:
+            data["trace_store"] = TraceStoreType.IN_MEMORY
+        if not tracing:
+            data["trace_store"] = None
+        return data
 
     @model_validator(mode="after")
     def validate_config(self) -> "ADQAConfig":
@@ -46,12 +82,5 @@ class ADQAConfig(BaseModel):
             and not self.tracing_enabled
         ):
             raise ConfigError("Human-in-loop execution requires tracing")
-
-        # Trace store must be defined iff tracing is enabled
-        if self.tracing_enabled and self.trace_store is None:
-            raise ConfigError("trace_store must be set when tracing is enabled")
-
-        if not self.tracing_enabled and self.trace_store is not None:
-            raise ConfigError("trace_store must be None when tracing is disabled")
 
         return self

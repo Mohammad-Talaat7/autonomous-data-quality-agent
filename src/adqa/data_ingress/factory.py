@@ -1,8 +1,10 @@
 # adqa/data_ingress/factory.py
-
-from .config import DataSourceConfig
+from .configs import *
+from .datasource import DataSource
 from .reader import DataReader
+from .readers.airbyte import AirbyteReader
 from .readers.csv import CSVReader
+from .readers.data_warehouses import WarehouseReader
 from .readers.database import DatabaseReader
 from .readers.dataframe import DataFrameReader
 from .readers.excel import ExcelReader
@@ -10,39 +12,53 @@ from .readers.nosql import NoSQLReader
 from .readers.parquet import ParquetReader
 from .readers.remote_file import RemoteFileReader
 from .readers.s3 import S3Reader
-from .types import DataSourceType
 
 
 class DataReaderFactory:
     @staticmethod
-    def create(source: DataSourceConfig) -> DataReader:
-        if source.type == DataSourceType.CSV:
-            return CSVReader(**source.params)
+    def create(source: DataSource) -> DataReader:
+        cfg = source.config
 
-        if source.type == DataSourceType.PARQUET:
-            return ParquetReader(**source.params)
+        match cfg:
+            case CSVSourceConfig():
+                return CSVReader(cfg.path, cfg.delimiter, cfg.encoding)
 
-        if source.type == DataSourceType.EXCEL:
-            return ExcelReader(**source.params)
+            case ParquetSourceConfig():
+                return ParquetReader(cfg.path)
 
-        if source.type == DataSourceType.DATABASE:
-            return DatabaseReader(**source.params)
+            case ExcelSourceConfig():
+                return ExcelReader(cfg.path, cfg.sheet_name)
 
-        if source.type == DataSourceType.NOSQL:
-            return NoSQLReader(**source.params)
+            case DatabaseSourceConfig():
+                return DatabaseReader(cfg.connection_url, cfg.query)
 
-        if source.type == DataSourceType.REMOTE_FILE:
-            return RemoteFileReader(**source.params)
+            case NoSQLSourceConfig():
+                return NoSQLReader(cfg.uri, cfg.collection, cfg.query)
 
-        if source.type == DataSourceType.S3:
-            return S3Reader(**source.params)
+            case S3SourceConfig():
+                return S3Reader(cfg.bucket, cfg.key, cfg.format, cfg.region)
 
-        if source.type == DataSourceType.DATAFRAME:
-            return DataFrameReader(**source.params)
+            case RemoteFileSourceConfig():
+                return RemoteFileReader(cfg.url, cfg.format)
 
-        if source.type == DataSourceType.WAREHOUSE:
-            raise NotImplementedError(
-                "Warehouse readers are supported but not implemented yet"
-            )
+            case DataFrameSourceConfig():
+                return DataFrameReader(cfg.dataframe)
 
-        raise ValueError(f"Unsupported data source type: {source.type}")
+            case WarehouseSourceConfig():
+                return WarehouseReader(
+                    cfg.connection_url,
+                    cfg.query,
+                    cfg.warehouse_type,
+                )
+
+            case AirbyteSourceConfig():
+                return AirbyteReader(
+                    cfg.source_name,
+                    cfg.config,
+                    cfg.stream,
+                )
+
+            case _:
+                raise NotImplementedError(
+                    f"Unsupported data source config: {type(cfg)}"
+                )
