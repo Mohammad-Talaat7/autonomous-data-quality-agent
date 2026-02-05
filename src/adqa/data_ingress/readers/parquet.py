@@ -19,12 +19,15 @@ class ParquetReader(DataReader):
     def read(self) -> pd.DataFrame:
         try:
             return pd.read_parquet(self.path)
-        except ImportError:
+        except ImportError as err:
             raise ImportError(
-                "pyarrow is not installed. Install it with `pip install adqa[databases]`"
-            )
+                "pyarrow is not installed."
+                + " Install it with `pip install adqa[databases]`"
+            ) from err
         except Exception as e:
-            raise RuntimeError(f"Failed to read Parquet file from {self.path}: {e}")
+            raise RuntimeError(
+                f"Failed to read Parquet file from {self.path}: {e}"
+            ) from e
 
     @override
     def describe(self) -> dict[str, Any]:

@@ -20,12 +20,15 @@ class ExcelReader(DataReader):
     def read(self) -> pd.DataFrame:
         try:
             return pd.read_excel(self.path, sheet_name=self.sheet_name)
-        except ImportError:
+        except ImportError as err:
             raise ImportError(
-                "openpyxl or xlrd is not installed. Install with `pip install adqa[excel]`"
-            )
+                "openpyxl or xlrd is not installed."
+                + " Install with `pip install adqa[excel]`"
+            ) from err
         except Exception as e:
-            raise RuntimeError(f"Failed to read Excel file from {self.path}: {e}")
+            raise RuntimeError(
+                f"Failed to read Excel file from {self.path}: {e}"
+            ) from e
 
     @override
     def describe(self) -> dict[str, Any]:

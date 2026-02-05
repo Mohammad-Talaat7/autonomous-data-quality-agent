@@ -30,10 +30,10 @@ class RemoteFileReader(DataReader):
     def read(self) -> pd.DataFrame:
         try:
             import requests
-        except ImportError:
+        except ImportError as err:
             raise ImportError(
                 "requests is not installed. Install it with `pip install adqa[remote]`"
-            )
+            ) from err
 
         response = requests.get(
             self.url,
@@ -50,18 +50,20 @@ class RemoteFileReader(DataReader):
         if self.format == "parquet":
             try:
                 return pd.read_parquet(content)
-            except ImportError:
+            except ImportError as err:
                 raise ImportError(
-                    "pyarrow is not installed. Install it with `pip install adqa[databases]`"
-                )
+                    "pyarrow is not installed."
+                    + " Install it with `pip install adqa[databases]`"
+                ) from err
 
         if self.format in ("xls", "xlsx", "excel"):
             try:
                 return pd.read_excel(content)
-            except ImportError:
+            except ImportError as err:
                 raise ImportError(
-                    "openpyxl or xlrd is not installed. Install with `pip install adqa[excel]`"
-                )
+                    "openpyxl or xlrd is not installed."
+                    + " Install with `pip install adqa[excel]`"
+                ) from err
 
         raise ValueError(f"Unsupported remote file format: {self.format}")
 

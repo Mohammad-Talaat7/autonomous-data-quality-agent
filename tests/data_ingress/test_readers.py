@@ -106,6 +106,6 @@ def test_dataframe_reader():
     df = pd.DataFrame({"a": [1, 2]})
     reader = DataFrameReader(df)
     result_df = reader.read()
-    
+
     pd.testing.assert_frame_equal(df, result_df)
     assert reader.describe()["rows"] == 2

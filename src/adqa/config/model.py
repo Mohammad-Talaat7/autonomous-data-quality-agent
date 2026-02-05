@@ -1,15 +1,17 @@
 # adqa/config/model.py
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, ClassVar, TypeAlias
+from typing import Any, ClassVar
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
 from ..data_ingress.datasource import DataSource
 from .errors import ConfigError
 
-JsonValue: TypeAlias = (
+type JsonValue = (
     dict[str, "JsonValue"] | list["JsonValue"] | str | int | float | bool | None
 )
 
@@ -23,25 +25,6 @@ class ExecutionMode(str, Enum):
 class TraceStoreType(str, Enum):
     IN_MEMORY = "in_memory"
     JSONL = "jsonl"
-
-
-@dataclass
-class ConfigSnapshot:
-    config: ADQAConfig
-
-    def to_json(self) -> dict[str, JsonValue]:
-        return self.config.model_dump(mode="json")
-
-    def hash(self) -> str:
-        import hashlib
-        import json
-
-        s = json.dumps(self.to_json(), sort_keys=True)
-        return hashlib.sha256(s.encode()).hexdigest()
-
-
-def snapshot_from_config(config: ADQAConfig) -> ConfigSnapshot:
-    return ConfigSnapshot(config)
 
 
 class ADQAConfig(BaseModel):
@@ -67,7 +50,7 @@ class ADQAConfig(BaseModel):
         return data
 
     @model_validator(mode="after")
-    def validate_config(self) -> "ADQAConfig":
+    def validate_config(self) -> ADQAConfig:
         # Lineage requires tracing
         if self.lineage_enabled and not self.tracing_enabled:
             raise ConfigError("Lineage cannot be enabled without tracing")
@@ -84,3 +67,22 @@ class ADQAConfig(BaseModel):
             raise ConfigError("Human-in-loop execution requires tracing")
 
         return self
+
+
+@dataclass
+class ConfigSnapshot:
+    config: ADQAConfig
+
+    def to_json(self) -> dict[str, JsonValue]:
+        return self.config.model_dump(mode="json")
+
+    def hash(self) -> str:
+        import hashlib
+        import json
+
+        s = json.dumps(self.to_json(), sort_keys=True)
+        return hashlib.sha256(s.encode()).hexdigest()
+
+
+def snapshot_from_config(config: ADQAConfig) -> ConfigSnapshot:
+    return ConfigSnapshot(config)

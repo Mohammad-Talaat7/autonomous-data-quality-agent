@@ -4,7 +4,18 @@ from typing import Any
 
 import pandas as pd
 
-from .configs import *
+from .configs import (
+    AirbyteSourceConfig,
+    CSVSourceConfig,
+    DatabaseSourceConfig,
+    DataFrameSourceConfig,
+    ExcelSourceConfig,
+    NoSQLSourceConfig,
+    ParquetSourceConfig,
+    RemoteFileSourceConfig,
+    S3SourceConfig,
+    WarehouseSourceConfig,
+)
 
 InternalSourceConfig = (
     CSVSourceConfig

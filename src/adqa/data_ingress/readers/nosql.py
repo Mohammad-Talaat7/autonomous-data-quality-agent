@@ -16,13 +16,23 @@ class NoSQLReader(DataReader):
     def read(self) -> pd.DataFrame:
         try:
             from pymongo import MongoClient
-        except ImportError:
+        except ImportError as err:
             raise ImportError(
-                "pymongo is not installed. Install it with `pip install adqa[mongo]`"
-            )
+                "pymongo is not installed."
+                + " Install it with `pip install adqa[mongo]`"
+            ) from err
 
         client: MongoClient[Any] = MongoClient(self.uri)
         db = client.get_default_database()
         cursor = db[self.collection].find(self.query)
         # Iterate over cursor directly
         return pd.DataFrame(cursor)
+
+    @override
+    def describe(self) -> dict[str, Any]:
+        return {
+            "type": "nosql",
+            "uri": self.uri,
+            "collection": self.collection,
+            "query": self.query,
+        }
