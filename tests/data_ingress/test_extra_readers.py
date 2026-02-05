@@ -6,6 +6,7 @@ import pytest
 from adqa.data_ingress.readers.airbyte import AirbyteReader
 from adqa.data_ingress.readers.data_warehouses import WarehouseReader
 from adqa.data_ingress.readers.database import DatabaseReader
+from adqa.data_ingress.readers.nosql import NoSQLReader
 
 
 def test_airbyte_reader_missing_dependency():
@@ -18,6 +19,25 @@ def test_airbyte_reader_missing_dependency():
 
         if sys.version_info >= (3, 13):
             assert "incompatible with Python 3.13+" in str(excinfo.value)
+
+
+def test_nosql_reader_read():
+    mock_mongo = MagicMock()
+    mock_client = MagicMock()
+    mock_db = MagicMock()
+    mock_collection = MagicMock()
+
+    mock_mongo.MongoClient.return_value = mock_client
+    mock_client.get_default_database.return_value = mock_db
+    mock_db.__getitem__.return_value = mock_collection
+    mock_collection.find.return_value = [{"a": 1}, {"a": 2}]
+
+    with patch.dict("sys.modules", {"pymongo": mock_mongo}):
+        reader = NoSQLReader(uri="mongodb://localhost", collection="test")
+        df = reader.read()
+
+        assert len(df) == 2
+        assert df.iloc[0]["a"] == 1
 
 
 @patch("sqlalchemy.create_engine")
