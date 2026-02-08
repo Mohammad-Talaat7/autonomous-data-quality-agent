@@ -22,6 +22,8 @@ class TraceEventType(str, Enum):
     EXECUTION = "execution"
     CHECK = "check"
     PROPOSAL = "proposal"
+    SNAPSHOT = "snapshot"
+    DATA_INGRESS = "data_ingress"
 
 
 class TraceSeverity(str, Enum):
