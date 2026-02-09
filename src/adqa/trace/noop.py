@@ -1,4 +1,4 @@
-# src/adqa/trace/noop.py
+# adqa/trace/noop.py
 
 from collections.abc import Iterable
 from typing import override

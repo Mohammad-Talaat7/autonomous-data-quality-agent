@@ -1,4 +1,4 @@
-# src/adqa/trace/lineage/context.py
+# adqa/trace/lineage/context.py
 
 from collections.abc import Generator
 from contextlib import contextmanager

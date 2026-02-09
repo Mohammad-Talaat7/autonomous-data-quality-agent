@@ -18,7 +18,9 @@ class AirbyteReader(DataReader):
 
             msg = (
                 "PyAirbyte is not installed."
-                + " Install it with `pip install adqa[airbyte]`."
+                + " Install it with `poetry add adqa[airbyte]` (Recommended)."
+                + " Or: Install it with `uv add adqa[airbyte]`."
+                + " Or: Install it with `pip install adqa[airbyte]`."
             )
             if sys.version_info >= (3, 13):
                 msg += " Note: PyAirbyte is currently incompatible with Python 3.13+."

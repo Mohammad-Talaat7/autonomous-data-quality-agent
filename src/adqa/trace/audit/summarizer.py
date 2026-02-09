@@ -1,3 +1,5 @@
+# adqa/trace/audit/summarizer.py
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

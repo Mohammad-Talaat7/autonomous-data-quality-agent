@@ -1,4 +1,5 @@
 # adqa/data_ingress/factory.py
+
 from .configs import (
     AirbyteSourceConfig,
     CSVSourceConfig,
