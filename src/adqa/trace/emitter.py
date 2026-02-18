@@ -1,4 +1,5 @@
 # src/adqa/trace/emitter.py
+
 from .context import TraceContext
 from .events import TraceEvent
 from .store.base import TraceStore

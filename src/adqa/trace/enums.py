@@ -1,10 +1,11 @@
+# adqa/trace/enums.py
 # shared vocabulary for all tracing system.
 
-from enum import Enum
+from enum import StrEnum
 from typing import TypedDict
 
 
-class TraceComponent(str, Enum):
+class TraceComponent(StrEnum):
     METRIC = "metric"
     RULE = "rule"
     FIX = "fix"
@@ -13,7 +14,7 @@ class TraceComponent(str, Enum):
     AUDIT = "audit"
 
 
-class TraceEventType(str, Enum):
+class TraceEventType(StrEnum):
     START = "start"
     END = "end"
     RESULT = "result"
@@ -22,9 +23,12 @@ class TraceEventType(str, Enum):
     EXECUTION = "execution"
     CHECK = "check"
     PROPOSAL = "proposal"
+    SNAPSHOT = "snapshot"
+    DATA_INGRESS = "data_ingress"
+    PROFILING = "profiling"
 
 
-class TraceSeverity(str, Enum):
+class TraceSeverity(StrEnum):
     INFO = "info"
     WARNING = "warning"
     ERROR = "error"

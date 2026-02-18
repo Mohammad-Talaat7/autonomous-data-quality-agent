@@ -1,4 +1,4 @@
-# src/adqa/trace/lineage/memory.py
+# adqa/trace/lineage/memory.py
 
 from collections import defaultdict
 from uuid import UUID

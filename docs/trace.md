@@ -180,4 +180,3 @@ nodes = lineage_adapter.get(context.trace_id)
 for node in nodes:
     print(f"Op: {node.operation} -> Outputs: {node.outputs}")
 ```
-

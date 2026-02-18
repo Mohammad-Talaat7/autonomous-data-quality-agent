@@ -1,4 +1,4 @@
-# src/adqa/trace/lineage/model.py
+# adqa/trace/lineage/model.py
 
 from __future__ import annotations
 

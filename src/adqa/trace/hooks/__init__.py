@@ -1,3 +1,5 @@
+# adqa/trace/hooks/__init__.py
+
 from .context import (
     get_current_emitter,
     reset_current_emitter,

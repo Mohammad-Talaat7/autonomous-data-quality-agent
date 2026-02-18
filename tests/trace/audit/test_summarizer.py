@@ -1,3 +1,5 @@
+# tests/trace/audit/test_summarizer.py
+
 from adqa.trace.audit.summarizer import TraceSummarizer
 from adqa.trace.context import TraceContext
 from adqa.trace.enums import TraceComponent, TraceEventType, TraceSeverity
