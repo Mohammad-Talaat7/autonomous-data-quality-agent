@@ -19,7 +19,6 @@ def run_ml_profiling(
     random_state: int = 42,
     thresholds: ProfilingThresholds | None = None,
 ) -> tuple[MLProfile, ...]:
-
     ml_results = []
 
     for profile in column_profiles:

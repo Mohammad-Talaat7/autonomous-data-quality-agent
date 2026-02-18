@@ -17,7 +17,6 @@ def compute_behavioral_metrics(
     logical_type: LogicalType,
     thresholds: ProfilingThresholds | None = None,
 ) -> BehavioralMetrics | None:
-
     if logical_type == LogicalType.NUMERIC:
         return compute_numeric_behavior(summary, thresholds=thresholds)
 

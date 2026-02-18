@@ -54,7 +54,6 @@ class ProfilingEngine:
         """
         Execute full profiling pipeline with deterministic caching and tracing.
         """
-
         start_time = time.perf_counter()
 
         # =========================
@@ -341,7 +340,6 @@ class ProfilingEngine:
         df: pd.DataFrame,
         columns: tuple[ColumnProfile, ...],
     ) -> tuple[MLProfile, ...]:
-
         return run_ml_profiling(
             df=df,
             column_profiles=columns,

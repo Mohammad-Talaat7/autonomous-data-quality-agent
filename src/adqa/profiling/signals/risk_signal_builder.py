@@ -11,7 +11,6 @@ def build_risk_signals(
     columns: tuple[ColumnProfile, ...],
     correlations: CorrelationProfile | None,
 ) -> tuple[RiskSignal, ...]:
-
     signals: list[RiskSignal] = []
 
     # =========================

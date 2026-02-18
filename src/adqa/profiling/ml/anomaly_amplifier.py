@@ -26,7 +26,6 @@ def amplify_numeric_anomalies(
     random_state: int = 42,
     thresholds: ProfilingThresholds | None = None,
 ) -> MLProfile | None:
-
     if column_profile.logical_type != LogicalType.NUMERIC:
         return None
 
