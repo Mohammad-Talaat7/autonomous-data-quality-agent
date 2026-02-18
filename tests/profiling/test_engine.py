@@ -8,15 +8,16 @@ import pytest
 
 from adqa.config.model import ADQAConfig, ProfilingConfig
 from adqa.data_ingress.datasource import DataSource
+
 mock_sklearn = MagicMock()
 sys.modules["sklearn"] = mock_sklearn
 sys.modules["sklearn.ensemble"] = mock_sklearn
 
-from adqa.profiling.engine import ProfilingEngine
+from adqa.profiling.engine import ProfilingEngine  # noqa: E402
 
 
 @pytest.fixture
-def mock_config():
+def mock_config() -> ADQAConfig:
     # Simple mock for DataSource as it's a protocol/base class
     ds = MagicMock(spec=DataSource)
     return ADQAConfig(
@@ -27,7 +28,7 @@ def mock_config():
     )
 
 
-def test_profiling_engine_sampling(mock_config):
+def test_profiling_engine_sampling(mock_config: ADQAConfig) -> None:
     # Create DF larger than threshold
     df = pd.DataFrame({"A": range(200), "B": range(200)})
 
@@ -40,7 +41,7 @@ def test_profiling_engine_sampling(mock_config):
     assert len(result.dataset_profile.columns) == 2
 
 
-def test_profiling_engine_parallel(mock_config):
+def test_profiling_engine_parallel(mock_config: ADQAConfig) -> None:
     df = pd.DataFrame({"A": [1, 2, 3], "B": [4, 5, 6], "C": [7, 8, 9]})
 
     engine = ProfilingEngine(config=mock_config)
