@@ -8,11 +8,11 @@ import pytest
 
 from adqa.config.model import ADQAConfig, ProfilingConfig
 from adqa.data_ingress.datasource import DataSource
-from adqa.profiling.engine import ProfilingEngine
-
 mock_sklearn = MagicMock()
 sys.modules["sklearn"] = mock_sklearn
 sys.modules["sklearn.ensemble"] = mock_sklearn
+
+from adqa.profiling.engine import ProfilingEngine
 
 
 @pytest.fixture

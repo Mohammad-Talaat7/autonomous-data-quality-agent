@@ -4,7 +4,11 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import IsolationForest
+
+try:
+    from sklearn.ensemble import IsolationForest
+except ImportError:
+    IsolationForest = None
 
 if TYPE_CHECKING:
     from ...config.model import ProfilingThresholds
@@ -24,6 +28,9 @@ def amplify_numeric_anomalies(
 ) -> MLProfile | None:
 
     if column_profile.logical_type != LogicalType.NUMERIC:
+        return None
+
+    if IsolationForest is None:
         return None
 
     clean = series.dropna()
