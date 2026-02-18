@@ -1,9 +1,12 @@
 # adqa/result.py
 
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pandas as pd
+
+if TYPE_CHECKING:
+    from ..profiling.models.profiling_result import ProfilingResult
 
 
 @dataclass(frozen=True)
@@ -15,8 +18,8 @@ class ADQAResult:
     # Core outputs
     dataframe: pd.DataFrame | None
 
-    # Phase 3 placeholders (filled later)
-    profiles: Any | None = None
+    # Phase 3
+    profiles: ProfilingResult | None = None
     detections: Any | None = None
     scores: Any | None = None
     decision: Any | None = None

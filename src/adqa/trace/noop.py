@@ -20,6 +20,11 @@ class NoOpTraceStore(TraceStore):
 
 
 class NoOpTraceEmitter:
+    def __init__(self) -> None:
+        from .context import TraceContext
+
+        self.context = TraceContext()
+
     def emit(self, event: TraceEvent) -> None:
         pass
 

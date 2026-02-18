@@ -3,7 +3,7 @@
 from typing import Any, Literal
 
 import pandas as pd
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_serializer
 
 from .types import DataSourceType
 
@@ -61,6 +61,10 @@ class RemoteFileSourceConfig(BaseSourceConfig):
 class DataFrameSourceConfig(BaseSourceConfig):
     dataframe: pd.DataFrame
     type: Literal[DataSourceType.DATAFRAME] = DataSourceType.DATAFRAME
+
+    @field_serializer("dataframe", when_used="json")
+    def serialize_df(self, df: pd.DataFrame) -> str:
+        return f"<pandas.DataFrame shape={df.shape}>"
 
 
 class WarehouseSourceConfig(BaseSourceConfig):

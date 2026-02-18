@@ -3,20 +3,21 @@
 
 from uuid import UUID
 
-from adqa.trace.hooks.serialize import to_trace_value
-
-from .config import ADQAConfig, ConfigSnapshot, TraceStoreType, snapshot_from_config
-from .data_ingress.factory import DataReaderFactory
-from .data_ingress.reader import DataReader
+from ..config import ADQAConfig, ConfigSnapshot, TraceStoreType, snapshot_from_config
+from ..data_ingress.factory import DataReaderFactory
+from ..data_ingress.reader import DataReader
+from ..profiling.cache import ProfileCache
+from ..profiling.engine import ProfilingEngine
+from ..trace.context import TraceContext
+from ..trace.emitter import TraceEmitter
+from ..trace.enums import TraceEventType
+from ..trace.events import TraceEvent
+from ..trace.hooks.serialize import to_trace_value
+from ..trace.lineage import LineageRecorder
+from ..trace.lineage.memory import InMemoryLineageAdapter
+from ..trace.noop import NoOpLineageRecorder, NoOpTraceEmitter
+from ..trace.store import InMemoryTraceStore, JSONTraceStore
 from .result import ADQAResult
-from .trace.context import TraceContext
-from .trace.emitter import TraceEmitter
-from .trace.enums import TraceEventType
-from .trace.events import TraceEvent
-from .trace.lineage import LineageRecorder
-from .trace.lineage.memory import InMemoryLineageAdapter
-from .trace.noop import NoOpLineageRecorder, NoOpTraceEmitter
-from .trace.store import InMemoryTraceStore, JSONTraceStore
 
 
 class ADQA:
@@ -33,6 +34,14 @@ class ADQA:
 
         # Lineage setup
         self._lineage: NoOpLineageRecorder | LineageRecorder = self._init_lineage()
+
+        # Profiling setup
+        self._cache = ProfileCache()
+        self._profiler = ProfilingEngine(
+            config=self._config,
+            cache=self._cache,
+            lineage=self._lineage,
+        )
 
     # --------------------------------------------------
     # Public API
@@ -93,14 +102,19 @@ class ADQA:
             outputs={"dataframe_columns": list(df.columns)},
         )
 
+        # ---- Profiling ----
+        # Update profiler with current trace emitter for this run
+        self._profiler._tracer = trace_emitter
+        profiling_result = self._profiler.run(df)
+
         # ---- Phase 3 pipeline placeholders ----
-        # profiling = ...
         # detections = ...
         # scores = ...
         # decision = ...
 
         return ADQAResult(
             dataframe=df,
+            profiles=profiling_result,
             execution_mode=self._config.execution_mode.value,
             trace_id=str(trace_id),
             config_hash=snapshot.hash(),

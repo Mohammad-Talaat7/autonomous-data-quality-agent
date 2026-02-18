@@ -73,6 +73,7 @@ loguru = "^0.7"
 openai = { version = "^1.12", optional = true }
 litellm = { version = "^1.30", optional = true }
 tiktoken = { version = "^0.6", optional = true }
+scikit-learn = { version = "^1.4", optional = true }
 
 psycopg = { version = "^3.1", extras = ["binary"], optional = true }
 duckdb = { version = ">=1.1.0", optional = true }
@@ -96,6 +97,10 @@ llm = [
   "tiktoken"
 ]
 
+ml = [
+  "scikit-learn"
+]
+
 # Database connectors
 databases = [
   "psycopg",
@@ -115,6 +120,7 @@ all = [
   "openai",
   "litellm",
   "tiktoken",
+  "scikit-learn",
   "psycopg",
   "duckdb",
   "pyarrow",
