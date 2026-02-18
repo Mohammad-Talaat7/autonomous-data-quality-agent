@@ -11,7 +11,7 @@ def round_value(value: Any, precision: int) -> Any:
     if isinstance(value, dict):
         return {k: round_value(v, precision) for k, v in value.items()}
 
-    if isinstance(value, (list, tuple)):
+    if isinstance(value, list | tuple):
         return type(value)(round_value(v, precision) for v in value)
 
     if is_dataclass(value) and not isinstance(value, type):
