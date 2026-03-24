@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 
 if TYPE_CHECKING:
+    from ..detection.results import DetectionResultBundle
     from ..profiling.models.profiling_result import ProfilingResult
 
 
@@ -22,7 +23,7 @@ class ADQAResult:
 
     # Phase 3
     profiles: ProfilingResult | None = None
-    detections: Any | None = None
+    detections: DetectionResultBundle | None = None
     scores: Any | None = None
     decision: Any | None = None
 

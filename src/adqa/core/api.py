@@ -6,6 +6,7 @@ from uuid import UUID
 from ..config import ADQAConfig, ConfigSnapshot, TraceStoreType, snapshot_from_config
 from ..data_ingress.factory import DataReaderFactory
 from ..data_ingress.reader import DataReader
+from ..detection import DetectionEngine, build_registry
 from ..profiling.cache import ProfileCache
 from ..profiling.engine import ProfilingEngine
 from ..trace.context import TraceContext
@@ -40,6 +41,16 @@ class ADQA:
         self._profiler = ProfilingEngine(
             config=self._config,
             cache=self._cache,
+            lineage=self._lineage,
+        )
+
+        # Detection setup
+        registry = build_registry()
+        thresholds = self._config.detection.thresholds
+
+        self._detection_engine = DetectionEngine(
+            rule_detectors=registry.create_rule_detectors(thresholds=thresholds),
+            ml_detectors=registry.create_ml_detectors(thresholds=thresholds),
             lineage=self._lineage,
         )
 
@@ -107,14 +118,30 @@ class ADQA:
         self._profiler._tracer = trace_emitter
         profiling_result = self._profiler.run(df)
 
+        # ---- Detection ----
+        # Update detection engine with current trace emitter for this run
+        self._detection_engine.tracing = trace_emitter
+
+        # Context requires column profiles by name
+        column_profiles_map = {
+            p.name: p for p in profiling_result.dataset_profile.columns
+        }
+
+        detections = self._detection_engine.run(
+            dataset_profile=profiling_result.dataset_profile,
+            column_profiles=column_profiles_map,
+            ml_profiles=profiling_result.ml_profiles,
+            raw_data_sample=df,
+        )
+
         # ---- Phase 3 pipeline placeholders ----
-        # detections = ...
         # scores = ...
         # decision = ...
 
         return ADQAResult(
             dataframe=df,
             profiles=profiling_result,
+            detections=detections,
             execution_mode=self._config.execution_mode.value,
             trace_id=str(trace_id),
             config_hash=snapshot.hash(),

@@ -1,7 +1,8 @@
 # adqa/trace/noop.py
 
-from collections.abc import Iterable
-from typing import override
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
+from typing import Any, override
 from uuid import UUID
 
 from .enums import TraceValue
@@ -27,6 +28,10 @@ class NoOpTraceEmitter:
 
     def emit(self, event: TraceEvent) -> None:
         pass
+
+    @contextmanager
+    def span(self, name: str, **kwargs: Any) -> Iterator[None]:
+        yield None
 
 
 class NoOpLineageRecorder:

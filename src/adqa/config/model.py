@@ -55,6 +55,25 @@ class ProfilingThresholds(BaseModel):
     global_seed: int = 42
 
 
+class DetectionThresholds(BaseModel):
+    missing_values_threshold: float = 0.2
+    constant_column_threshold: int = 1
+    duplicate_rows_threshold: float = 0.1
+    imbalance_threshold: float = 0.9
+    skewness_threshold: float = 1.0
+    correlation_threshold: float = 0.9
+    pattern_match_threshold: float = 0.8
+
+    # New Thresholds
+    outlier_ratio_threshold: float = 0.05
+    zero_value_ratio_threshold: float = 0.3
+    rare_category_threshold: float = 0.01
+
+    # Range
+    min_value: float | None = None
+    max_value: float | None = None
+
+
 class ProfilingConfig(BaseModel):
     enable_ml: bool = False
     enable_correlation: bool = True
@@ -70,6 +89,14 @@ class ProfilingConfig(BaseModel):
     thresholds: ProfilingThresholds = ProfilingThresholds()
 
 
+class DetectionConfig(BaseModel):
+    enabled: bool = True
+    enable_ml: bool = True
+
+    # Thresholds
+    thresholds: DetectionThresholds = DetectionThresholds()
+
+
 class ADQAConfig(BaseModel):
     data_source: DataSource
     tracing_enabled: bool = False
@@ -78,6 +105,7 @@ class ADQAConfig(BaseModel):
     trace_store: TraceStoreType | None = None
     execution_mode: ExecutionMode = ExecutionMode.ADVISORY
     profiling: ProfilingConfig = ProfilingConfig()
+    detection: DetectionConfig = DetectionConfig()
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True, arbitrary_types_allowed=True

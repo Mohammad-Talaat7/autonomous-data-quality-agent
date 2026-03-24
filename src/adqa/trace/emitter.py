@@ -1,5 +1,9 @@
 # src/adqa/trace/emitter.py
 
+from collections.abc import Iterator
+from contextlib import contextmanager
+from typing import Any
+
 from .context import TraceContext
 from .events import TraceEvent
 from .store.base import TraceStore
@@ -32,3 +36,24 @@ class TraceEmitter:
             raise ValueError("TraceEvent.trace_id does not match TraceContext.trace_id")
 
         self._store.append(event)
+
+    @contextmanager
+    def span(self, name: str, **kwargs: Any) -> Iterator[Any]:
+        """
+        Syntactic sugar for execution_hook.
+        """
+        from .enums import TraceComponent, TraceEventType
+        from .hooks.execution import execution_hook
+
+        # Default to RULE/CHECK if not specified
+        component = kwargs.pop("component", TraceComponent.RULE)
+        event_type = kwargs.pop("event_type", TraceEventType.CHECK)
+
+        with execution_hook(
+            name=name,
+            component=component,
+            event_type=event_type,
+            emitter=self,
+            inputs=kwargs,
+        ) as ctx:
+            yield ctx
