@@ -33,7 +33,6 @@ class DetectionEngine:
         ml_profiles: Any | None = None,
         raw_data_sample: Any | None = None,
     ) -> DetectionResultBundle:
-
         # Extract correlation matrix if available in dataset_profile
         correlation_matrix = None
         if hasattr(dataset_profile, "correlations") and dataset_profile.correlations:

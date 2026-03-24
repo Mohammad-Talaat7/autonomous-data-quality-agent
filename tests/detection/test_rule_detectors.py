@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 
 import pandas as pd
 import pytest
-
 from adqa.config.model import DetectionThresholds
 from adqa.detection.context import DetectionContext
 from adqa.detection.rule_detectors.constant import ConstantColumnDetector

@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
-
 from adqa.data_ingress.readers.csv import CSVReader
 from adqa.data_ingress.readers.dataframe import DataFrameReader
 from adqa.data_ingress.readers.excel import ExcelReader

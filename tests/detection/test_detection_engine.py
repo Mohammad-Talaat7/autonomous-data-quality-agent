@@ -3,7 +3,6 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
-
 from adqa.detection.engine import DetectionEngine
 from adqa.detection.ml_detectors.isolation_forest import IsolationForestDetector
 from adqa.detection.ml_detectors.pii import PIIDetector
