@@ -1,8 +1,9 @@
+# tests/trace/test_emitter.py
+
 from unittest.mock import Mock
 from uuid import uuid4
 
 import pytest
-
 from adqa.trace.context import TraceContext
 from adqa.trace.emitter import TraceEmitter
 from adqa.trace.events import TraceEvent

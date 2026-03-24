@@ -1,11 +1,12 @@
+# adqa/trace/audit/summarizer.py
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from adqa.trace.context import TraceContext
-from adqa.trace.enums import TraceEventDict, TraceSeverity
-from adqa.trace.store.base import TraceStore
-
+from ..context import TraceContext
+from ..enums import TraceEventDict, TraceSeverity
+from ..store.base import TraceStore
 from .templates import format_event
 
 

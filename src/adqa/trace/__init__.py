@@ -1,3 +1,5 @@
+# adqa/trace/__init__.py
+
 from .context import TraceContext
 from .emitter import TraceEmitter
 from .enums import (

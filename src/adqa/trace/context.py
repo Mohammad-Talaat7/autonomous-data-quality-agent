@@ -1,3 +1,4 @@
+# adqa/trace/context.py
 # identify and scope a trace session.
 
 from __future__ import annotations

@@ -3,7 +3,6 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
-
 from adqa.trace.enums import TraceComponent, TraceEventType, TraceSeverity
 from adqa.trace.events import TraceEvent
 from adqa.trace.store.json_store import JSONTraceStore

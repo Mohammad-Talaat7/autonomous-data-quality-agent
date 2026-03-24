@@ -14,7 +14,8 @@ on:
       - "phase-*"
       
 jobs:
-  test:
+  test-core:
+    name: Test Core (Minimal Dependencies)
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,7 +33,6 @@ jobs:
           pipx ensurepath
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           poetry self add poetry-dynamic-versioning
-          # IT should work with both Github Actions and Act
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -40,11 +40,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: "poetry"
 
-      - name: Install dependencies
+      - name: Install dependencies (minimal)
         run: |
           poetry install --with dev
 
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
           poetry run pytest \
             --cov=src \
@@ -56,31 +56,54 @@ jobs:
         with:
           files: coverage.xml
 
-      # ---------------------------------
-      # Lint: ruff
-      # ---------------------------------
       - name: Lint (ruff)
         run: |
           poetry run ruff check src tests
           poetry run ruff format --check src tests
 
-      # ---------------------------------
-      # Formatting: black
-      # ---------------------------------
       - name: Formatting (black)
         run: |
           poetry run black --check src tests
 
-      # ---------------------------------
-      # Docstring linting: pydoclint
-      # ---------------------------------
       - name: Docstring linting
         run: |
           poetry run pydoclint src --style numpy
 
-      # ---------------------------------
-      # Type checking: mypy
-      # ---------------------------------
-      - name: Type checking
+      - name: Type checking (mypy)
         run: |
           poetry run mypy src/adqa
+
+  test-full:
+    name: Test Full (All Extras)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          pipx ensurepath
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry self add poetry-dynamic-versioning
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+
+      - name: Install dependencies (all)
+        run: |
+          # Install all optional dependencies for full test coverage
+          poetry install --with dev -E all
+
+      - name: Run tests (full)
+        run: |
+          poetry run pytest
