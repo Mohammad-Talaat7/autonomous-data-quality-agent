@@ -2,7 +2,10 @@
 
 from typing import Any
 
-from sklearn.ensemble import IsolationForest
+try:
+    from sklearn.ensemble import IsolationForest
+except ImportError:
+    IsolationForest = None
 
 from ..base import BaseMLDetector, DetectionContext, QualityDimension
 from ..results import MLEvidence
@@ -16,6 +19,10 @@ class IsolationForestDetector(BaseMLDetector):
         pass
 
     def run_model(self, context: DetectionContext) -> list[MLEvidence]:
+        if IsolationForest is None:
+            # Skip if scikit-learn is not installed
+            return []
+
         if context.raw_data_sample is None:
             return []
 
