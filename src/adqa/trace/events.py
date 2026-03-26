@@ -1,3 +1,4 @@
+# adqa/trace/events.py
 # the atomic unit of observability.
 
 from __future__ import annotations

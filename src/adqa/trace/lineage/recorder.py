@@ -1,4 +1,4 @@
-# src/adqa/trace/lineage/recorder.py
+# adqa/trace/lineage/recorder.py
 
 from collections.abc import Iterable
 from uuid import UUID
