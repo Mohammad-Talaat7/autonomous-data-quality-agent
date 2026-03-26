@@ -1,9 +1,10 @@
 # tests/config/test_model.py
 
 import pytest
+from pydantic import ValidationError
+
 from adqa.config import ADQAConfig, ExecutionMode, TraceStoreType
 from adqa.data_ingress.datasource import DataSource
-from pydantic import ValidationError
 
 
 class TestADQAConfig:

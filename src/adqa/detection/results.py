@@ -18,6 +18,7 @@ def _generate_id() -> str:
 class DetectionResult:
     detector_name: str
     issue_type: str
+    dimension: str = "unknown"
 
     column: str | None = None
     columns: list[str] | None = None
@@ -25,6 +26,7 @@ class DetectionResult:
     scope: str = "column"  # column | dataset | cross_column
 
     severity_hint: float = 0.0  # [0, 1], NOT final severity
+    confidence: float = 1.0  # [0, 1]
 
     metrics: dict[str, Any] = field(default_factory=dict)
     description: str = ""
@@ -41,11 +43,12 @@ class DetectionResult:
 class MLEvidence:
     model_name: str
     signal_type: str
+    dimension: str = "accuracy"
 
     column: str | None = None
 
     score: float = 0.0
-    confidence: float = 0.0
+    confidence: float = 1.0
 
     metadata: dict[str, Any] = field(default_factory=dict)
 

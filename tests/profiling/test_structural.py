@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
+
 from adqa.profiling.models.column_profile import LogicalType
 from adqa.profiling.structural.column_profiler import profile_column
 

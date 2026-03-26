@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
+
 from adqa.data_ingress.readers.airbyte import AirbyteReader
 from adqa.data_ingress.readers.data_warehouses import WarehouseReader
 from adqa.data_ingress.readers.database import DatabaseReader

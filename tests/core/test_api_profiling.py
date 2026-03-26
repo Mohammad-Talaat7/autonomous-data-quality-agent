@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+
 from adqa.config.model import ADQAConfig
 from adqa.core.api import ADQA
 from adqa.data_ingress.datasource import DataSource

@@ -79,6 +79,10 @@ class DetectionEngine:
         else:
             results = detector.detect(context)
 
+        for r in results:
+            if hasattr(detector, "dimension") and r.dimension == "unknown":
+                r.dimension = detector.dimension
+
         self._register_lineage(context, results)
 
         return results
@@ -94,6 +98,10 @@ class DetectionEngine:
                 evidence = detector.run_model(context)
         else:
             evidence = detector.run_model(context)
+
+        for e in evidence:
+            if hasattr(detector, "dimension") and e.dimension == "accuracy":
+                e.dimension = detector.dimension
 
         self._register_lineage(context, evidence)
 

@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 
 import pandas as pd
 import pytest
+
 from adqa.config.model import ADQAConfig, ProfilingConfig
 from adqa.data_ingress.datasource import DataSource
 
