@@ -1,3 +1,5 @@
+# adqa/trace/hooks/serialize.py
+
 from collections.abc import Mapping, Sequence
 from typing import cast
 
