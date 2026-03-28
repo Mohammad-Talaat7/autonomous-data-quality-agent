@@ -97,6 +97,14 @@ class DetectionConfig(BaseModel):
     thresholds: DetectionThresholds = DetectionThresholds()
 
 
+class ExecutionConfig(BaseModel):
+    # Map issue types to desired actions (e.g., {"missing_values": "WARN"})
+    issue_overrides: dict[str, str] = {}
+
+    # Whether to stop on the first BLOCK action
+    stop_on_block: bool = True
+
+
 class ADQAConfig(BaseModel):
     data_source: DataSource
     tracing_enabled: bool = False
@@ -106,6 +114,7 @@ class ADQAConfig(BaseModel):
     execution_mode: ExecutionMode = ExecutionMode.ADVISORY
     profiling: ProfilingConfig = ProfilingConfig()
     detection: DetectionConfig = DetectionConfig()
+    execution: ExecutionConfig = ExecutionConfig()
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True, arbitrary_types_allowed=True
