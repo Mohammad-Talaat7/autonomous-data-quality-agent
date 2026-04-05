@@ -2,6 +2,13 @@
 name = "adqa-tui"
 version = "0.1.0"
 edition = "2021"
+description = "A real-time Terminal UI for the ADQA Autonomous Data Quality Agent"
+license = "MIT"
+repository = "https://github.com/google/autonomous-data-quality-agent"
+homepage = "https://github.com/google/autonomous-data-quality-agent"
+readme = "../README.md"
+keywords = ["data-quality", "tui", "agent", "observability"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 # UI
@@ -13,7 +20,7 @@ tokio = { version = "1.36", features = ["full"] }
 futures = "0.3"
 
 # Interop
-pyo3 = { version = "0.23", features = ["auto-initialize", "abi3-py312"] }
+pyo3 = { version = "0.23", features = ["auto-initialize"] }
 
 # Data
 serde = { version = "1.0", features = ["derive"] }
