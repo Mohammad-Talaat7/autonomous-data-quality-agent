@@ -6,11 +6,11 @@
 [![Crates.io](https://img.shields.io/crates/v/adqa-tui.svg)](https://crates.io/crates/adqa-tui)
 [![Python versions](https://img.shields.io/pypi/pyversions/adqa.svg)](https://pypi.org/project/adqa/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Documentation](https://img.shields.io/badge/docs-live-brightgreen.svg)](https://google.github.io/autonomous-data-quality-agent/)
+[![Documentation](https://img.shields.io/badge/docs-live-brightgreen.svg)](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/)
 
 **The intelligent, autonomous agent for high-performance data quality inspection, risk detection, and automated remediation.**
 
-[Getting Started](#-getting-started) • [Key Features](#-key-features) • [Documentation](https://google.github.io/autonomous-data-quality-agent/) • [Rust TUI](#-rust-tui)
+[Getting Started](#-getting-started) • [Key Features](#-key-features) • [Documentation](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/) • [Rust TUI](#-rust-tui)
 
 </div>
 
@@ -25,7 +25,7 @@ Data quality is the #1 bottleneck in AI development. ADQA combines a powerful **
 ## 📚 Documentation
 
 For full documentation, architecture details, and API reference, visit:
-**[google.github.io/autonomous-data-quality-agent](https://google.github.io/autonomous-data-quality-agent/)**
+**[Mohammad-Talaat7.github.io/autonomous-data-quality-agent](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/)**
 
 ## ✨ Key Features
 
@@ -55,7 +55,7 @@ pip install "adqa[all]"
 ```
 
 ### Rust TUI
-You can download the pre-compiled binaries from the [Releases](https://github.com/google/autonomous-data-quality-agent/releases) page, or install via cargo:
+You can download the pre-compiled binaries from the [Releases](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/releases) page, or install via cargo:
 ```bash
 cargo install adqa-tui
 ```
