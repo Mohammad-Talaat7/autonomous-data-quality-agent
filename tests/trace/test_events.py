@@ -1,3 +1,5 @@
+# tests/trace/test_events.py
+
 from __future__ import annotations
 
 import unittest

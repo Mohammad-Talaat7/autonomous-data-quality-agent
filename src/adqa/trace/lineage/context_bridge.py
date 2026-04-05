@@ -1,3 +1,5 @@
+# adqa/trace/lineage/context_bridge.py
+
 from collections.abc import Generator
 from contextlib import contextmanager
 

@@ -1,24 +1,45 @@
 name: docs
 
-# on: { push: { paths: ['docs/**'] } }
-on: workflow_dispatch # Manual only for now
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/CD-Docs.yml'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-        # Clones your repository into the runner
+        with:
+          fetch-depth: 0
 
-      - run: pip install mkdocs-material
-        # Installs MkDocs + Material theme
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
 
-      - run: mkdocs build -f docs/mkdocs.yml
-        # Builds the static site into ./site
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install mkdocs-material mkdocstrings[python] pymdown-extensions
 
-      - uses: peaceiris/actions-gh-pages@v3
-        # Pushes ./site to the gh-pages branch
+      - name: Build documentation
+        run: mkdocs build -f docs/mkdocs.yml
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site

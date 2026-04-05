@@ -1,11 +1,64 @@
-site_name: ADQA Documentation
-nav:
-  - Home: index.md
-  - Agents: agents.md
-  - Core: core.md
-  - LLM: llm.md
-  - Trace: trace.md
+site_name: ADQA - Autonomous Data Quality Agent
+site_description: Autonomous data quality agent for profiling, detecting, and healing data issues.
+repo_url: https://github.com/google/autonomous-data-quality-agent
+edit_uri: edit/main/docs/
+
 theme:
   name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Getting Started: index.md
+      - Data Ingress: ingress.md
+      - Profiling: profiling.md
+      - Detection: detection.md
+      - Scoring: scoring.md
+      - Execution: execution.md
+      - Trace & Lineage: trace.md
+  - API Reference:
+      - ADQA Core: api/core.md
+      - Configuration: api/config.md
+      - Detection: api/detection.md
+      - Profiling: api/profiling.md
+  - About:
+      - PyAirByte Integration: PyAirByte.md
+
 plugins:
   - search
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import os
+            - import sys
+            - sys.path.append(os.path.abspath("src"))
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html

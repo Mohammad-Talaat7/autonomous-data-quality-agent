@@ -1,3 +1,5 @@
+# tests/trace/test_emitter.py
+
 from unittest.mock import Mock
 from uuid import uuid4
 

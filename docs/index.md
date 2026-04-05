@@ -1,18 +1,58 @@
-# Welcome to ADQA Documentation
+# ADQA - Autonomous Data Quality Agent
 
-This documentation provides an overview of the Autonomous Data Quality Agent (ADQA) project, its architecture, and how to use its various components.
+ADQA is a modern, autonomous data quality agent designed to profile datasets, detect multi-dimensional quality risks, and execute automated remediations.
 
-## About ADQA
+## Core Pillars
 
-The Autonomous Data Quality Agent (ADQA) is designed to address data quality issues autonomously. It performs profiling, detection, explanation, and proposes fixes for data quality problems in various datasets. The project leverages AI and LLMs to provide intelligent solutions for maintaining high data quality.
+- **🔍 Multi-Dimensional Profiling**: Deep analysis of structural, behavioral, and semantic characteristics.
+- **🚨 Intelligent Detection**: Hybrid engine combining rule-based heuristics with ML-driven risk identification.
+- **⚖️ Quality Scoring**: Aggregated scoring across dimensions like Validity, Completeness, Consistency, and Privacy.
+- **🛠️ Autonomous Healing**: Automated remediation engine with Advisory, Human-in-the-loop, and Automatic modes.
+- **📜 Full Traceability**: Complete audit logs and data lineage for every decision and transformation.
 
-## Project Structure
+## Installation
 
-The ADQA project is organized into several key modules:
+ADQA is built with Python and leverages `poetry` for dependency management.
 
-- **Agents**: Contains the intelligent agents responsible for data quality tasks.
-- **Core**: Houses the fundamental building blocks and core logic of the ADQA system.
-- **LLM**: Integrates and manages Large Language Models for advanced data quality tasks.
-- **Trace**: Provides the infrastructure for tracing, lineage, reasoning, and auditing within the ADQA system.
+```bash
+pip install .
+```
 
-Navigate through the sidebar to explore each module in detail.
+For full ML capabilities:
+
+```bash
+pip install ".[ml]"
+```
+
+## Quick Start
+
+### Using the Python API
+
+```python
+from adqa import ADQA, ADQAConfig, DataSource
+
+# 1. Initialize with a data source
+agent = ADQA.from_path("sample_data.csv")
+
+# 2. Run analysis
+result = agent.analyze()
+
+# 3. View quality decision
+print(result.summary())
+
+# 4. If in automatic mode, remediated data is available
+if result.dataframe is not None:
+    result.dataframe.to_csv("healed_data.csv")
+```
+
+### Using the CLI
+
+```bash
+adqa analyze sample_data.csv --mode advisory
+```
+
+## Documentation Structure
+
+- [Guide](ingress.md): Conceptual overview of how ADQA works.
+- [API Reference](api/core.md): Technical documentation of classes and methods.
+- [Trace & Lineage](trace.md): Understanding how decisions are tracked.
