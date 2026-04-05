@@ -5,12 +5,12 @@ Thank you for your interest in contributing to ADQA! We welcome contributions fr
 ## How to Contribute
 
 ### 1. Reporting Bugs
-- Use the [Bug Report Template](https://github.com/google/autonomous-data-quality-agent/issues/new?template=bug_report.md).
+- Use the [Bug Report Template](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/issues/new?template=bug_report.md).
 - Provide a clear description of the issue and steps to reproduce.
 - Include environment details (OS, Python version, ADQA version).
 
 ### 2. Suggesting Enhancements
-- Use the [Feature Request Template](https://github.com/google/autonomous-data-quality-agent/issues/new?template=feature_request.md).
+- Use the [Feature Request Template](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/issues/new?template=feature_request.md).
 - Explain the use case and why this feature would be valuable.
 
 ### 3. Code Contributions

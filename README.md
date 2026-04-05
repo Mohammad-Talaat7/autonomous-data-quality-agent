@@ -2,96 +2,113 @@
 
 <div align="center">
 
-[![PyPI version](https://img.shields.io/pypi/v/adqa.svg)](https://pypi.org/project/adqa/)
-[![Crates.io](https://img.shields.io/crates/v/adqa-tui.svg)](https://crates.io/crates/adqa-tui)
-[![Python versions](https://img.shields.io/pypi/pyversions/adqa.svg)](https://pypi.org/project/adqa/)
+[![Release](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release.yml/badge.svg)](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release.yml)
+[![Docs](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/CD-Docs.yml/badge.svg)](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/)
+[![PyPI version](https://img.shields.io/pypi/v/adqa?include_prereleases&color=blue)](https://pypi.org/project/adqa/)
+[![Crates.io](https://img.shields.io/crates/v/adqa-tui?color=orange)](https://crates.io/crates/adqa-tui)
+[![Python versions](https://img.shields.io/pypi/pyversions/adqa)](https://pypi.org/project/adqa/)
+<br />
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Documentation](https://img.shields.io/badge/docs-live-brightgreen.svg)](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Downloads](https://static.pepy.tech/badge/adqa)](https://pepy.tech/project/adqa)
 
 **The intelligent, autonomous agent for high-performance data quality inspection, risk detection, and automated remediation.**
 
-[Getting Started](#-getting-started) • [Key Features](#-key-features) • [Documentation](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/) • [Rust TUI](#-rust-tui)
+[Getting Started](#-getting-started) • [Key Features](#-key-features) • [Documentation](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/) • [Rust TUI](#-rust-tui) • [Contributing](#-contributing)
 
 </div>
 
 ---
 
-**ADQA** is built for the era of **Data-centric AI**. It helps Data Scientists and Engineers ensure their models are trained on clean, reliable, and safe data by automating the boring parts of data quality: profiling, detecting anomalies, explaining risks, and proposing (or applying) fixes.
+## 🧐 Why ADQA?
+
+In the era of **Data-centric AI**, your models are only as good as your data. Yet, Data Scientists spend up to **80% of their time** cleaning data.
+
+ADQA solves this by providing an **autonomous loop**:
+1.  **Observe**: Deep multi-dimensional profiling of your dataset.
+2.  **Orient**: Detect complex risks like PII leakage, statistical bias, and structural anomalies.
+3.  **Decide**: Generate an execution plan with prioritized remediations.
+4.  **Act**: Heal the data autonomously or with human oversight.
 
 ## 🚀 Vision
 
-Data quality is the #1 bottleneck in AI development. ADQA combines a powerful **Python library** for automated pipelines with a high-performance **Rust-based TUI** for interactive observability, providing a seamless bridge between automated remediation and human oversight.
+ADQA combines a robust **Python backend** for seamless pipeline integration with a high-performance **Rust-based TUI** for interactive observability. It bridges the gap between fully automated data engineering and the critical need for human intuition in data quality.
 
 ## 📚 Documentation
 
-For full documentation, architecture details, and API reference, visit:
+Detailed guides, architecture deep-dives, and full API references are available at:
 **[Mohammad-Talaat7.github.io/autonomous-data-quality-agent](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/)**
 
 ## ✨ Key Features
 
-- **🔍 Multi-Source Ingress:** Seamlessly connect to CSV, Parquet, Excel, SQL databases, S3, and 300+ SaaS sources via **Airbyte**.
+- **🔍 Multi-Source Ingress:** Direct support for CSV, Parquet, Excel, SQL (Postgres, MySQL, etc.), S3, and **300+ SaaS sources** via Airbyte.
 - **🧠 Intelligent Profiling:** 
-    - **Structural:** Null ratios, cardinality, and type inference.
-    - **Behavioral:** Outlier detection, skewness, and pattern identification.
-    - **Semantic:** ML-driven classification of PII and domain-specific data types.
+    - **Structural:** Automated type inference and null-ratio analysis.
+    - **Behavioral:** Outlier detection (Z-score/IQR), skewness, and cardinality.
+    - **Semantic:** ML classifiers identify PII (Emails, SSNs, CCs) and domain-specific types.
 - **🚨 Hybrid Risk Detection:** 
-    - **Rule-based:** Deterministic checks for missing values, range violations, and duplicates.
-    - **ML-based:** Structural anomalies via **Isolation Forest**, PII leakage, and statistical bias.
+    - **Rule-based:** Deterministic checks for drift, range violations, and duplicates.
+    - **ML-based:** Advanced anomaly detection via **Isolation Forests** and bias identification.
 - **🛠️ Autonomous Remediation:** 
-    - **Advisory Mode:** Observe what would happen without modifying data.
-    - **Automatic Mode:** Heal data autonomously (impute, drop, clip, mask).
-    - **Human-in-the-Loop:** Interactive approval of proposed fixes via CLI or TUI.
-- **📜 Full Traceability:** Detailed execution traces and data lineage for every decision made by the agent.
+    - **Advisory Mode:** Generate audit-ready reports of what *should* be fixed.
+    - **Automatic Mode:** Fully autonomous healing (impute, drop, clip, mask).
+    - **Human-in-the-Loop:** Interactive approval of fixes via CLI or TUI.
+- **📜 Full Traceability:** Industry-standard data lineage and execution traces for every transformation.
 
 ## 📦 Installation
 
 ### Python Library & CLI
 ```bash
 pip install adqa
-```
-For full ML capabilities:
-```bash
+# Or for full ML + Data Ingress capabilities:
 pip install "adqa[all]"
 ```
 
 ### Rust TUI
-You can download the pre-compiled binaries from the [Releases](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/releases) page, or install via cargo:
+The TUI is distributed as a standalone binary. Install via cargo:
 ```bash
 cargo install adqa-tui
 ```
+*Or download pre-compiled binaries from the [Releases](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/releases) page.*
 
 ## 🛠 Usage
 
 ### Command Line Interface (CLI)
+Quickly inspect any dataset:
 ```bash
-# Basic advisory analysis
-adqa analyze data.csv
-
-# Run in automatic remediation mode and save results
-adqa analyze data.csv --mode automatic --output cleaned_data.csv
+adqa analyze my_data.parquet --mode advisory
 ```
 
 ### Python API
+Integrate into your training or ETL pipelines:
 ```python
-from adqa import ADQA, DataSource
+from adqa import ADQA, ADQAConfig
 
-# Initialize and run
-agent = ADQA.from_path("path/to/data.csv")
+# High-performance profiling and detection
+agent = ADQA.from_path("data.csv", config=ADQAConfig(execution_mode="automatic"))
 result = agent.analyze()
 
-# View summary and get healed data
+# Access the healed dataframe immediately
+clean_df = result.dataframe
 print(result.summary())
-df_cleaned = result.dataframe
 ```
 
 ## 🖥 Rust TUI
 
-Experience real-time data quality monitoring. The ADQA TUI provides an interactive dashboard to explore profiles, monitor detection events, and approve remediations.
+Monitor your agent's reasoning in real-time. The Rust TUI provides a zero-latency dashboard for exploring data lineages, trace events, and approving remediation plans.
 
 ```bash
 adqa-tui
 ```
 
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) to get started with:
+- Adding new **Detectors**.
+- Improving the **Scoring Engine**.
+- Enhancing the **Rust TUI**.
+
 ## 📄 License
 
-MIT License. See [LICENSE](LICENSE) for details.
+ADQA is released under the **MIT License**. See [LICENSE](LICENSE) for details.
