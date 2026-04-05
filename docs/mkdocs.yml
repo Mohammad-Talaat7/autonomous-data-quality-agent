@@ -2,6 +2,8 @@ site_name: ADQA - Autonomous Data Quality Agent
 site_description: Autonomous data quality agent for profiling, detecting, and healing data issues.
 repo_url: https://github.com/google/autonomous-data-quality-agent
 edit_uri: edit/main/docs/
+docs_dir: .
+site_dir: ../site
 
 theme:
   name: material
@@ -49,10 +51,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          setup_commands:
-            - import os
-            - import sys
-            - sys.path.append(os.path.abspath("src"))
+          paths: [../src]
 
 markdown_extensions:
   - pymdownx.highlight:
