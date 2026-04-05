@@ -6,6 +6,7 @@ from .configs import (
     DatabaseSourceConfig,
     DataFrameSourceConfig,
     ExcelSourceConfig,
+    JSONSourceConfig,
     NoSQLSourceConfig,
     ParquetSourceConfig,
     RemoteFileSourceConfig,
@@ -20,6 +21,7 @@ from .readers.data_warehouses import WarehouseReader
 from .readers.database import DatabaseReader
 from .readers.dataframe import DataFrameReader
 from .readers.excel import ExcelReader
+from .readers.json import JSONReader
 from .readers.nosql import NoSQLReader
 from .readers.parquet import ParquetReader
 from .readers.remote_file import RemoteFileReader
@@ -40,6 +42,9 @@ class DataReaderFactory:
 
             case ExcelSourceConfig():
                 return ExcelReader(cfg.path, cfg.sheet_name)
+
+            case JSONSourceConfig():
+                return JSONReader(cfg.path, cfg.orient)
 
             case DatabaseSourceConfig():
                 return DatabaseReader(cfg.connection_url, cfg.query)

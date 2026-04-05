@@ -15,6 +15,12 @@ def normalize_detection_results(
     # -------- Rules --------
     if detection_results:
         for r in detection_results:
+            column = getattr(r, "column", None)
+            if column is None:
+                cols = getattr(r, "columns", [])
+                if cols:
+                    column = cols[0]
+
             normalized.append(
                 NormalizedDetection(
                     detector_id=getattr(r, "detector_name", "unknown"),
@@ -22,7 +28,7 @@ def normalize_detection_results(
                     rule_id=r.issue_type,
                     issue_type=r.issue_type,
                     dimension=getattr(r, "dimension", "unknown"),
-                    column=getattr(r, "column", None),
+                    column=column,
                     severity=getattr(r, "severity_hint", 0.0),
                     confidence=getattr(r, "confidence", 1.0),
                     metadata=getattr(r, "metrics", {}),

@@ -29,6 +29,9 @@ class NoOpTraceEmitter:
     def emit(self, event: TraceEvent) -> None:
         pass
 
+    def trace(self, name: str, metadata: dict[str, Any] | None = None) -> None:
+        pass
+
     @contextmanager
     def span(self, name: str, **kwargs: Any) -> Iterator[None]:
         yield None
@@ -45,3 +48,6 @@ class NoOpLineageRecorder:
         metadata: dict[str, TraceValue] | None = None,
     ) -> None:
         pass
+
+    def get(self, trace_id: UUID) -> list[Any]:
+        return []

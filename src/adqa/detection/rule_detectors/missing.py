@@ -1,4 +1,4 @@
-# detection/rule_detectors/missing.py
+# missing.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, DetectionContext, QualityDimension
@@ -16,7 +16,12 @@ class MissingValuesDetector(ColumnDetector):
         self, column: str, context: DetectionContext
     ) -> list[DetectionResult]:
         profile = context.get_column(column)
-        ratio = getattr(profile, "null_ratio", 0)
+
+        ratio = 0.0
+        if hasattr(profile, "structural_metrics") and profile.structural_metrics:
+            ratio = profile.structural_metrics.null_ratio
+        else:
+            ratio = getattr(profile, "null_ratio", 0.0)
 
         if ratio > self.threshold:
             return [
@@ -24,10 +29,10 @@ class MissingValuesDetector(ColumnDetector):
                     detector_name=self.name,
                     issue_type="missing_values",
                     column=column,
-                    severity_hint=min(ratio, 1.0),
+                    severity_hint=ratio,
                     metrics={"observed_value": ratio, "threshold": self.threshold},
                     description=f"{column} has {ratio:.2%} missing values"
-                    + " (threshold: {self.threshold:.2%})",
+                    + f" (threshold: {self.threshold:.2%})",
                 )
             ]
         return []

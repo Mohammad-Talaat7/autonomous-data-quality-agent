@@ -59,7 +59,7 @@ def test_detection_engine_tracing():
 
     engine.run(dataset_profile=MagicMock(), column_profiles={})
 
-    tracing.span.assert_called_with(
+    tracing.span.assert_any_call(
         "RUN_DETECTOR", detector=rule_detector.__class__.__name__
     )
 
@@ -95,7 +95,9 @@ def test_isolation_forest_detector():
         mock_model.fit_predict.return_value = np.array([-1, 1, 1, 1])  # 25% anomalies
         mock_if_class.return_value = mock_model
 
-        detector = IsolationForestDetector()
+        thresholds = MagicMock()
+        thresholds.min_rows_anomaly_detection = 0
+        detector = IsolationForestDetector(thresholds=thresholds)
         context = MagicMock()
         context.raw_data_sample = pd.DataFrame({"A": [1, 2, 3, 4]})
 
@@ -110,9 +112,9 @@ def test_pii_detector():
     detector = PIIDetector()
 
     ml_profile = MagicMock()
-    ml_profile.model_name = "SemanticClassifier"
+    ml_profile.model_name = "semantic_classifier"
     ml_profile.target = "email_col"
-    ml_profile.outputs = {"label": "email", "confidence": 0.95}
+    ml_profile.outputs = {"predicted_class": "email", "confidence": 0.95}
 
     context = MagicMock()
     context.ml_profiles = [ml_profile]

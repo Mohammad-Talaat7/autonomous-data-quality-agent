@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from .enums import (
@@ -31,7 +31,7 @@ class TraceEvent:
     severity: TraceSeverity = TraceSeverity.INFO
 
     name: str = ""
-    timestamp: datetime = field(default_factory=lambda: datetime.now(tz=UTC))
+    timestamp: datetime = field(default_factory=lambda: datetime.now())
 
     inputs: dict[str, TraceValue] | None = None
     outputs: dict[str, TraceValue] | None = None
@@ -40,6 +40,8 @@ class TraceEvent:
     parent_event_id: UUID | None = None
 
     def to_dict(self) -> TraceEventDict:
+        from .hooks.serialize import to_trace_value
+
         return {
             "event_id": str(self.event_id),
             "trace_id": str(self.trace_id),
@@ -51,7 +53,15 @@ class TraceEvent:
             "severity": self.severity.value,
             "name": self.name,
             "timestamp": self.timestamp.isoformat(),
-            "inputs": self.inputs,
-            "outputs": self.outputs,
-            "metadata": self.metadata,
+            "inputs": (
+                {k: to_trace_value(v) for k, v in self.inputs.items()}
+                if self.inputs
+                else None
+            ),
+            "outputs": (
+                {k: to_trace_value(v) for k, v in self.outputs.items()}
+                if self.outputs
+                else None
+            ),
+            "metadata": {k: to_trace_value(v) for k, v in self.metadata.items()},
         }

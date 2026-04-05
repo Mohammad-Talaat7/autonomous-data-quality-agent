@@ -34,6 +34,8 @@ class S3Reader(DataReader):
 
         if self.format == "csv":
             return pd.read_csv(content)
+        elif self.format == "json":
+            return pd.read_json(content)
         elif self.format == "parquet":
             try:
                 return pd.read_parquet(content)

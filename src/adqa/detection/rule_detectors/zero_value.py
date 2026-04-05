@@ -28,7 +28,7 @@ class ZeroValueDetector(ColumnDetector):
             return [
                 DetectionResult(
                     detector_name=self.name,
-                    issue_type="excessive_zeros",
+                    issue_type="zero_value",
                     column=column,
                     severity_hint=min(ratio, 1.0),
                     metrics={

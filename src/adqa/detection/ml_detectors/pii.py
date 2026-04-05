@@ -8,7 +8,7 @@ from ..results import MLEvidence
 
 class PIIDetector(BaseMLDetector):
     name = "PIIDetector"
-    dimension = QualityDimension.INTEGRITY  # PII is an integrity/security risk
+    dimension = QualityDimension.PRIVACY
 
     def __init__(self, **kwargs: Any) -> None:
         pass
@@ -19,11 +19,21 @@ class PIIDetector(BaseMLDetector):
             return []
 
         results = []
-        pii_types = {"email", "phone", "ssn", "credit_card", "address", "name"}
+        pii_types = {
+            "email",
+            "phone",
+            "ssn",
+            "credit_card",
+            "address",
+            "name",
+            "date_of_birth",
+            "bank_account",
+            "driver_license",
+        }
 
         for ml in ml_profiles:
-            if ml.model_name == "SemanticClassifier":
-                label = ml.outputs.get("label")
+            if ml.model_name == "semantic_classifier":
+                label = ml.outputs.get("predicted_class")
                 confidence = ml.outputs.get("confidence", 0.0)
 
                 if label in pii_types and confidence > 0.6:
@@ -34,7 +44,7 @@ class PIIDetector(BaseMLDetector):
                             column=ml.target,
                             score=confidence,
                             confidence=0.9,
-                            metadata={"pii_type": label},
+                            metadata={"pii_type": label, "pii_score": confidence},
                         )
                     )
         return results

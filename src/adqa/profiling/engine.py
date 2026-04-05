@@ -222,10 +222,47 @@ class ProfilingEngine:
             )
 
         # =========================
-        # Rounding
+        # Rounding & Enrichment
         # =========================
 
         precision = self._profiling_config.rounding_precision
+
+        # Enrich column profiles with ML semantic tags if available
+        if ml_profiles:
+            enriched_columns = []
+            ml_map = {
+                m.target: m.outputs.get("predicted_class")
+                for m in ml_profiles
+                if m.model_name == "semantic_classifier"
+            }
+
+            from .models.column_profile import ColumnProfile, SemanticTag
+
+            for col in column_profiles:
+                tag_val = ml_map.get(col.name)
+                if tag_val:
+                    # Convert string label to SemanticTag enum if possible
+                    try:
+                        tag = SemanticTag(str(tag_val).lower())
+                        # Create new profile with tags (frozen dataclass)
+                        new_col = ColumnProfile(
+                            name=col.name,
+                            dtype=col.dtype,
+                            logical_type=col.logical_type,
+                            structural_metrics=col.structural_metrics,
+                            numeric_metrics=col.numeric_metrics,
+                            categorical_metrics=col.categorical_metrics,
+                            datetime_metrics=col.datetime_metrics,
+                            text_metrics=col.text_metrics,
+                            behavioral_metrics=col.behavioral_metrics,
+                            semantic_tags=(tag,),
+                        )
+                        enriched_columns.append(new_col)
+                        continue
+                    except ValueError:
+                        pass
+                enriched_columns.append(col)
+            column_profiles = tuple(enriched_columns)
 
         dataset_profile = DatasetProfile(
             metadata=dataset_metadata,
@@ -310,22 +347,23 @@ class ProfilingEngine:
         max_workers = self._profiling_config.max_workers
         thresholds = self._profiling_config.thresholds
 
-        # Parallel processing if multiple workers allowed and enough columns
-        if max_workers is not None and max_workers > 1 and len(df.columns) > 1:
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                # Need to use a lambda or partial to pass thresholds
-                from functools import partial
+        with self._tracer.span("COLUMN_PROFILING", count=len(df.columns)):
+            # Parallel processing if multiple workers allowed and enough columns
+            if max_workers is not None and max_workers > 1 and len(df.columns) > 1:
+                with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                    # Need to use a lambda or partial to pass thresholds
+                    from functools import partial
 
-                profile_func = partial(profile_column, thresholds=thresholds)
-                profiles = list(
-                    executor.map(profile_func, [df[col] for col in df.columns])
-                )
-        else:
-            profiles = []
-            for column_name in df.columns:
-                series = df[column_name]
-                profile = profile_column(series, thresholds=thresholds)
-                profiles.append(profile)
+                    profile_func = partial(profile_column, thresholds=thresholds)
+                    profiles = list(
+                        executor.map(profile_func, [df[col] for col in df.columns])
+                    )
+            else:
+                profiles = []
+                for column_name in df.columns:
+                    series = df[column_name]
+                    profile = profile_column(series, thresholds=thresholds)
+                    profiles.append(profile)
 
         # Deterministic ordering
         profiles.sort(key=lambda p: p.name)

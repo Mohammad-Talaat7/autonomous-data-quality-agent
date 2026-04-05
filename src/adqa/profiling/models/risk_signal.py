@@ -30,3 +30,11 @@ class RiskSignal:
     subject: str  # column name or "dataset"
     value: float | bool | str
     metadata: Mapping[str, Any] | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "type": self.type.value,
+            "subject": self.subject,
+            "value": self.value,
+            "metadata": dict(self.metadata) if self.metadata else None,
+        }

@@ -33,6 +33,21 @@ class DetectionResult:
 
     id: str = field(default_factory=_generate_id)
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "detector_name": self.detector_name,
+            "issue_type": self.issue_type,
+            "dimension": self.dimension,
+            "column": self.column,
+            "columns": self.columns,
+            "scope": self.scope,
+            "severity_hint": self.severity_hint,
+            "confidence": self.confidence,
+            "metrics": self.metrics,
+            "description": self.description,
+        }
+
 
 # =========================
 # ML Evidence (Signals Only)
@@ -54,6 +69,18 @@ class MLEvidence:
 
     id: str = field(default_factory=_generate_id)
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "model_name": self.model_name,
+            "signal_type": self.signal_type,
+            "dimension": self.dimension,
+            "column": self.column,
+            "score": self.score,
+            "confidence": self.confidence,
+            "metadata": self.metadata,
+        }
+
 
 # =========================
 # Aggregated Output
@@ -68,3 +95,9 @@ class DetectionResultBundle:
     def extend(self, other: "DetectionResultBundle") -> None:
         self.detections.extend(other.detections)
         self.ml_evidence.extend(other.ml_evidence)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "detections": [d.to_dict() for d in self.detections],
+            "ml_evidence": [e.to_dict() for e in self.ml_evidence],
+        }

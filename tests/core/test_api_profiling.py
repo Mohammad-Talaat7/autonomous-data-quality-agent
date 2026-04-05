@@ -16,9 +16,8 @@ def test_adqa_analyze_with_profiling():
         }
     )
 
-    config = ADQAConfig(data_source=DataSource.dataframe(df), tracing_enabled=False)
-
-    agent = ADQA(config=config)
+    config = ADQAConfig(tracing_enabled=False)
+    agent = ADQA(data_source=DataSource.dataframe(df), config=config)
     result = agent.analyze()
 
     assert result.dataframe is not None

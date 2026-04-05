@@ -16,22 +16,25 @@ class ImbalanceDetector(ColumnDetector):
         self, column: str, context: DetectionContext
     ) -> list[DetectionResult]:
         profile = context.get_column(column)
-        dist = getattr(profile, "value_distribution", None)
 
-        if not dist:
-            return []
+        # In ADQA, mode_ratio in categorical_metrics indicates the
+        # dominance of the top class
+        ratio = 0.0
+        if hasattr(profile, "categorical_metrics") and profile.categorical_metrics:
+            ratio = profile.categorical_metrics.mode_ratio
+        else:
+            # Fallback to general attribute
+            ratio = getattr(profile, "mode_ratio", 0.0)
 
-        max_ratio = max(dist.values())
-
-        if max_ratio > self.threshold:
+        if ratio > self.threshold:
             return [
                 DetectionResult(
                     detector_name=self.name,
                     issue_type="imbalance",
                     column=column,
-                    severity_hint=max_ratio,
-                    metrics={"observed_value": max_ratio, "threshold": self.threshold},
-                    description=f"{column} is highly imbalanced ({max_ratio:.2%})",
+                    severity_hint=ratio,
+                    metrics={"observed_value": ratio, "threshold": self.threshold},
+                    description=f"{column} is highly imbalanced ({ratio:.2%})",
                 )
             ]
         return []

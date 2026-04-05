@@ -27,7 +27,7 @@ class RangeDetector(ColumnDetector):
             results.append(
                 DetectionResult(
                     detector_name=self.name,
-                    issue_type="range_violation_min",
+                    issue_type="range_violation",
                     column=column,
                     severity_hint=1.0,
                     metrics={
@@ -43,7 +43,7 @@ class RangeDetector(ColumnDetector):
             results.append(
                 DetectionResult(
                     detector_name=self.name,
-                    issue_type="range_violation_max",
+                    issue_type="range_violation",
                     column=column,
                     severity_hint=1.0,
                     metrics={

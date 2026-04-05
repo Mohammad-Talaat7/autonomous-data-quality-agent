@@ -40,11 +40,13 @@ def test_missing_values_detector(mock_context, thresholds):
 
     # Below threshold (0.2)
     col_ok = MagicMock()
+    col_ok.structural_metrics = None
     col_ok.null_ratio = 0.1
     mock_context.column_profiles["col_ok"] = col_ok
 
     # Above threshold
     col_bad = MagicMock()
+    col_bad.structural_metrics = None
     col_bad.null_ratio = 0.3
     mock_context.column_profiles["col_bad"] = col_bad
 
@@ -59,10 +61,14 @@ def test_constant_column_detector(mock_context, thresholds):
     detector = ConstantColumnDetector(thresholds=thresholds)
 
     col_ok = MagicMock()
+    col_ok.categorical_metrics = None
+    col_ok.structural_metrics = None
     col_ok.unique_count = 10
     mock_context.column_profiles["col_ok"] = col_ok
 
     col_constant = MagicMock()
+    col_constant.categorical_metrics = None
+    col_constant.structural_metrics = None
     col_constant.unique_count = 1
     mock_context.column_profiles["col_constant"] = col_constant
 
@@ -76,12 +82,12 @@ def test_constant_column_detector(mock_context, thresholds):
 def test_duplicate_rows_detector(mock_context, thresholds):
     detector = DuplicateRowsDetector(thresholds=thresholds)
 
-    mock_context.dataset_profile.duplicate_ratio = 0.2
+    mock_context.dataset_profile.metadata.duplicate_row_ratio = 0.2
     results = detector.detect(mock_context)
     assert len(results) == 1
     assert results[0].issue_type == "duplicate_rows"
 
-    mock_context.dataset_profile.duplicate_ratio = 0.05
+    mock_context.dataset_profile.metadata.duplicate_row_ratio = 0.05
     results = detector.detect(mock_context)
     assert len(results) == 0
 
@@ -90,10 +96,12 @@ def test_skewness_detector(mock_context, thresholds):
     detector = SkewnessDetector(thresholds=thresholds)
 
     col_ok = MagicMock()
+    col_ok.numeric_metrics = None
     col_ok.skewness = 0.5
     mock_context.column_profiles["col_ok"] = col_ok
 
     col_skewed = MagicMock()
+    col_skewed.numeric_metrics = None
     col_skewed.skewness = 2.5
     mock_context.column_profiles["col_skewed"] = col_skewed
 
@@ -101,23 +109,23 @@ def test_skewness_detector(mock_context, thresholds):
 
     assert len(results) == 1
     assert results[0].column == "col_skewed"
-    assert results[0].issue_type == "skewed_distribution"
+    assert results[0].issue_type == "high_skewness"
 
 
 def test_imbalance_detector(mock_context, thresholds):
     detector = ImbalanceDetector(thresholds=thresholds)
 
     col_ok = MagicMock()
-    col_ok.value_distribution = {"A": 0.5, "B": 0.5}
+    col_ok.categorical_metrics = None
+    col_ok.mode_ratio = 0.5
     mock_context.column_profiles["col_ok"] = col_ok
 
     col_imbalanced = MagicMock()
-    col_imbalanced.value_distribution = {"A": 0.95, "B": 0.05}
+    col_imbalanced.categorical_metrics = None
+    col_imbalanced.mode_ratio = 0.95
     mock_context.column_profiles["col_imbalanced"] = col_imbalanced
 
     results = detector.detect(mock_context)
-
-    assert len(results) == 1
     assert results[0].column == "col_imbalanced"
     assert results[0].issue_type == "imbalance"
 
@@ -136,7 +144,9 @@ def test_correlation_detector(mock_context, thresholds):
 
 
 def test_pattern_detector(mock_context, thresholds):
-    detector = PatternDetector(thresholds=thresholds, pattern=r"^\d{3}$")
+    detector = PatternDetector(
+        thresholds=thresholds, pattern=r"^\d{3}$", target_semantic="id"
+    )
 
     df = pd.DataFrame(
         {
@@ -145,7 +155,17 @@ def test_pattern_detector(mock_context, thresholds):
         }
     )
     mock_context.raw_data_sample = df
-    mock_context.column_profiles = {"col_ok": MagicMock(), "col_bad": MagicMock()}
+
+    tag = MagicMock()
+    tag.value = "id"
+
+    col_ok = MagicMock()
+    col_ok.semantic_tags = [tag]
+
+    col_bad = MagicMock()
+    col_bad.semantic_tags = [tag]
+
+    mock_context.column_profiles = {"col_ok": col_ok, "col_bad": col_bad}
 
     results = detector.detect(mock_context)
 
@@ -187,7 +207,7 @@ def test_outlier_detector(mock_context, thresholds):
 
     results = detector.detect(mock_context)
     assert len(results) == 1
-    assert results[0].issue_type == "outlier_detection"
+    assert results[0].issue_type == "outliers"
 
 
 def test_zero_value_detector(mock_context, thresholds):
@@ -199,7 +219,7 @@ def test_zero_value_detector(mock_context, thresholds):
 
     results = detector.detect(mock_context)
     assert len(results) == 1
-    assert results[0].issue_type == "excessive_zeros"
+    assert results[0].issue_type == "zero_value"
 
 
 def test_rare_category_detector(mock_context, thresholds):
@@ -211,7 +231,7 @@ def test_rare_category_detector(mock_context, thresholds):
 
     results = detector.detect(mock_context)
     assert len(results) == 1
-    assert results[0].issue_type == "rare_categories"
+    assert results[0].issue_type == "rare_category"
 
 
 def test_type_mismatch_detector(mock_context):

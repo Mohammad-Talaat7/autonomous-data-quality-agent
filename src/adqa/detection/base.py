@@ -35,6 +35,8 @@ class QualityDimension(StrEnum):
     INTEGRITY = "integrity"
     TIMELINESS = "timeliness"
     ACCURACY = "accuracy"
+    PRIVACY = "privacy"
+    BIAS = "bias"
 
 
 # =========================

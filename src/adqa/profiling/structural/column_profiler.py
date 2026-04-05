@@ -116,9 +116,13 @@ def compute_numeric_metrics(summary: ColumnSummary) -> NumericMetrics:
 # =========================
 
 
-def compute_categorical_metrics(summary: ColumnSummary) -> CategoricalMetrics:
+def compute_categorical_metrics(
+    summary: ColumnSummary, thresholds: ProfilingThresholds | None = None
+) -> CategoricalMetrics:
     clean = summary.clean_series
     total = summary.clean_count
+
+    rare_threshold = thresholds.rare_category_threshold if thresholds else 0.01
 
     if total == 0:
         return CategoricalMetrics(
@@ -127,6 +131,7 @@ def compute_categorical_metrics(summary: ColumnSummary) -> CategoricalMetrics:
             mode=None,
             mode_ratio=0.0,
             dominance_ratio=0.0,
+            rare_categories=[],
         )
 
     # Use pre-calculated value_counts if available
@@ -142,12 +147,18 @@ def compute_categorical_metrics(summary: ColumnSummary) -> CategoricalMetrics:
     mode = value_counts.index[0]
     mode_ratio = value_counts.iloc[0] / total
 
+    # Identify rare categories
+    rare_categories = (
+        value_counts[probabilities < rare_threshold].index.astype(str).tolist()
+    )
+
     return CategoricalMetrics(
         cardinality=int(summary.unique_count),
         entropy=float(entropy),
         mode=str(mode),
         mode_ratio=float(mode_ratio),
         dominance_ratio=float(mode_ratio),
+        rare_categories=rare_categories,
     )
 
 
@@ -245,7 +256,9 @@ def profile_column(
         numeric_metrics = compute_numeric_metrics(summary)
 
     elif logical_type == LogicalType.CATEGORICAL:
-        categorical_metrics = compute_categorical_metrics(summary)
+        categorical_metrics = compute_categorical_metrics(
+            summary, thresholds=thresholds
+        )
 
     elif logical_type == LogicalType.DATETIME:
         datetime_metrics = compute_datetime_metrics(summary)

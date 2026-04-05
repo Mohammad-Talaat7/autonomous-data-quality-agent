@@ -31,6 +31,12 @@ class ExcelSourceConfig(BaseSourceConfig):
     sheet_name: str | int = 0
 
 
+class JSONSourceConfig(BaseSourceConfig):
+    path: str
+    type: Literal[DataSourceType.JSON] = DataSourceType.JSON
+    orient: str = "records"
+
+
 class DatabaseSourceConfig(BaseSourceConfig):
     connection_url: str
     query: str
@@ -54,7 +60,7 @@ class S3SourceConfig(BaseSourceConfig):
 
 class RemoteFileSourceConfig(BaseSourceConfig):
     url: str
-    format: str  # csv | parquet | excel
+    format: str  # csv | parquet | excel | json
     type: Literal[DataSourceType.REMOTE_FILE] = DataSourceType.REMOTE_FILE
 
 

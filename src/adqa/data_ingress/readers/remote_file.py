@@ -11,7 +11,7 @@ from ..reader import DataReader
 class RemoteFileReader(DataReader):
     """
     Reads tabular data from an HTTP(S) endpoint.
-    Supported formats: csv, parquet, excel
+    Supported formats: csv, parquet, excel, json
     """
 
     def __init__(
@@ -46,6 +46,9 @@ class RemoteFileReader(DataReader):
 
         if self.format == "csv":
             return pd.read_csv(content)
+
+        if self.format == "json":
+            return pd.read_json(content)
 
         if self.format == "parquet":
             try:

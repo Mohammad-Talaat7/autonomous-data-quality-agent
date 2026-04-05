@@ -1,109 +1,82 @@
 # ADQA Data Ingress with PyAirByte
 
-ADQA uses the PyAirByte library as optional method for data ingestion, which supports 600+ connectors for both remote and local databases. PyAirByte alone is sufficient for most data ingestion needs without requiring additional libraries.
+ADQA uses the [PyAirByte](https://github.com/airbytehq/pyairbyte) library as an optional method for data ingestion, which supports 600+ connectors for both remote and local databases.
 
-You can explore available PyAirByte connectors by visiting [AirByte Connectors](https://airbyte.com/connectors) or by running the following code:
+## Integration Overview
+
+ADQA integrates PyAirByte through its `DataSource` abstraction, allowing you to use any Airbyte connector as a source for your data quality analysis.
+
+### Prerequisites
+
+To use Airbyte connectors, ensure you have the `airbyte` extra installed:
+
+```bash
+pip install "adqa[airbyte]"
+```
+
+## Using `DataSource.airbyte`
+
+The recommended way to use Airbyte with ADQA is through the `DataSource` factory.
+
+### Example: Using the Faker Source
 
 ```python
-from adqa.data_ingress.airbyte import ab
+from adqa import ADQA, DataSource
 
+# 1. Define the Airbyte source
+source = DataSource.airbyte(
+    source_name="source-faker",
+    config={"count": 500},
+    stream="users"
+)
+
+# 2. Initialize and run ADQA
+agent = ADQA(data_source=source)
+result = agent.analyze()
+
+print(result.summary())
+```
+
+## Direct Access to PyAirByte
+
+If you need lower-level access to PyAirByte functionality, you can import it directly (if installed). ADQA uses it internally in `adqa.data_ingress.readers.airbyte`.
+
+```python
+import airbyte as ab
+
+# List available connectors
 connectors = ab.get_available_connectors()
 print(connectors)
 ```
 
 ## Local Data Support
 
-For local data, PyAirByte supports local files (CSV/JSON/Parquet via source-file) and local databases (e.g., SQLite, PostgreSQL on localhost) directly—no extra libraries required for ingestion.
+For local data, PyAirByte supports local files (CSV/JSON/Parquet via `source-file`) and local databases (e.g., SQLite, PostgreSQL on localhost) directly.
 
-## Usage Examples
+## Advanced Examples
 
-Below are several examples demonstrating how to use PyAirByte for different data ingestion scenarios:
-
-### Example 1: Using Faker Source for Test Data
+### Reading from a Remote HTTPS URL
 
 ```python
-from adqa.data_ingress.airbyte import ab
-import pandas as pd
+from adqa import DataSource
 
-# Create a source using the faker connector to generate test data
-# Available streams: {'users', 'purchases', 'products'}
-source = ab.get_source(
-    "source-faker",
-    config={"count": 500},  # Generate 500 records
-    install_if_missing=True,
-)
-
-# Validate the connection and select all available data streams
-source.check()               # Validates the connection
-source.select_all_streams()  # Selects all available data streams
-result = source.read()      # Reads the data
-
-# List available streams
-print("Available streams:", list(result.streams.keys()))
-
-# Convert the result to a dataframe and display the first few rows
-df = result["users"].to_pandas()
-print(df.head())
-```
-
-### Example 2: Reading CSV Data from HTTPS URL
-
-```python
-from adqa.data_ingress.airbyte import ab
-import pandas as pd
-
-# Create a source to read CSV data from a remote HTTPS URL
-source = ab.get_source(
-    "source-file",
+source = DataSource.airbyte(
+    source_name="source-file",
     config={
-        "dataset_name": "epidemiology",  # Name for the dataset
+        "dataset_name": "epidemiology",
         "provider": {
-            "storage": "HTTPS",          # Data is stored on HTTPS
-            "user_agent": False          # Disable user agent
+            "storage": "HTTPS",
+            "user_agent": False
         },
         "url": "https://storage.googleapis.com/covid19-open-data/v2/latest/epidemiology.csv",
-        "format": "csv"                 # File format is CSV
+        "format": "csv"
     },
-    install_if_missing=True,
+    stream="epidemiology"
 )
-
-# Validate connection, select streams, and read data
-source.check()
-source.select_all_streams()
-result = source.read()
-
-# Convert the result to a dataframe and display the first few rows
-df = result['epidemiology'].to_pandas()  # Use the same name as dataset_name
-print(df.head())
 ```
 
-### Example 3: Reading Local CSV File
+## Why use Airbyte with ADQA?
 
-```python
-from adqa.data_ingress.airbyte import ab
-import pandas as pd
-
-# Create a source to read CSV data from a local file
-source = ab.get_source(
-    "source-file",
-    config={
-        "dataset_name": "local",        # Name for the dataset
-        "provider": {
-            "storage": "local",          # Data is stored locally
-            "user_agent": False          # Disable user agent
-        },
-        "url": "path/to/your/local/file.csv",
-        "format": "csv"                 # File format is CSV
-    },
-    install_if_missing=True,
-)
-
-# Validate connection, select streams, and read data
-source.check()
-source.select_all_streams()
-result = source.read()
-
-# Convert the result to a dataframe and display the first few rows
-df = result['local'].to_pandas()  # Use the same name as dataset_name
-print(df.head())
-```
+1. **Broad Connectivity**: Access 300+ SaaS platforms and databases.
+2. **Standardization**: Airbyte handles the complexity of API pagination, rate limiting, and schema discovery.
+3. **Seamless Integration**: Once configured as a `DataSource`, the data flows through ADQA's profiling and detection engines like any other local file.

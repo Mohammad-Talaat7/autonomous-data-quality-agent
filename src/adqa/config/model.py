@@ -8,7 +8,6 @@ from typing import Any, ClassVar, Literal
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from ..data_ingress.datasource import DataSource
 from .errors import ConfigError
 
 type JsonValue = (
@@ -57,7 +56,7 @@ class ProfilingThresholds(BaseModel):
 
 class DetectionThresholds(BaseModel):
     missing_values_threshold: float = 0.2
-    constant_column_threshold: int = 1
+    constant_column_threshold: float = 1.0
     duplicate_rows_threshold: float = 0.1
     imbalance_threshold: float = 0.9
     skewness_threshold: float = 1.0
@@ -75,7 +74,7 @@ class DetectionThresholds(BaseModel):
 
 
 class ProfilingConfig(BaseModel):
-    enable_ml: bool = False
+    enable_ml: bool = True
     enable_correlation: bool = True
     correlation_method: Literal["pearson", "kendall", "spearman"] = "pearson"
     rounding_precision: int = 4
@@ -97,6 +96,11 @@ class DetectionConfig(BaseModel):
     thresholds: DetectionThresholds = DetectionThresholds()
 
 
+class ScoringConfig(BaseModel):
+    # Map detector_id or rule_id to weight
+    weight_map: dict[str, float] = {}
+
+
 class ExecutionConfig(BaseModel):
     # Map issue types to desired actions (e.g., {"missing_values": "WARN"})
     issue_overrides: dict[str, str] = {}
@@ -106,7 +110,36 @@ class ExecutionConfig(BaseModel):
 
 
 class ADQAConfig(BaseModel):
-    data_source: DataSource
+    Mode: ClassVar[type[ExecutionMode]] = ExecutionMode
+    TraceStore: ClassVar[type[TraceStoreType]] = TraceStoreType
+
+    class Presets:
+        @staticmethod
+        def strict() -> ADQAConfig:
+            return ADQAConfig(
+                execution_mode=ExecutionMode.AUTOMATIC,
+                tracing_enabled=True,
+                lineage_enabled=True,
+                ml_enabled=True,
+                execution=ExecutionConfig(stop_on_block=True),
+            )
+
+        @staticmethod
+        def advisory() -> ADQAConfig:
+            return ADQAConfig(
+                execution_mode=ExecutionMode.ADVISORY,
+                tracing_enabled=True,
+                lineage_enabled=True,
+                ml_enabled=True,
+            )
+
+        @staticmethod
+        def fast() -> ADQAConfig:
+            return ADQAConfig(
+                execution_mode=ExecutionMode.ADVISORY,
+                profiling=ProfilingConfig(enable_ml=False, enable_correlation=False),
+            )
+
     tracing_enabled: bool = False
     lineage_enabled: bool = False
     ml_enabled: bool = False
@@ -114,7 +147,42 @@ class ADQAConfig(BaseModel):
     execution_mode: ExecutionMode = ExecutionMode.ADVISORY
     profiling: ProfilingConfig = ProfilingConfig()
     detection: DetectionConfig = DetectionConfig()
+    scoring: ScoringConfig = ScoringConfig()
     execution: ExecutionConfig = ExecutionConfig()
+
+    @classmethod
+    def from_cli_args(
+        cls,
+        mode: str,
+        tracing_enabled: bool,
+        ml_enabled: bool,
+        lineage_enabled: bool,
+        prof_ml_enabled: bool,
+        sample_size: int,
+        rounding_precision: int,
+        profiling_thresholds: dict[str, Any],
+        detection_thresholds: dict[str, Any],
+        stop_on_block: bool,
+    ) -> ADQAConfig:
+        return cls(
+            execution_mode=ExecutionMode(mode),
+            tracing_enabled=tracing_enabled,
+            ml_enabled=ml_enabled,
+            lineage_enabled=lineage_enabled,
+            profiling=ProfilingConfig(
+                enable_ml=prof_ml_enabled,
+                sample_size=sample_size,
+                rounding_precision=rounding_precision,
+                thresholds=ProfilingThresholds(**profiling_thresholds),
+            ),
+            detection=DetectionConfig(
+                enable_ml=ml_enabled,
+                thresholds=DetectionThresholds(**detection_thresholds),
+            ),
+            execution=ExecutionConfig(
+                stop_on_block=stop_on_block,
+            ),
+        )
 
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True, arbitrary_types_allowed=True
@@ -124,10 +192,17 @@ class ADQAConfig(BaseModel):
     @classmethod
     def set_defaults(cls, data: dict[str, Any]) -> dict[str, Any]:
         tracing = data.get("tracing_enabled", False)
+
         if tracing and data.get("trace_store") is None:
             data["trace_store"] = TraceStoreType.IN_MEMORY
+
         if not tracing:
             data["trace_store"] = None
+            # If tracing is disabled, lineage MUST be disabled
+            # too if not explicitly provided
+            if "lineage_enabled" not in data:
+                data["lineage_enabled"] = False
+
         return data
 
     @model_validator(mode="after")

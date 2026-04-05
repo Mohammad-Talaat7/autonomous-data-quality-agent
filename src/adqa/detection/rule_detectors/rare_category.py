@@ -28,7 +28,7 @@ class RareCategoryDetector(ColumnDetector):
             return [
                 DetectionResult(
                     detector_name=self.name,
-                    issue_type="rare_categories",
+                    issue_type="rare_category",
                     column=column,
                     severity_hint=0.5,
                     metrics={

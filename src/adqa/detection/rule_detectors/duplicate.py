@@ -13,7 +13,12 @@ class DuplicateRowsDetector(DatasetDetector):
         self.threshold = thresholds.duplicate_rows_threshold if thresholds else 0.1
 
     def detect(self, context: DetectionContext) -> list[DetectionResult]:
-        ratio = getattr(context.dataset_profile, "duplicate_ratio", 0)
+        # Access from dataset metadata
+        ratio = 0.0
+        if hasattr(context.dataset_profile, "metadata"):
+            ratio = context.dataset_profile.metadata.duplicate_row_ratio
+        else:
+            ratio = getattr(context.dataset_profile, "duplicate_ratio", 0.0)
 
         if ratio > self.threshold:
             return [
@@ -23,8 +28,8 @@ class DuplicateRowsDetector(DatasetDetector):
                     scope="dataset",
                     severity_hint=ratio,
                     metrics={"observed_value": ratio, "threshold": self.threshold},
-                    description=f"{ratio:.2%} duplicate rows"
-                    + " (threshold: {self.threshold:.2%})",
+                    description=f"{ratio:.2%} duplicate rows detected"
+                    + f" (threshold: {self.threshold:.2%})",
                 )
             ]
         return []

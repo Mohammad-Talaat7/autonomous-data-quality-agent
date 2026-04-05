@@ -18,13 +18,13 @@ license = "MIT"
 readme = "README.md"
 
 # Version is controlled dynamically via Git tags
-version = "0.0.0"
+version = "0.1.0"
 
 packages = [{ include = "adqa", from = "src" }]
 
-homepage = "https://github.com/<org>/adqa"
-repository = "https://github.com/<org>/adqa"
-documentation = "https://github.com/<org>/adqa/tree/main/docs"
+homepage = "https://github.com/google/autonomous-data-quality-agent"
+repository = "https://github.com/google/autonomous-data-quality-agent"
+documentation = "https://google.github.io/autonomous-data-quality-agent/"
 
 keywords = [
   "data-quality",
@@ -32,17 +32,22 @@ keywords = [
   "ai-agent",
   "llm",
   "mlops",
-  "dataops"
+  "dataops",
+  "observability",
+  "data-lineage",
+  "automated-remediation"
 ]
 
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
-  "Topic :: Software Development :: Data Engineering",
+  "Topic :: Software Development :: Quality Assurance",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.12"
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
 ]
 
 
@@ -150,26 +155,29 @@ pre-commit = "^3.6"
 types-requests = "^2.31"
 boto3-stubs = "^1.34.0"
 
+# ============================================================
+# Documentation dependencies
+# ============================================================
 
-# ============================================================
-# Dynamic versioning via Git tags
-# ============================================================
+[tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.7.1"
-
-[tool.poetry-dynamic-versioning]
-enable = true
-vcs = "git"
-style = "semver"
-
-# Optional but recommended:
-# Shows versions like: 0.2.0.dev5+githash on non-tagged commits
-dirty = true
+mkdocstrings = { extras = ["python"], version = "^0.26.1" }
+pymdown-extensions = "^10.9"
 
 
 # ============================================================
 # Tooling configuration
 # ============================================================
+
+[tool.poetry.scripts]
+adqa = "adqa.cli:main"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
+dirty = true
 
 [tool.black]
 line-length = 88
@@ -208,4 +216,3 @@ source = ["adqa"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
-

@@ -34,6 +34,8 @@ def pass_decision():
         severity_level="LOW",
         breakdown={},
         dimension_breakdown={},
+        column_breakdown={},
+        issue_map={},
         dominant_issues=[],
         affected_columns=[],
         thresholds_used={},
@@ -49,6 +51,8 @@ def fail_decision():
         severity_level="HIGH",
         breakdown={},
         dimension_breakdown={},
+        column_breakdown={},
+        issue_map={},
         dominant_issues=["missing_values"],
         affected_columns=["col1"],
         thresholds_used={},
@@ -58,18 +62,18 @@ def fail_decision():
 
 def test_advisory_mode_never_blocks(engine, fail_decision):
     config = MockConfig(execution_mode=ExecutionMode.ADVISORY)
-    result = engine.run(fail_decision, config)
+    result, _ = engine.run(fail_decision, config)
 
     assert not result.blocked
     assert not result.approval_requested
     # The FAIL should have been converted to WARN or started as WARN
     assert result.executed_actions[0].action_type == "WARN"
-    assert "Advisory" in result.executed_actions[0].reason
+    assert "[ADVICE]" in result.executed_actions[0].reason
 
 
 def test_human_in_loop_requests_approval(engine, fail_decision):
     config = MockConfig(execution_mode=ExecutionMode.HUMAN_IN_LOOP)
-    result = engine.run(fail_decision, config)
+    result, _ = engine.run(fail_decision, config)
 
     assert result.approval_requested
     assert len(result.executed_actions) == 0
@@ -78,7 +82,7 @@ def test_human_in_loop_requests_approval(engine, fail_decision):
 
 def test_automatic_mode_blocks(engine, fail_decision):
     config = MockConfig(execution_mode=ExecutionMode.AUTOMATIC)
-    result = engine.run(fail_decision, config)
+    result, _ = engine.run(fail_decision, config)
 
     assert result.blocked
     assert not result.approval_requested
@@ -90,12 +94,13 @@ def test_executor_handlers(engine, fail_decision):
 
     handled_actions = []
 
-    def my_handler(action, tracer):
+    def my_handler(action, tracer, df=None):
         handled_actions.append(action)
+        return df
 
     engine.executor.register_handler("BLOCK", my_handler)
 
-    _ = engine.run(fail_decision, config)
+    _, _ = engine.run(fail_decision, config)
 
     assert len(handled_actions) == 1
     assert handled_actions[0].action_type == "BLOCK"

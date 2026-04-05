@@ -38,6 +38,23 @@ SEMANTIC_REGISTRY = [
         keywords=("phone", "tel", "mobile", "cell"),
     ),
     SemanticRule(
+        name="credit_card",
+        pattern=re.compile(
+            r"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$"
+        ),
+        keywords=("credit", "card", "visa", "mastercard", "amex", "cc_number"),
+    ),
+    SemanticRule(
+        name="ssn",
+        pattern=re.compile(r"^\d{3}-\d{2}-\d{4}$|^\d{9}$"),
+        keywords=("ssn", "social_security", "national_id", "tax_id"),
+    ),
+    SemanticRule(
+        name="date_of_birth",
+        pattern=re.compile(r"^\d{4}-\d{2}-\d{2}$|^\d{2}/\d{2}/\d{4}$"),
+        keywords=("dob", "birth", "birthday", "born"),
+    ),
+    SemanticRule(
         name="ip_address",
         pattern=re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"),
         keywords=("ip", "address", "host"),

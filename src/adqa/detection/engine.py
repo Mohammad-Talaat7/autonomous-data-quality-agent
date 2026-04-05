@@ -32,6 +32,7 @@ class DetectionEngine:
         column_profiles: dict[str, Any],
         ml_profiles: Any | None = None,
         raw_data_sample: Any | None = None,
+        historical_profiles: Any | None = None,
     ) -> DetectionResultBundle:
         # Extract correlation matrix if available in dataset_profile
         correlation_matrix = None
@@ -44,6 +45,7 @@ class DetectionEngine:
             ml_profiles=ml_profiles,
             correlation_matrix=correlation_matrix,
             raw_data_sample=raw_data_sample,
+            historical_profiles=historical_profiles,
         )
 
         bundle = DetectionResultBundle()
@@ -51,16 +53,27 @@ class DetectionEngine:
         # -------------------------
         # Rule-based detection
         # -------------------------
-        for rule_det in self.rule_detectors:
-            results = self._run_rule_detector(rule_det, context)
-            bundle.detections.extend(results)
+        with self.tracing.span("RULE_BASED_DETECTION", count=len(self.rule_detectors)):
+            for rule_det in self.rule_detectors:
+                results = self._run_rule_detector(rule_det, context)
+                bundle.detections.extend(results)
 
         # -------------------------
         # ML-based detection
         # -------------------------
-        for ml_det in self.ml_detectors:
-            evidence = self._run_ml_detector(ml_det, context)
-            bundle.ml_evidence.extend(evidence)
+        with self.tracing.span("ML_BASED_DETECTION", count=len(self.ml_detectors)):
+            for ml_det in self.ml_detectors:
+                evidence = self._run_ml_detector(ml_det, context)
+                bundle.ml_evidence.extend(evidence)
+
+        if self.tracing:
+            self.tracing.trace(
+                "DETECTION_RESULTS",
+                {
+                    "rule_count": len(bundle.detections),
+                    "ml_count": len(bundle.ml_evidence),
+                },
+            )
 
         return bundle
 
@@ -90,9 +103,6 @@ class DetectionEngine:
     def _run_ml_detector(
         self, detector: BaseMLDetector, context: DetectionContext
     ) -> list[MLEvidence]:
-        if not context.has_ml():
-            return []
-
         if self.tracing:
             with self.tracing.span("ML_MODEL_RUN", model=detector.__class__.__name__):
                 evidence = detector.run_model(context)
@@ -136,8 +146,13 @@ class DetectionEngine:
                 self.lineage.record(
                     trace_id=trace_id,
                     operation=op_name,
-                    # We use inputs/outputs loosely as nodes here
-                    inputs={"dataset_profile": str(context.dataset_profile)},
+                    # Use summary metadata instead of full profile string
+                    inputs={
+                        "dataset_summary": {
+                            "rows": context.dataset_profile.metadata.row_count,
+                            "cols": context.dataset_profile.metadata.column_count,
+                        }
+                    },
                     outputs={"detection_id": getattr(output, "id", None)},
                     metadata={
                         "issue_type": getattr(output, "issue_type", None),

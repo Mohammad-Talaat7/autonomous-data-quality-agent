@@ -37,6 +37,21 @@ class TraceEmitter:
 
         self._store.append(event)
 
+    def trace(self, name: str, metadata: dict[str, Any] | None = None) -> None:
+        """
+        Quick helper to emit an INFO event.
+        """
+        from .enums import TraceEventType
+
+        self.emit(
+            TraceEvent(
+                trace_id=self.context.trace_id,
+                event_type=TraceEventType.INFO,
+                name=name,
+                metadata=metadata or {},
+            )
+        )
+
     @contextmanager
     def span(self, name: str, **kwargs: Any) -> Iterator[Any]:
         """

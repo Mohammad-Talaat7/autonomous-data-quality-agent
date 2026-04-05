@@ -17,13 +17,19 @@ class SkewnessDetector(ColumnDetector):
         self, column: str, context: DetectionContext
     ) -> list[DetectionResult]:
         profile = context.get_column(column)
-        skew = getattr(profile, "skewness", None)
+
+        # Access from numeric_metrics
+        skew = 0.0
+        if hasattr(profile, "numeric_metrics") and profile.numeric_metrics:
+            skew = profile.numeric_metrics.skewness
+        else:
+            skew = getattr(profile, "skewness", 0.0)
 
         if skew and abs(skew) > self.threshold:
             return [
                 DetectionResult(
                     detector_name=self.name,
-                    issue_type="skewed_distribution",
+                    issue_type="high_skewness",
                     column=column,
                     severity_hint=min(abs(skew) / 10, 1.0),
                     metrics={"observed_value": skew, "threshold": self.threshold},

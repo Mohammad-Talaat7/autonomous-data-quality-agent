@@ -7,6 +7,7 @@ class DataSourceType(Enum):
     CSV = "csv"
     PARQUET = "parquet"
     EXCEL = "excel"
+    JSON = "json"
 
     DATABASE = "database"  # SQL-like
     NOSQL = "nosql"  # document / key-value

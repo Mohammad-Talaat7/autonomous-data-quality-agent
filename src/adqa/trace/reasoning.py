@@ -69,11 +69,12 @@ class ReasoningTraceEvent(TraceEvent):
     @override
     def to_dict(self) -> ReasoningTraceEventDict:
         base = super().to_dict()
+        from .hooks.serialize import to_trace_value
 
         return {
             **base,
             "execution_event_id": str(self.execution_event_id),
             "confidence": self.confidence,
             "reasons": list(self.reasons),
-            "evidence": self.evidence,
+            "evidence": {k: to_trace_value(v) for k, v in self.evidence.items()},
         }

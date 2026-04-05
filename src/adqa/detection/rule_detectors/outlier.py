@@ -27,7 +27,7 @@ class OutlierDetector(ColumnDetector):
             return [
                 DetectionResult(
                     detector_name=self.name,
-                    issue_type="outlier_detection",
+                    issue_type="outliers",
                     column=column,
                     severity_hint=ratio,
                     metrics={"observed_value": ratio, "threshold": self.threshold},

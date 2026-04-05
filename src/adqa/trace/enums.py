@@ -26,6 +26,7 @@ class TraceEventType(StrEnum):
     SNAPSHOT = "snapshot"
     DATA_INGRESS = "data_ingress"
     PROFILING = "profiling"
+    INFO = "info"
 
 
 class TraceSeverity(StrEnum):

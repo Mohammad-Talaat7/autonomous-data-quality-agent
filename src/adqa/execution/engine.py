@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+import pandas as pd
+
 from .approval import ApprovalManager
 from .executor import ActionExecutor
 from .models import ActionPlan, ExecutionResult
@@ -21,7 +23,12 @@ class ExecutionEngine:
         self.executor = ActionExecutor()
         self.approval = ApprovalManager()
 
-    def run(self, decision: QualityDecision, config: ADQAConfig) -> ExecutionResult:
+    def run(
+        self,
+        decision: QualityDecision,
+        config: ADQAConfig,
+        df: pd.DataFrame | None = None,
+    ) -> tuple[ExecutionResult, pd.DataFrame | None]:
         """
         Evaluate policy using config and execute safe actions, or request approval.
         """
@@ -46,11 +53,18 @@ class ExecutionEngine:
                 self.tracer.trace("ACTION_APPROVAL_REQUIRED", approval_payload)
 
             if self.lineage:
-                self.lineage.record(
-                    "action_pending_approval", inputs=decision, outputs=approval_payload
+                trace_id = getattr(
+                    getattr(self.tracer, "context", None), "trace_id", None
                 )
+                if trace_id:
+                    self.lineage.record(
+                        trace_id=trace_id,
+                        operation="action_pending_approval",
+                        inputs=decision,
+                        outputs=approval_payload,
+                    )
 
-            return ExecutionResult(
+            result = ExecutionResult(
                 executed_actions=[],
                 approval_requested=True,
                 blocked=False,
@@ -58,15 +72,18 @@ class ExecutionEngine:
                 approval_payload=approval_payload,
                 plan=plan,
             )
+            return result, df
 
         # -------- execute actions --------
-        return self.execute_plan(plan)
+        return self.execute_plan(plan, df)
 
-    def execute_plan(self, plan: ActionPlan) -> ExecutionResult:
+    def execute_plan(
+        self, plan: ActionPlan, df: pd.DataFrame | None = None
+    ) -> tuple[ExecutionResult, pd.DataFrame | None]:
         """
         Directly execute an ActionPlan (e.g. after approval)
         """
-        result = self.executor.execute(plan, tracer=self.tracer)
+        result, processed_df = self.executor.execute(plan, tracer=self.tracer, df=df)
         result.plan = plan  # Ensure plan is attached to the result
 
         if self.tracer:
@@ -81,6 +98,13 @@ class ExecutionEngine:
 
         # -------- lineage --------
         if self.lineage:
-            self.lineage.record("action_execution", inputs=plan.summary, outputs=result)
+            trace_id = getattr(getattr(self.tracer, "context", None), "trace_id", None)
+            if trace_id:
+                self.lineage.record(
+                    trace_id=trace_id,
+                    operation="action_execution",
+                    inputs=plan.summary,
+                    outputs=result,
+                )
 
-        return result
+        return result, processed_df
