@@ -55,6 +55,8 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           files: coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
 
       - name: Lint (ruff)
         run: |
@@ -106,4 +108,15 @@ jobs:
 
       - name: Run tests (full)
         run: |
-          poetry run pytest
+          poetry run pytest \
+            --cov=src \
+            --cov-report=xml:coverage-full.xml \
+            --cov-report=term
+
+      - name: Upload coverage (full)
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage-full.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: full
+          fail_ci_if_error: false

@@ -1,0 +1,85 @@
+name: Release - Windows TUI
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    env:
+      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
+      TARGET: x86_64-pc-windows-msvc
+      BINARY_NAME: adqa-tui-windows-x86_64
+      PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-x86_64-pc-windows-msvc-shared-pgo-full.tar.zst"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ env.TARGET }}
+
+      - name: Setup Standalone Python
+        shell: bash
+        run: |
+          mkdir -p standalone_python
+          cd standalone_python
+          curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.zst
+          tar -xf python.tar.zst
+          mv python/install ../python_env
+          cd ..
+
+      - name: Install Backend Packages into Bundled Python
+        run: ./python_env/python.exe -m pip install .
+
+      - name: Sync Cargo.toml version
+        working-directory: adqa-tui
+        shell: bash
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            sed "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml > Cargo.toml.tmp && mv Cargo.toml.tmp Cargo.toml
+          fi
+
+      - name: Build TUI
+        working-directory: adqa-tui
+        shell: bash
+        run: |
+          PYTHON_ROOT_DIR=$(realpath "../python_env")
+          LIB_FILE=$(find "$PYTHON_ROOT_DIR" -name "python312.lib" | head -n 1)
+          LIB_DIR=$(cygpath -w "$(dirname "$LIB_FILE")")
+          PYO3_CONFIG_PATH=$(cygpath -w "$(pwd)/../pyo3-config.txt")
+          
+          cat <<CONF | sed 's/^[[:space:]]*//' > ../pyo3-config.txt
+          implementation=CPython
+          version=3.12
+          shared=true
+          lib_name=python312
+          lib_dir=$LIB_DIR
+          pointer_width=64
+          build_flags=
+          CONF
+          
+          export PYO3_CONFIG_FILE="$PYO3_CONFIG_PATH"
+          export RUSTFLAGS="-L $LIB_DIR"
+          
+          cargo build --release --target ${{ env.TARGET }}
+
+      - name: Prepare Standalone Package
+        shell: bash
+        run: |
+          mkdir -p adqa-tui-bundle
+          cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-tui-bundle/${{ env.BINARY_NAME }}.exe
+          cp -r python_env adqa-tui-bundle/python
+          find adqa-tui-bundle/python -name "__pycache__" -type d -exec rm -rf {} + || true
+          tar -czf ${{ env.BINARY_NAME }}.tar.gz adqa-tui-bundle/
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.BINARY_NAME }}.tar.gz

@@ -22,9 +22,9 @@ version = "0.1.0"
 
 packages = [{ include = "adqa", from = "src" }]
 
-homepage = "https://github.com/google/autonomous-data-quality-agent"
-repository = "https://github.com/google/autonomous-data-quality-agent"
-documentation = "https://google.github.io/autonomous-data-quality-agent/"
+homepage = "https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent"
+repository = "https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent"
+documentation = "https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/"
 
 keywords = [
   "data-quality",

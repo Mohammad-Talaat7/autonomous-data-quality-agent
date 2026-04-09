@@ -31,6 +31,54 @@ enum TuiEvent {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 1. Setup Python environment
+    
+    // Auto-detect bundled python environment for standalone distribution
+    if let Ok(exe_path) = env::current_exe() {
+        if let Some(exe_dir) = exe_path.parent() {
+            let bundled_py = exe_dir.join("python");
+            if bundled_py.exists() {
+                env::set_var("PYTHONHOME", &bundled_py);
+                
+                // Add site-packages to PYTHONPATH to ensure bundled dependencies are found
+                let site_packages = if cfg!(windows) {
+                    bundled_py.join("Lib").join("site-packages")
+                } else {
+                    // On Linux/macOS, it's usually lib/python3.x/site-packages
+                    // We'll search for it
+                    let mut sp = bundled_py.join("lib").join("python3.12").join("site-packages");
+                    if !sp.exists() {
+                        // Try to find it if version differs
+                        if let Ok(entries) = std::fs::read_dir(bundled_py.join("lib")) {
+                            for entry in entries.flatten() {
+                                if entry.file_name().to_string_lossy().starts_with("python") {
+                                    let p = entry.path().join("site-packages");
+                                    if p.exists() {
+                                        sp = p;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    sp
+                };
+
+                if site_packages.exists() {
+                    let existing = env::var("PYTHONPATH").unwrap_or_default();
+                    let separator = if cfg!(windows) { ";" } else { ":" };
+                    let new_path = if existing.is_empty() {
+                        site_packages.to_string_lossy().to_string()
+                    } else {
+                        format!("{}{}{}", site_packages.to_string_lossy(), separator, existing)
+                    };
+                    env::set_var("PYTHONPATH", new_path);
+                }
+            }
+        }
+    }
+
+    pyo3::prepare_freethreaded_python();
+    
     // Add local src to PYTHONPATH if it exists (for dev), otherwise rely on installed package
     if let Ok(current_dir) = env::current_dir() {
         if let Some(parent) = current_dir.parent() {

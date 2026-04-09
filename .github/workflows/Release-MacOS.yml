@@ -1,0 +1,95 @@
+name: Release - macOS TUI
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-apple-darwin
+            binary_name: adqa-tui-macos-x86_64
+            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-x86_64-apple-darwin-pgo+lto-full.tar.zst"
+          - target: aarch64-apple-darwin
+            binary_name: adqa-tui-macos-arm64
+            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-aarch64-apple-darwin-pgo+lto-full.tar.zst"
+    runs-on: macos-latest
+    env:
+      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Setup Standalone Python
+        shell: bash
+        run: |
+          mkdir -p standalone_python
+          cd standalone_python
+          curl -sfSL "${{ matrix.python_url }}" -o python.tar.zst
+          tar -xf python.tar.zst
+          mv python/install ../python_env
+          cd ..
+          chmod +x python_env/bin/python3
+
+      - name: Install Backend Packages into Bundled Python
+        run: ./python_env/bin/python3 -m pip install .
+
+      - name: Sync Cargo.toml version
+        working-directory: adqa-tui
+        shell: bash
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            sed "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml > Cargo.toml.tmp && mv Cargo.toml.tmp Cargo.toml
+          fi
+
+      - name: Build TUI
+        working-directory: adqa-tui
+        shell: bash
+        run: |
+          PYTHON_ROOT_DIR=$(realpath "../python_env")
+          LIB_FILE=$(find "$PYTHON_ROOT_DIR" -name "libpython3.12.dylib" | head -n 1)
+          LIB_DIR=$(dirname "$LIB_FILE")
+          
+          cat <<CONF | sed 's/^[[:space:]]*//' > ../pyo3-config.txt
+          implementation=CPython
+          version=3.12
+          shared=true
+          lib_name=python3.12
+          lib_dir=$LIB_DIR
+          pointer_width=64
+          build_flags=
+          CONF
+          
+          export PYO3_CONFIG_FILE="$(pwd)/../pyo3-config.txt"
+          export RUSTFLAGS="-L $LIB_DIR"
+          
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Prepare Standalone Package
+        shell: bash
+        run: |
+          mkdir -p adqa-tui-bundle
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui adqa-tui-bundle/${{ matrix.binary_name }}
+          cp -r python_env adqa-tui-bundle/python
+          find adqa-tui-bundle/python -name "__pycache__" -type d -exec rm -rf {} + || true
+          
+          # Fix rpath so the binary finds the bundled dylib
+          install_name_tool -add_rpath "@executable_path/python/lib" adqa-tui-bundle/${{ matrix.binary_name }} || true
+          
+          tar -czf ${{ matrix.binary_name }}.tar.gz adqa-tui-bundle/
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.binary_name }}.tar.gz
