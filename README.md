@@ -2,15 +2,16 @@
 
 <div align="center">
 
-[![Release](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release.yml/badge.svg)](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release.yml)
+[![Release - Linux](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release-Linux.yml/badge.svg)](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release-Linux.yml)
+[![Release - Windows](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release-Windows.yml/badge.svg)](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release-Windows.yml)
+[![Release - macOS](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release-MacOS.yml/badge.svg)](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/Release-MacOS.yml)
+[![Tests](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/CI-Pipeline.yml/badge.svg)](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/CI-Pipeline.yml)
 [![Docs](https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent/actions/workflows/CD-Docs.yml/badge.svg)](https://Mohammad-Talaat7.github.io/autonomous-data-quality-agent/)
 [![PyPI version](https://img.shields.io/pypi/v/adqa?include_prereleases&color=blue)](https://pypi.org/project/adqa/)
 [![Crates.io](https://img.shields.io/crates/v/adqa-tui?color=orange)](https://crates.io/crates/adqa-tui)
 [![Python versions](https://img.shields.io/pypi/pyversions/adqa)](https://pypi.org/project/adqa/)
 <br />
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![codecov](https://codecov.io/gh/Mohammad-Talaat7/autonomous-data-quality-agent/branch/main/graph/badge.svg)](https://codecov.io/gh/Mohammad-Talaat7/autonomous-data-quality-agent)
 
 **The intelligent, autonomous agent for high-performance data quality inspection, risk detection, and automated remediation.**
