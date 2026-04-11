@@ -77,7 +77,7 @@ jobs:
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-tui-bundle/${{ env.BINARY_NAME }}.exe
             cp -r python_env/* adqa-tui-bundle/
             find adqa-tui-bundle/ -name "__pycache__" -type d -exec rm -rf {} + || true
-            powershell Compress-Archive -Path adqa-tui-bundle/* -DestinationPath ${{ env.BINARY_NAME }}.zip
+            powershell -Command "7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-tui-bundle\*'"
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
