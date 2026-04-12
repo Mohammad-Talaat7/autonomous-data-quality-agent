@@ -210,3 +210,6 @@ __marimo__/
 # Rust TUI artifacts
 adqa-tui/target/
 adqa-tui/adqa_export.json
+
+# Personal files / Notes
+_My_files
