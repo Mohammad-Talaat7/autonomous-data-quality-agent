@@ -19,7 +19,7 @@ jobs:
       CLI_NAME: adqa-cli-win-x86_64
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-x86_64-pc-windows-msvc-shared-pgo-full.tar.zst"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -81,7 +81,13 @@ jobs:
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/${{ env.CLI_NAME }}.exe
             powershell -Command "7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'"
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: build-zip
+          path: ${{ env.BINARY_NAME }}.zip
+
       - name: Upload to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ${{ env.BINARY_NAME }}.zip
