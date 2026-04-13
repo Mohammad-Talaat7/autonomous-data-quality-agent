@@ -20,7 +20,7 @@ tokio = { version = "1.36", features = ["full"] }
 futures = "0.3"
 
 # Interop
-pyo3 = { version = "0.23" }
+pyo3 = { version = "0.23", features = ["auto-initialize"] }
 
 # Data
 serde = { version = "1.0", features = ["derive"] }
@@ -37,3 +37,11 @@ lto = true          # Enable Link Time Optimization
 codegen-units = 1   # Reduce parallel code generation units for better optimization
 panic = "abort"     # Abort on panic to reduce binary size
 strip = true        # Strip symbols from binary
+
+[[bin]]
+name = "adqa-cli"
+path = "src/cli_main.rs"
+
+[[bin]]
+name = "adqa-tui"
+path = "src/main.rs"
