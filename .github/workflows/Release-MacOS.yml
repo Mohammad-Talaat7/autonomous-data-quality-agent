@@ -1,4 +1,4 @@
-name: Release - macOS TUI
+name: Release-MacOS-x86_64-arm
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
     env:
       PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -90,6 +90,6 @@ jobs:
           tar -czf ${{ matrix.binary_name }}.tar.gz adqa-tui-bundle/
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ${{ matrix.binary_name }}.tar.gz

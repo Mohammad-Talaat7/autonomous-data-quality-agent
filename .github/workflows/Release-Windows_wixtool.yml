@@ -1,4 +1,4 @@
-name: Release - Windows TUI - temp / testing branch
+name: Release-win-x86_64-msi-wixtool
 
 on:
   push:
