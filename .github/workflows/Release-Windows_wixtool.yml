@@ -66,7 +66,7 @@ jobs:
         run: dotnet tool install --global wix
 
       - name: Build MSI Installer
-        run: wix build .\adqa-installer.wxs -o adqa-installer.msi
+        run: wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
 
       - name: Upload MSI as artifact
         uses: actions/upload-artifact@v5
