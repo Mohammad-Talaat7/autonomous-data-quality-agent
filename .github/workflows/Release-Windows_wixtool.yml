@@ -66,11 +66,11 @@ jobs:
       # why? Requires a sponsorship fee once you earn at least US $10,000 per year
       # The fee is about $10 per month for small organizations (<20 people).
       # WiX v5 did not have such a fee.
-      - name: Install WiX v7
-        run: dotnet tool install --global wix # --version 5.0.2
+      - name: Install WiX v5
+        run: dotnet tool install --global wix --version 5.0.2
 
       - name: Build MSI Installer
-        run: wix build -acceptEula wix7 ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
+        run: wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
 
       - name: Upload MSI as artifact
         uses: actions/upload-artifact@v5
