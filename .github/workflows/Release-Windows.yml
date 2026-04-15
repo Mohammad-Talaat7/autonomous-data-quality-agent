@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: cargo build --release --target ${{ env.TARGET }}
 
-      - name: Prepare Standalone Package
+      - name: Prepare Standalone Package 1
         shell: bash
         run: |
             mkdir -p adqa-win/bin
@@ -61,6 +61,10 @@ jobs:
             mkdir -p adqa-win/samples
             cp -r samples/* ./adqa-win/samples
 
+      - name: Clean and zip
+        shell: bash
+        run: |
+            ./distribution/gnu-full/minify_env_win.sh -y 
             7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'
 
       # Disable later, just for testing builds manual without publish tags
