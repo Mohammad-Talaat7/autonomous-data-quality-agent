@@ -19,8 +19,10 @@ jobs:
       TARGET: x86_64-pc-windows-msvc
       #BINARY_NAME: adqa-${{ github.ref_name }}-win-x86_64
       BINARY_NAME: adqa-win-x86_64
+
       #BINARY_NAME_SHORT: adqa-${{ github.ref_name }}-win
       BINARY_NAME_SHORT: adqa-win
+      
       TUI_NAME: adqa-tui
       CLI_NAME: adqa-cli
       # PYTHON_URL_FULL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-pgo-full.tar.zst"
@@ -113,6 +115,7 @@ jobs:
         run: dotnet tool install --global wix --version 5.0.2
 
       - name: Build MSI Installer
+        shell: bash
         run: |
             echo $PWD
             wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
