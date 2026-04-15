@@ -15,9 +15,10 @@ jobs:
     env:
       TARGET: x86_64-pc-windows-msvc
       BINARY_NAME: adqa-${{ github.ref_name }}-win-x86_64
-      tui_NAME: adqa-tui
+      TUI_NAME: adqa-tui
       CLI_NAME: adqa-cli
-      PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-x86_64-pc-windows-msvc-shared-pgo-full.tar.zst"
+      # PYTHON_URL_Full: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-pgo-full.tar.zst"
+      PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
     steps:
       - uses: actions/checkout@v5
       - name: Set up Rust
@@ -30,32 +31,36 @@ jobs:
         run: |
           mkdir -p standalone_python
           cd standalone_python
-          curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.zst
-          tar -xf python.tar.zst
-          mv python/install ../python_env
+          curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.gz
+          tar -xf python.tar.gz
+          mv python/ ../python_env
           cd ..
 
       - name: Install Backend Packages into Bundled Python
-        run: ./python_env/python.exe -m pip install .
+        shell: bash
+        run: |
+            ./python_env/python.exe -m pip install .
+            mv ./python_env/python.exe ./python_env/python.exe_disable
+            mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
+
 
       - name: Build TUI
         working-directory: adqa-tui
         shell: bash
         run: cargo build --release --target ${{ env.TARGET }}
 
-      - name: Clean python_env
-        shell: bash
-        run: |
-            # Run shellscript to clean python env
-            # find adqa-win/ -name "__pycache__" -type d -exec rm -rf {} + || true?
-
       - name: Prepare Standalone Package
         shell: bash
         run: |
             mkdir -p adqa-win/
-            cp -r python_env/* adqa-win/ 
-            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-win/${{ env.tui_NAME }}.exe
-            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/${{ env.CLI_NAME }}.exe
+            cp -r python_env/* adqa-win/bin
+            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-win/bin/${{ env.TUI_NAME }}.exe
+            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/bin/${{ env.CLI_NAME }}.exe
+
+            cp README.md adqa-win/
+            cp LICENSE adqa-win/
+            cp -r sample/ ./adqa-win/
+
             7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'
 
       # Disable later, just for testing builds manual without publish tags
