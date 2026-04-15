@@ -91,7 +91,7 @@ jobs:
       
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.binary_name }}
           path: ${{ matrix.binary_name }}.tar.gz
