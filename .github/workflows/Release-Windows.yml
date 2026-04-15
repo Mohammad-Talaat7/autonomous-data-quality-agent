@@ -18,9 +18,10 @@ jobs:
     env:
       TARGET: x86_64-pc-windows-msvc
       BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-win-x86_64
-    
+      
       TUI_NAME: adqa-tui
       CLI_NAME: adqa-cli
+
       # PYTHON_URL_FULL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-pgo-full.tar.zst"
       # PYTHON_SHA256_FULL: "6644ab07ff671724b4e71e4a70a8ae1719ed761fe5bed44b96785f2e653b9499"
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
@@ -112,7 +113,8 @@ jobs:
 
       - name: Build MSI Installer
         run: |
-            $env:VERSION = $env:BINARY_NAME -replace '^v', ''
+            $env:VERSION = if ($env:BINARY_NAME -match 'v(\d+\.\d+\.\d+)') { $matches[1] }
+            echo $env:VERSION
             echo $PWD
             wix build ./distribution/win/adqa-installer.wxs -o adqa-installer.msi
 
