@@ -17,7 +17,8 @@ jobs:
     runs-on: windows-latest
     env:
       TARGET: x86_64-pc-windows-msvc
-      BINARY_NAME: adqa-${{ github.ref_name }}-win-x86_64
+      #BINARY_NAME: adqa-${{ github.ref_name }}-win-x86_64
+      BINARY_NAME: adqa-win-x86_64
       #BINARY_NAME_SHORT: adqa-${{ github.ref_name }}-win
       BINARY_NAME_SHORT: adqa-win
       TUI_NAME: adqa-tui
