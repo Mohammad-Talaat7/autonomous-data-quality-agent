@@ -116,6 +116,7 @@ jobs:
             $env:VERSION = if ($env:BINARY_NAME -match 'v(\d+\.\d+\.\d+)') { $matches[1] }
             echo $env:VERSION
             echo $PWD
+            wix extension add --global WixToolset.UI.wixext/5.0.2
             wix build ./distribution/win/adqa-installer.wxs -ext WixToolset.UI.wixext -o adqa-installer.msi
 
       # Disable later, just for testing builds manual without publish tags
