@@ -117,7 +117,8 @@ jobs:
             echo $env:VERSION
             echo $PWD
             wix extension add --global WixToolset.UI.wixext/5.0.2
-            wix build ./distribution/win/adqa-installer.wxs -ext WixToolset.UI.wixext -o adqa-installer.msi
+            Copy-Item .\distribution\win\adqa-installer.wxs .\adqa-installer.wxs
+            wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o adqa-installer.msi
 
       # Disable later, just for testing builds manual without publish tags
       - name: Upload MSI as artifact
