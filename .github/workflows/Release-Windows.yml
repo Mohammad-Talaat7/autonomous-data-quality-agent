@@ -52,7 +52,7 @@ jobs:
       - name: Prepare Standalone Package
         shell: bash
         run: |
-            mkdir -p adqa-win/
+            mkdir -p adqa-win/bin
             cp -r python_env/* adqa-win/bin
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-win/bin/${{ env.TUI_NAME }}.exe
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/bin/${{ env.CLI_NAME }}.exe
