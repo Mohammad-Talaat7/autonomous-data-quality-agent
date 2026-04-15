@@ -45,7 +45,7 @@ jobs:
           echo "$PYTHON_SHA256  python.tar.gz" | sha256sum -c -
 
           tar -xf python.tar.gz
-          mv python/install ../python_env
+          mv python/ ../python_env
           cd ..
           chmod +x python_env/bin/python3
 
