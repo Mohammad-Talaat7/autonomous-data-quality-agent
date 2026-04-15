@@ -115,10 +115,9 @@ jobs:
         run: dotnet tool install --global wix --version 5.0.2
 
       - name: Build MSI Installer
-        shell: bash
         run: |
             echo $PWD
-            wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
+            wix build ./distribution/win/adqa-installer.wxs -o adqa-installer.msi
 
       # Disable later, just for testing builds manual without publish tags
       - name: Upload MSI as artifact
