@@ -74,7 +74,7 @@ jobs:
         run: |
             ../distribution/win/minify_env_win.sh -y
             cd ..
-            7z a -tzip '${{ env.BINARY_NAME }}.zip' '/${{ env.BINARY_NAME_SHORT }}/*'
+            7z a -tzip '${{ env.BINARY_NAME }}.zip' './${{ env.BINARY_NAME_SHORT }}/*'
 
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
