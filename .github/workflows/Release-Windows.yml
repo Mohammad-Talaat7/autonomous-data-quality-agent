@@ -19,7 +19,7 @@ jobs:
       TUI_NAME: adqa-tui
       CLI_NAME: adqa-cli
       # PYTHON_URL_FULL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-pgo-full.tar.zst"
-      # PYTHON_SHA256_FULL: "<expected_sha256>"
+      # PYTHON_SHA256_FULL: "6644ab07ff671724b4e71e4a70a8ae1719ed761fe5bed44b96785f2e653b9499"
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
       PYTHON_SHA256: "93bf8e8c05ede0077b197a29c99ebdaf253497f27190097494265150b4e70ba8"
     steps:
@@ -107,7 +107,9 @@ jobs:
         run: dotnet tool install --global wix --version 5.0.2
 
       - name: Build MSI Installer
-        run: wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
+        run: |
+            echo $PWD
+            wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
 
       # Disable later, just for testing builds manual without publish tags
       - name: Upload MSI as artifact
