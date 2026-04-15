@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+  pull_request:  # fires on every push to any open PR branch
+    branches: [main]
+  
 permissions:
   contents: write
 
@@ -42,15 +45,6 @@ jobs:
 
       - name: Install Backend Packages into Bundled Python
         run: ./python_env/bin/python3 -m pip install .
-
-      - name: Sync Cargo.toml version
-        working-directory: adqa-tui
-        shell: bash
-        run: |
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-            sed "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml > Cargo.toml.tmp && mv Cargo.toml.tmp Cargo.toml
-          fi
 
       - name: Build TUI
         working-directory: adqa-tui
