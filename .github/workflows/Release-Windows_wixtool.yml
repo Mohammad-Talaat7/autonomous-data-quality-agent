@@ -53,39 +53,3 @@ jobs:
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/${{ env.CLI_NAME }}.exe
             7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'
       
-      # Create MSI
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '8.x'
-
-      - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v3
-
-      # Don't update to higher version of wix
-      # why? Requires a sponsorship fee once you earn at least $10,000 per year.
-      # The fee is about $10 per month for small organizations (<20 people).
-      # WiX v5 did not have such a fee.
-      - name: Install WiX v5
-        run: dotnet tool install --global wix --version 5.0.2
-
-      - name: Build MSI Installer
-        run: wix build ./distribution/msi/adqa-installer.wxs -o adqa-installer.msi
-
-      - name: Upload MSI as artifact
-        uses: actions/upload-artifact@v5
-        with:
-          name: ${{ env.BINARY_NAME }}-installer.msi
-          path: ${{ env.BINARY_NAME }}-installer.msi
-
-      # Disable later, just for testing builds manual without publish tags
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ env.BINARY_NAME }}
-          path: ${{ env.BINARY_NAME }}.zip
-
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v3
-        with:
-          files: ${{ env.BINARY_NAME }}.zip
