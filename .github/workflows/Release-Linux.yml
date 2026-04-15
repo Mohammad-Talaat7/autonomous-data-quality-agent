@@ -76,9 +76,9 @@ jobs:
           
           # export PYO3_CONFIG_FILE="$(pwd)/../pyo3-config.txt"
           
-          # # Use shared linking and set RPATH so the binary finds libpython3.12.so in the bundle
-          # # $ORIGIN refers to the directory containing the executable
-          # export RUSTFLAGS="-L $LIB_DIR -Clink-arg=-Wl,-rpath,\$ORIGIN/python/lib"
+          # Use shared linking and set RPATH so the binary finds libpython3.12.so in the bundle
+          # $ORIGIN refers to the directory containing the executable
+          export RUSTFLAGS="-L $LIB_DIR -Clink-arg=-Wl,-rpath,\$ORIGIN/python/lib"
           
           cargo build --release --target ${{ env.TARGET }}
 
