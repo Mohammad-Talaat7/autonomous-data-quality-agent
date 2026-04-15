@@ -39,12 +39,12 @@ jobs:
         run: |
           mkdir -p standalone_python
           cd standalone_python
-          curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.zst
+          curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.gz
 
           # checksum check
           echo "$PYTHON_SHA256  python.tar.gz" | sha256sum -c -
 
-          tar -xf python.tar.zst
+          tar -xf python.tar.gz
           mv python/install ../python_env
           cd ..
           chmod +x python_env/bin/python3
