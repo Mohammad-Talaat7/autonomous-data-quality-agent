@@ -16,9 +16,9 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     env:
-      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
+      # PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
       TARGET: x86_64-unknown-linux-gnu
-      BINARY_NAME: adqa-tui-linux-x86_64
+      BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-linux-x86_64-unknown-linux-gnu
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
       PYTHON_SHA256: "1dbaa624a09e15afe7efbdac08d42993135a68db8d34f986ef6977a6d77bdc3c"
 
@@ -85,13 +85,13 @@ jobs:
       - name: Prepare Standalone Package
         shell: bash
         run: |
-          mkdir -p adqa-tui-bundle
-          cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui adqa-tui-bundle/${{ env.BINARY_NAME }}
-          cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli adqa-tui-bundle/${{ env.BINARY_NAME }}
-          cp -r python_env adqa-tui-bundle/python
-          # rm -rf adqa-tui-bundle/python/share adqa-tui-bundle/python/include
-          # find adqa-tui-bundle/python -name "__pycache__" -type d -exec rm -rf {} + || true
-          tar -czf ${{ env.BINARY_NAME }}.tar.gz adqa-tui-bundle/
+          mkdir -p ${{ env.BINARY_NAME }}
+          cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui ${{ env.BINARY_NAME }}/
+          cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli ${{ env.BINARY_NAME }}/
+          cp -r python_env ${{ env.BINARY_NAME }}/python
+          rm -rf ${{ env.BINARY_NAME }}/python/share ${{ env.BINARY_NAME }}/python/include
+          find ${{ env.BINARY_NAME }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
+          tar -czf ${{ env.BINARY_NAME }}.tar.gz ${{ env.BINARY_NAME }}/
       
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
