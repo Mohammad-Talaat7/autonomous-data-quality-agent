@@ -1,4 +1,4 @@
-name: Release-win-x86_64-zip
+name: Release-win-x86_64-zip-msi
 
 on:
   push:
@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: cargo build --release --target ${{ env.TARGET }}
 
-      - name: Prepare Standalone Package 1
+      - name: Prepare Standalone Package
         shell: bash
         run: |
             mkdir -p ${{ env.BINARY_NAME_SHORT }}/bin
@@ -85,10 +85,10 @@ jobs:
           name: ${{ env.BINARY_NAME }}
           path: ${{ env.BINARY_NAME }}.zip
 
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v3
-        with:
-          files: ${{ env.BINARY_NAME }}.zip
+      # - name: Upload to Release
+      #   uses: softprops/action-gh-release@v3
+      #   with:
+      #     files: ${{ env.BINARY_NAME }}.zip
       
       # Create MSI
       - name: Setup .NET
