@@ -88,6 +88,13 @@ jobs:
           install_name_tool -add_rpath "@executable_path/python/lib" adqa-tui-bundle/${{ matrix.binary_name }} || true
           
           tar -czf ${{ matrix.binary_name }}.tar.gz adqa-tui-bundle/
+      
+      # Disable later, just for testing builds manual without publish tags
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.binary_name }}
+          path: ${{ matrix.binary_name }}.tar.gz
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v3

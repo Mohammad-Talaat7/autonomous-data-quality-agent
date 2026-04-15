@@ -1,0 +1,86 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="ADQA v$(env.VERSION)"
+           Manufacturer="Mohammad Talaat"
+           Version="$(env.VERSION)"
+           UpgradeCode="d2b0e7f9-7aa9-446b-8f40-d4d9370040d2">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of ADQA is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <ComponentGroupRef Id="AppComponents" />
+    <ComponentGroupRef Id="SampleComponents" />
+
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent" />
+    
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value=".\LICENSE.rtf" />
+  </Package>
+
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="ADQA v$(env.VERSION)">
+        <Directory Id="BinFolder" Name="bin" />
+        <Directory Id="SamplesFolder" Name="samples" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="InstallProgramMenuFolder" Name="ADQA" />
+    </StandardDirectory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="AppComponents">
+      
+      <Component Id="TUIExeComponent" Directory="BinFolder" Guid="*">
+        <File Id="TUIExe" Source="$(env.SOURCEPATH)\adqa-win\adqa-tui.exe" KeyPath="yes" />
+        
+        <Shortcut Id="TUIShortcut" 
+                  Directory="InstallProgramMenuFolder" 
+                  Name="ADQA TUI" 
+                  WorkingDirectory="BinFolder" 
+                  Advertise="no" />
+      </Component>
+
+      <Component Id="CLIExeComponent" Directory="BinFolder" Guid="*">
+        <File Id="CLIExe" Source="$(env.SOURCEPATH)\adqa-win\adqa-cli.exe" KeyPath="yes" />
+        
+        <Shortcut Id="CLIShortcut" 
+                  Directory="InstallProgramMenuFolder" 
+                  Name="ADQA CLI" 
+                  WorkingDirectory="BinFolder" 
+                  Advertise="no" />
+
+
+        <Environment Id="UpdatePath"
+                     Name="PATH"
+                     Value="[BinFolder]"
+                     Permanent="no"
+                     Part="last"
+                     Action="set"
+                     System="yes" />
+
+        <RemoveFolder Id="CleanupShortcutFolder" Directory="InstallProgramMenuFolder" On="uninstall" />
+      </Component>
+
+      <Component Id="ReadmeComponent" Directory="INSTALLFOLDER" Guid="*">
+        <File Id="ReadmeFile" Source="$(env.SOURCEPATH)\README.md" KeyPath="yes" />
+      </Component>
+      
+      <Component Id="LicenseComponent" Directory="INSTALLFOLDER" Guid="*">
+        <File Id="LICENSEFile" Source="$(env.SOURCEPATH)\LICENSE.md" KeyPath="yes" />
+      </Component>
+
+      <Files Include="$(env.SOURCEPATH)\adqa-win\**" Directory="BinFolder">
+        <Exclude Files="$(env.SOURCEPATH)\adqa-win\adqa-tui.exe" />
+        <Exclude Files="$(env.SOURCEPATH)\adqa-win\adqa-cli.exe" />
+      </Files>
+    </ComponentGroup>
+
+    <ComponentGroup Id="SampleComponents" Directory="SamplesFolder">
+      <Files Include="$(env.SOURCEPATH)\samples\**" />
+    </ComponentGroup>
+  </Fragment>
+</Wix>

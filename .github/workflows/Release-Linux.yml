@@ -91,6 +91,13 @@ jobs:
           rm -rf adqa-tui-bundle/python/share adqa-tui-bundle/python/include
           find adqa-tui-bundle/python -name "__pycache__" -type d -exec rm -rf {} + || true
           tar -czf ${{ env.BINARY_NAME }}.tar.gz adqa-tui-bundle/
+      
+      # Disable later, just for testing builds manual without publish tags
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ env.BINARY_NAME }}
+          path: ${{ env.BINARY_NAME }}.tar.gz
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v3

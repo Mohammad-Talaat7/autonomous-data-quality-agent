@@ -63,7 +63,7 @@ jobs:
         uses: microsoft/setup-msbuild@v3
 
       # Don't update to higher version of wix
-      # why? Requires a sponsorship fee once you earn at least US $10,000 per year
+      # why? Requires a sponsorship fee once you earn at least $10,000 per year.
       # The fee is about $10 per month for small organizations (<20 people).
       # WiX v5 did not have such a fee.
       - name: Install WiX v5

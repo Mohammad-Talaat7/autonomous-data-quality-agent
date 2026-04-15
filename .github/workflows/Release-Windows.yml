@@ -43,12 +43,17 @@ jobs:
         shell: bash
         run: cargo build --release --target ${{ env.TARGET }}
 
+      - name: Clean python_env
+        shell: bash
+        run: |
+            # Run shellscript to clean python env
+            # find adqa-win/ -name "__pycache__" -type d -exec rm -rf {} + || true?
+
       - name: Prepare Standalone Package
         shell: bash
         run: |
             mkdir -p adqa-win/
-            cp -r python_env/* adqa-win/
-            find adqa-win/ -name "__pycache__" -type d -exec rm -rf {} + || true
+            cp -r python_env/* adqa-win/ 
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-win/${{ env.tui_NAME }}.exe
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/${{ env.CLI_NAME }}.exe
             7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'
