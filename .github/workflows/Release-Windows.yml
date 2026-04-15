@@ -57,9 +57,9 @@ jobs:
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-win/bin/${{ env.TUI_NAME }}.exe
             cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/bin/${{ env.CLI_NAME }}.exe
 
-            cp README.md adqa-win/
-            cp LICENSE adqa-win/
-            cp -r sample/ ./adqa-win/
+            cp README.md LICENSE adqa-win/
+            mkdir -p adqa-win/samples
+            cp -r samples/* ./adqa-win/samples
 
             7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'
 
