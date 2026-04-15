@@ -6,7 +6,7 @@ on:
       - 'v*'
   workflow_dispatch:
   
-  pull_request:   # fires on every push to any open PR branch
+  pull_request:  # fires on every push to any open PR branch
     branches: [main]
 
 permissions:
@@ -75,6 +75,7 @@ jobs:
         shell: bash
         working-directory: ${{ env.BINARY_NAME_SHORT }}
         run: |
+            echo $PWD
             cp ../distribution/win/minify_env_win.sh ./bin/minify_env_win.sh
             ./bin/minify_env_win.sh -y
             rm ./bin/minify_env_win.sh
