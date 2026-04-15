@@ -72,7 +72,8 @@ jobs:
         shell: bash
         working-directory: ${{ env.BINARY_NAME_SHORT }}
         run: |
-            ../distribution/win/minify_env_win.sh -y
+            cp ../distribution/win/minify_env_win.sh ./minify_env_win.sh
+            ./minify_env_win.sh -y
             cd ..
             7z a -tzip '${{ env.BINARY_NAME }}.zip' './${{ env.BINARY_NAME_SHORT }}/*'
 

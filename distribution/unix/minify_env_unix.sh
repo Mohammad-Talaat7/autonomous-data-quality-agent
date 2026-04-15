@@ -19,6 +19,9 @@ fi
 TARGET_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 STRIP_CMD="${STRIP:-strip}"
 
+echo "PWD.. $PWD"
+echo "TARGET_DIR.. $TARGET_DIR"
+
 # Auto-detect Python lib directory (e.g., lib/python3.11)
 LIB_DIR=$(find "$TARGET_DIR/lib" -maxdepth 1 -type d -name "python3.*" | head -n 1)
 if [ -z "$LIB_DIR" ]; then echo "Error: Could not find lib/python3.* directory."; exit 1; fi

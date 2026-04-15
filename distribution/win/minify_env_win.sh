@@ -21,6 +21,9 @@ LIB_DIR="$TARGET_DIR/Lib"
 DLLS_DIR="$TARGET_DIR/DLLs"
 SITE_PACKAGES="$LIB_DIR/site-packages"
 
+echo "PWD.. $PWD"
+echo "TARGET_DIR.. $TARGET_DIR"
+
 echo "[1/9] Removing Debugging Symbols (*.pdb)..."
 find "$TARGET_DIR" -type f -name "*.pdb" -delete
 
