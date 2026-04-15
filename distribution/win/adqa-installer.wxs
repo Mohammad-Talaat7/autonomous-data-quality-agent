@@ -80,7 +80,7 @@
                       On="uninstall" />
       </Component>
 
-      <Files Include=".\$(env.BINARY_NAME_SHORT)\**" Directory="INSTALLFOLDER" />
+      <Files Include=".\$(env.BINARY_NAME)\**" Directory="INSTALLFOLDER" />
 
     </ComponentGroup>
   </Fragment>
