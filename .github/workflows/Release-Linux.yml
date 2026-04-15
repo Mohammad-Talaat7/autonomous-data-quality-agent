@@ -100,6 +100,6 @@ jobs:
           path: ${{ env.BINARY_NAME }}.tar.gz
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v4
+        uses: softprops/action-gh-release@v3
         with:
           files: ${{ env.BINARY_NAME }}.tar.gz
