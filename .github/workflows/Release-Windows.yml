@@ -122,6 +122,6 @@ jobs:
           path: ${{ env.BINARY_NAME }}-installer.msi
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v4
         with:
           files: ${{ env.BINARY_NAME }}-installer.msi

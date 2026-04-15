@@ -97,6 +97,6 @@ jobs:
           path: ${{ matrix.binary_name }}.tar.gz
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v4
         with:
           files: ${{ matrix.binary_name }}.tar.gz
