@@ -15,10 +15,13 @@ jobs:
     env:
       TARGET: x86_64-pc-windows-msvc
       BINARY_NAME: adqa-${{ github.ref_name }}-win-x86_64
+      BINARY_NAME_SHORT: adqa-${{ github.ref_name }}-win
       TUI_NAME: adqa-tui
       CLI_NAME: adqa-cli
-      # PYTHON_URL_Full: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-pgo-full.tar.zst"
+      # PYTHON_URL_FULL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-pgo-full.tar.zst"
+      # PYTHON_SHA256_FULL: "<expected_sha256>"
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
+      PYTHON_SHA256: "93bf8e8c05ede0077b197a29c99ebdaf253497f27190097494265150b4e70ba8"
     steps:
       - uses: actions/checkout@v5
       - name: Set up Rust
@@ -32,6 +35,10 @@ jobs:
           mkdir -p standalone_python
           cd standalone_python
           curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.gz
+          
+          # checksum check
+          echo "$PYTHON_SHA256  python.tar.gz" | sha256sum -c -
+          
           tar -xf python.tar.gz
           mv python/ ../python_env
           cd ..
@@ -52,20 +59,21 @@ jobs:
       - name: Prepare Standalone Package 1
         shell: bash
         run: |
-            mkdir -p adqa-win/bin
-            cp -r python_env/* adqa-win/bin
-            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe adqa-win/bin/${{ env.TUI_NAME }}.exe
-            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe adqa-win/bin/${{ env.CLI_NAME }}.exe
+            mkdir -p ${{ env.BINARY_NAME_SHORT }}/bin
+            cp -r python_env/* ${{ env.BINARY_NAME_SHORT }}/bin
+            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe ${{ env.BINARY_NAME_SHORT }}/bin/${{ env.TUI_NAME }}.exe
+            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe ${{ env.BINARY_NAME_SHORT }}/bin/${{ env.CLI_NAME }}.exe
 
-            cp README.md LICENSE adqa-win/
-            mkdir -p adqa-win/samples
-            cp -r samples/* ./adqa-win/samples
+            cp README.md LICENSE ${{ env.BINARY_NAME_SHORT }}/
+            mkdir -p ${{ env.BINARY_NAME_SHORT }}/samples
+            cp -r samples/* ./${{ env.BINARY_NAME_SHORT }}/samples
 
       - name: Clean and zip
         shell: bash
+        working-directory: ${{ env.BINARY_NAME_SHORT }}
         run: |
-            ./distribution/gnu-full/minify_env_win.sh -y 
-            7z a -tzip '${{ env.BINARY_NAME }}.zip' 'adqa-win\*'
+            ./distribution/win/minify_env_win.sh -y 
+            7z a -tzip '${{ env.BINARY_NAME }}.zip' '..\${{ env.BINARY_NAME_SHORT }}\*'
 
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
