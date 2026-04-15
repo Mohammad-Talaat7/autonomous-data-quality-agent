@@ -112,7 +112,7 @@ jobs:
 
       - name: Build MSI Installer
         run: |
-            $VERSION = $env:BINARY_NAME -replace '^v', ''
+            $env:VERSION = $env:BINARY_NAME -replace '^v', ''
             echo $PWD
             wix build ./distribution/win/adqa-installer.wxs -o adqa-installer.msi
 
