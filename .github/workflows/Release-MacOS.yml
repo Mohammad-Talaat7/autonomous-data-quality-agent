@@ -7,15 +7,13 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main]
+    branches: [main_disable]
 
 permissions:
   contents: write
 
 jobs:
   build-macos:
-    env: 
-      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
     strategy:
       matrix:
         include:
@@ -78,9 +76,6 @@ jobs:
           
           cargo build --release --target ${{ matrix.target }}
       
-      - name: Install Dependencies
-        run: brew install zstd
-
       - name: Prepare Standalone Package
         shell: bash
         run: |
