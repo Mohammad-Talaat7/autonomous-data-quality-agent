@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:
-    branches: [main_disable]
+    branches: [main_disab]
 
 permissions:
   contents: write
