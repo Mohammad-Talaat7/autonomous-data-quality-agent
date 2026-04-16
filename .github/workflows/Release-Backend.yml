@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -40,7 +42,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install poetry
-        run: pip install poetry poetry-dynamic-versioning
+        run: |
+          pip install poetry
+          poetry self add "poetry-dynamic-versioning[plugin]"
+        
       - name: Build package
         run: poetry build
       - name: Create GitHub Release
@@ -64,7 +69,13 @@ jobs:
         working-directory: adqa-tui
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
-          sed "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml > Cargo.toml.tmp && mv Cargo.toml.tmp Cargo.toml
+          # sed "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml > Cargo.toml.tmp && mv Cargo.toml.tmp Cargo.toml
+          # change version in line 3
+          sed -i "3s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
+          
+          # # Another way but slower
+          # cargo install cargo-edit
+          # cargo set-version $VERSION
       - name: Publish to crates.io
         working-directory: adqa-tui
         env:

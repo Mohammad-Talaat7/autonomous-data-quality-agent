@@ -10,15 +10,17 @@ build-backend = "poetry_dynamic_versioning.backend"
 [tool.poetry]
 name = "adqa"
 description = "Autonomous Data Quality Agent: profiling, detection, explanation, and fix proposals for data quality issues."
+
 authors = [
   "Mohammad T. Ismael <mohamed.talaat.ismael@gmail.com>",
   "Peter Gamil <peter7gamil@gmail.com>"
 ]
+
 license = "MIT"
 readme = "README.md"
 
 # Version is controlled dynamically via Git tags
-version = "0.1.0"
+version = "0.1.2-post.83+961e902.dirty"
 
 packages = [{ include = "adqa", from = "src" }]
 
@@ -174,11 +176,15 @@ pymdown-extensions = "^10.9"
 [tool.poetry.scripts]
 adqa = "adqa.cli:main"
 
+# ============================================================
+# Dynamic versioning via Git tags
+# ============================================================
+
 [tool.poetry-dynamic-versioning]
 enable = true
 vcs = "git"
 style = "semver"
-dirty = true
+dirty = true # If you have uncommitted changes, it will append a "post" or "dev" suffix instead of failing
 
 [tool.black]
 line-length = 88
