@@ -78,7 +78,7 @@ jobs:
           ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
           # ./python_env/python.exe -m pip install "meson==1.10.0"
           
-          ./python_env/python.exe -m pip install . --no-index --find-links ./local_wheels --prefer-binary
+          ./python_env/python.exe -m pip install . --find-links ./local_wheels --prefer-binary
 
           mv ./python_env/python.exe ./python_env/python.exe_disable
           mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
