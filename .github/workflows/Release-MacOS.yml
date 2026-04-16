@@ -96,7 +96,7 @@ jobs:
           install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/adqa-tui || true
           install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/adqa-cli || true
 
-          tar -I 'zstd -19' -cf "${{ matrix.binary_name }}.tar.zst" "${{ matrix.binary_name }}/"
+          tar --use-compress-program='zstd -19' -cf "${{ matrix.binary_name }}.tar.zst" "${{ matrix.binary_name }}/"
       
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
