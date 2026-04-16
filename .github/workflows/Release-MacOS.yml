@@ -102,6 +102,7 @@ jobs:
           prerelease: true
       
       # Create dmg
+      # You have to sign your .dmg files by pay 99$/year to apple or will be blocked by gatekeeper.
       - name: Code sign
         shell: bash
         run: |
