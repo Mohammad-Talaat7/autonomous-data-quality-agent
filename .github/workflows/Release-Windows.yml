@@ -45,15 +45,13 @@ jobs:
         if: matrix.arch == 'arm64'
         uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
-          arch: arm64
+          arch: amd64_arm64
 
       - name: Fix PATH (prioritize MSVC over Git)
         if: matrix.arch == 'arm64'
         shell: cmd
         run: |
-          set CC=cl
-          set CXX=cl
-          set LINK=link
+          set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
           where link
 
       - name: Setup Standalone Python
