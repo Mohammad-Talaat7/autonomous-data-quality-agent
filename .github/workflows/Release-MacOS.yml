@@ -77,6 +77,9 @@ jobs:
           export RUSTFLAGS="-L $LIB_DIR"
           
           cargo build --release --target ${{ matrix.target }}
+      
+      - name: Install Dependencies
+        run: brew install zstd
 
       - name: Prepare Standalone Package
         shell: bash
@@ -90,8 +93,9 @@ jobs:
           find ${{ matrix.binary_name }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
           
           # Fix rpath so the binary finds the bundled dylib
-          install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/${{ matrix.binary_name }} || true
-          
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/adqa-tui || true
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/adqa-cli || true
+
           tar -I 'zstd -19' -cf "${{ matrix.binary_name }}.tar.zst" "${{ matrix.binary_name }}/"
       
       # Disable later, just for testing builds manual without publish tags
