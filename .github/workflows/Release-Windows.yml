@@ -14,17 +14,22 @@ permissions:
 
 jobs:
   build-windows:
-    runs-on: windows-latest
     strategy:
       matrix:
         include:
           - target: x86_64-pc-windows-msvc
+            arch: x64
+            runner: windows-latest
             python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
             python_sha256: "93bf8e8c05ede0077b197a29c99ebdaf253497f27190097494265150b4e70ba8"
           
           - target: aarch64-pc-windows-msvc
+            arch: arm64
+            runner: windows-11-arm
             python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-aarch64-pc-windows-msvc-install_only_stripped.tar.gz"
             python_sha256: "4611a41c8653fd074f75999f5ae806ee151b59828fbe7d218e02e125187263fe"
+    
+    runs-on: ${{ matrix.runner }}
     env:
       BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-${{ matrix.target }}
 
@@ -107,7 +112,7 @@ jobs:
             $env:VERSION = if ("${{ env.BINARY_NAME }}" -match 'v(\d+\.\d+\.\d+)') { $matches[1] }
             wix extension add --global WixToolset.UI.wixext/5.0.2
             Copy-Item ./distribution/win/adqa-installer.wxs ./adqa-installer.wxs
-            wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o "${{ env.BINARY_NAME }}-installer.msi"
+            wix build ./adqa-installer.wxs -arch ${{ matrix.arch }} -ext WixToolset.UI.wixext -o "${{ env.BINARY_NAME }}-installer.msi"
 
       - name: Upload MSI to Release
         uses: softprops/action-gh-release@v3

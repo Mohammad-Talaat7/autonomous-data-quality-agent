@@ -1,4 +1,4 @@
-name: Release-MacOS-x86_64-aarch64-tar.zst-dmg
+name: Release-apple-darwin-x86_64-aarch64-tar.zst-dmg
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main]
+    branches: [main_disable]
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
     
     runs-on: macos-latest
     env:
-      BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-linux-${{ matrix.target }}
+      BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-${{ matrix.target }}
     steps:
       - uses: actions/checkout@v5
       - name: Set up Rust

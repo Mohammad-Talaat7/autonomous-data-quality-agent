@@ -45,7 +45,10 @@ jobs:
           mkdir -p standalone_python
           cd standalone_python
           curl -sfSL "${{ matrix.python_url }}" -o python.tar.gz
+          
+          # checksum check
           echo "${{ matrix.python_sha256 }}  python.tar.gz" | sha256sum -c -
+          
           tar -xf python.tar.gz
           mv python/ ../python_env
           cd ..
