@@ -1,13 +1,12 @@
-name: Release-win-x86_64-zip-msi
+name: Release-win-x86_64-aarch64-zip-msi
 
 on:
   push:
     tags:
       - 'v*'
   workflow_dispatch:
-  
-  pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
@@ -15,31 +14,36 @@ permissions:
 jobs:
   build-windows:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-pc-windows-msvc
+            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
+            python_sha256: "93bf8e8c05ede0077b197a29c99ebdaf253497f27190097494265150b4e70ba8"
+          
+          - target: aarch64-pc-windows-msvc
+            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-aarch64-pc-windows-msvc-install_only_stripped.tar.gz"
+            python_sha256: "4611a41c8653fd074f75999f5ae806ee151b59828fbe7d218e02e125187263fe"
     env:
-      TARGET: x86_64-pc-windows-msvc
-      BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-win-x86_64
-      
-      TUI_NAME: adqa-tui
-      CLI_NAME: adqa-cli
+      BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-${{ matrix.target }}
 
-      PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
-      PYTHON_SHA256: "93bf8e8c05ede0077b197a29c99ebdaf253497f27190097494265150b4e70ba8"
     steps:
       - uses: actions/checkout@v5
+      
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ env.TARGET }}
+          targets: ${{ matrix.target }}
 
       - name: Setup Standalone Python
         shell: bash
         run: |
           mkdir -p standalone_python
           cd standalone_python
-          curl -sfSL "${{ env.PYTHON_URL }}" -o python.tar.gz
+          curl -sfSL "${{ matrix.python_url }}" -o python.tar.gz
           
           # checksum check
-          echo "$PYTHON_SHA256  python.tar.gz" | sha256sum -c -
+          echo "${{ matrix.python_sha256 }}  python.tar.gz" | sha256sum -c -
           
           tar -xf python.tar.gz
           mv python/ ../python_env
@@ -52,20 +56,18 @@ jobs:
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
 
-
       - name: Build TUI
         working-directory: adqa-tui
         shell: bash
-        run: cargo build --release --target ${{ env.TARGET }}
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Prepare Standalone Package
         shell: bash
         run: |
             mkdir -p ${{ env.BINARY_NAME }}/bin
             cp -r python_env/* ${{ env.BINARY_NAME }}/bin
-            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui.exe ${{ env.BINARY_NAME }}/bin/${{ env.TUI_NAME }}.exe
-            cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli.exe ${{ env.BINARY_NAME }}/bin/${{ env.CLI_NAME }}.exe
-
+            cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui.exe ${{ env.BINARY_NAME }}/bin/
+            cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli.exe ${{ env.BINARY_NAME }}/bin/
             cp README.md LICENSE ${{ env.BINARY_NAME }}/
             mkdir -p ${{ env.BINARY_NAME }}/samples
             cp -r samples/* ./${{ env.BINARY_NAME }}/samples
@@ -74,22 +76,20 @@ jobs:
         shell: bash
         working-directory: ${{ env.BINARY_NAME }}
         run: |
-            echo $PWD
-            cp ../distribution/win/minify_env_win.sh ./bin/minify_env_win.sh
+            cp ../distribution/win/minify_env_win.sh ./bin/
             ./bin/minify_env_win.sh -y
             rm ./bin/minify_env_win.sh
             cd ..
             7z a -tzip '${{ env.BINARY_NAME }}.zip' './${{ env.BINARY_NAME }}/*'
 
-      - name: Upload to Release
+      - name: Upload Zip to Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: "v0.1.0-beta" # Disable later
+          tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}.zip
           draft: true
           prerelease: true
       
-      # Create MSI
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
@@ -98,26 +98,20 @@ jobs:
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v3
 
-      # Don't update to higher version of wix
-      # why? Requires a sponsorship fee once you earn at least $10,000 per year.
-      # The fee is about $10 per month for small organizations (<20 people).
-      # WiX v5 did not have such a fee.
       - name: Install WiX v5
         run: dotnet tool install --global wix --version 5.0.2
 
       - name: Build MSI Installer
         run: |
             $env:VERSION = if ("${{ env.BINARY_NAME }}" -match 'v(\d+\.\d+\.\d+)') { $matches[1] }
-            echo $env:VERSION
-            echo $PWD
             wix extension add --global WixToolset.UI.wixext/5.0.2
             Copy-Item ./distribution/win/adqa-installer.wxs ./adqa-installer.wxs
             wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o "${{ env.BINARY_NAME }}-installer.msi"
 
-      - name: Upload to Release
+      - name: Upload MSI to Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: "v0.1.0-beta" # Disable later
+          tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}-installer.msi
           draft: true
           prerelease: true
