@@ -16,7 +16,6 @@ jobs:
   build-windows:
     runs-on: windows-latest
     env:
-      GITHUB_REF: refs/tags/v0.1.0-beta # Disable, just for testing
       TARGET: x86_64-pc-windows-msvc
       BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-win-x86_64
       
@@ -89,10 +88,13 @@ jobs:
           name: ${{ env.BINARY_NAME }}
           path: ${{ env.BINARY_NAME }}.zip
 
-      # - name: Upload to Release
-      #   uses: softprops/action-gh-release@v3
-      #   with:
-      #     files: ${{ env.BINARY_NAME }}.zip
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: "v0.1.0-beta" # Disable later
+          files: ${{ env.BINARY_NAME }}.zip
+          draft: true
+          prerelease: true
       
       # Create MSI
       - name: Setup .NET
@@ -129,4 +131,7 @@ jobs:
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: "v0.1.0-beta" # Disable later
           files: ${{ env.BINARY_NAME }}-installer.msi
+          draft: true
+          prerelease: true

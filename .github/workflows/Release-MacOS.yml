@@ -15,7 +15,7 @@ permissions:
 jobs:
   build-macos:
     env: 
-      GITHUB_REF: refs/tags/v0.1.0-beta # Disable, just for testing
+      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
     strategy:
       matrix:
         include:
@@ -30,8 +30,6 @@ jobs:
             PYTHON_SHA256: "22625deaf5757e7c266cf1a096c9151a06b598b1e14632a2ec9993d58ec5fe84"
     
     runs-on: macos-latest
-    env:
-      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
     steps:
       - uses: actions/checkout@v5
       - name: Set up Rust
@@ -106,4 +104,7 @@ jobs:
       - name: Upload to Release
         uses: softprops/action-gh-release@v4
         with:
+          tag_name: "v0.1.0-beta" # Disable later
           files: ${{ matrix.binary_name }}.tar.zst
+          draft: true
+          prerelease: true
