@@ -1,4 +1,4 @@
-name: Release-MacOS-x86_64-arm
+name: Release-MacOS-x86_64-aarch64-tar.zst-dmg
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main]
+    branches: [main_disable]
 
 permissions:
   contents: write
