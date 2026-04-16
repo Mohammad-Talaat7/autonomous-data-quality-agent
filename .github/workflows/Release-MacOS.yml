@@ -18,12 +18,12 @@ jobs:
       matrix:
         include:
           - target: x86_64-apple-darwin
-            binary_name: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-macos-x86_64
+            binary_name: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-x86_64-apple-darwin
             python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-apple-darwin-install_only_stripped.tar.gz"
             PYTHON_SHA256: "a84ac7a36d465bc6eb68db84540fdb5da04333900e2c3cb34b5d454f2022048c"
 
           - target: aarch64-apple-darwin
-            binary_name: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-macos-arm64
+            binary_name: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-aarch64-apple-darwin
             python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-aarch64-apple-darwin-install_only_stripped.tar.gz"
             PYTHON_SHA256: "22625deaf5757e7c266cf1a096c9151a06b598b1e14632a2ec9993d58ec5fe84"
     
@@ -115,7 +115,7 @@ jobs:
           hdiutil create \
             -volname "${{ matrix.binary_name }}" \
             -srcfolder "${{ matrix.binary_name }}" \
-            -ov -format UDZO \
+            -ov -format ULFO \
             "${{ matrix.binary_name }}.dmg"
 
       - name: Upload to Release
