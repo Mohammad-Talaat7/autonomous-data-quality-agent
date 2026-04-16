@@ -43,9 +43,18 @@ jobs:
 
       - name: Setup MSVC for ARM64
         if: matrix.arch == 'arm64'
-        uses: ilammy/msvc-dev-cmd@v1
+        uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
           arch: arm64
+
+      - name: Fix PATH (prioritize MSVC over Git)
+        if: matrix.arch == 'arm64'
+        shell: cmd
+        run: |
+          set CC=cl
+          set CXX=cl
+          set LINK=link
+          where link
 
       - name: Setup Standalone Python
         shell: bash
