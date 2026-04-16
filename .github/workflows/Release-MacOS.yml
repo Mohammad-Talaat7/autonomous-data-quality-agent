@@ -79,25 +79,25 @@ jobs:
       - name: Prepare Standalone Package
         shell: bash
         run: |
-          mkdir -p ${{ matrix.binary_name }}
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui ${{ matrix.binary_name }}/
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli ${{ matrix.binary_name }}/
-          cp -r python_env ${{ matrix.binary_name }}/python
+          mkdir -p ${{ env.BINARY_NAME }}
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui ${{ env.BINARY_NAME }}/
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli ${{ env.BINARY_NAME }}/
+          cp -r python_env ${{ env.BINARY_NAME }}/python
 
-          rm -rf ${{ matrix.binary_name }}/python/share ${{ matrix.binary_name }}/python/include
-          find ${{ matrix.binary_name }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
+          rm -rf ${{ env.BINARY_NAME }}/python/share ${{ env.BINARY_NAME }}/python/include
+          find ${{ env.BINARY_NAME }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
           
           # Fix rpath so the binary finds the bundled dylib
-          install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/adqa-tui || true
-          install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/adqa-cli || true
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ env.BINARY_NAME }}/adqa-tui || true
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ env.BINARY_NAME }}/adqa-cli || true
 
-          tar --use-compress-program='zstd -19' -cf "${{ matrix.binary_name }}.tar.zst" "${{ matrix.binary_name }}/"
+          tar --use-compress-program='zstd -19' -cf "${{ env.BINARY_NAME }}.tar.zst" "${{ env.BINARY_NAME }}/"
       
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: "v0.1.0-beta" # Disable later
-          files: ${{ matrix.binary_name }}.tar.zst
+          files: ${{ env.BINARY_NAME }}.tar.zst
           draft: true
           prerelease: true
       
@@ -106,24 +106,24 @@ jobs:
         shell: bash
         run: |
             # Ad-hoc sign the binaries (the '-' means no identity/self-signed)
-            codesign --force --deep --sign - ${{ matrix.binary_name }}/adqa-tui
-            codesign --force --deep --sign - ${{ matrix.binary_name }}/adqa-cli
+            codesign --force --deep --sign - ${{ env.BINARY_NAME }}/adqa-tui
+            codesign --force --deep --sign - ${{ env.BINARY_NAME }}/adqa-cli
 
       - name: hdiutil
         shell: bash
         run: |
           hdiutil create \
-            -volname "${{ matrix.binary_name }}" \
-            -srcfolder "${{ matrix.binary_name }}" \
+            -volname "${{ env.BINARY_NAME }}" \
+            -srcfolder "${{ env.BINARY_NAME }}" \
             -ov -format UDBZ \
             -imagekey bzip2-level=9 \
-            "${{ matrix.binary_name }}.dmg"
+            "${{ env.BINARY_NAME }}.dmg"
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: "v0.1.0-beta" # Disable later
-          files: ${{ matrix.binary_name }}.dmg
+          files: ${{ env.BINARY_NAME }}.dmg
           draft: true
           prerelease: true
 

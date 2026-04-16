@@ -5,8 +5,9 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+
   pull_request:
-    branches: [main]
+    branches: [main_disable]
 
 permissions:
   contents: write
