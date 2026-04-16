@@ -115,8 +115,8 @@ jobs:
           hdiutil create \
             -volname "${{ matrix.binary_name }}" \
             -srcfolder "${{ matrix.binary_name }}" \
-            -ov -format UDZO \
-            -imagekey zlib-level=9 \
+            -ov -format UDBZ \
+            -imagekey bzip2-level=9 \
             "${{ matrix.binary_name }}.dmg"
 
       - name: Upload to Release
