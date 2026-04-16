@@ -3,14 +3,14 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main_disable # disable_for_while
+      - main
       - "phase-*"
       - "feature/**"
     tags:
       - "v*"
   pull_request:
     branches:
-      - main_disable # disable_for_while
+      - main
       - "phase-*"
       
 jobs:
