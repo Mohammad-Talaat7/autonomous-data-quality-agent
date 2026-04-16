@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
             # ./python_env/python.exe -m pip install --upgrade pip setuptools wheel meson ninja
-            ./python_env/python.exe -m pip install "meson<1.11"
+            ./python_env/python.exe -m pip install "meson<1.11" "meson-python<0.16"
             ./python_env/python.exe -m pip install . --prefer-binary
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
