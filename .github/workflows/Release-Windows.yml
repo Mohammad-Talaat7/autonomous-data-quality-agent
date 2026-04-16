@@ -52,13 +52,7 @@ jobs:
         shell: cmd
         run: |
           set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
-          # set LINK=link.exe
           ren "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
-          where link
-          where gcc
-          where cl
-          where ld
-          where ar
 
       - name: Setup Standalone Python
         shell: bash
@@ -77,7 +71,8 @@ jobs:
       - name: Install Backend Packages into Bundled Python
         shell: bash
         run: |
-            ./python_env/python.exe -m pip install --upgrade pip setuptools wheel meson ninja
+            # ./python_env/python.exe -m pip install --upgrade pip setuptools wheel meson ninja
+            # ./python_env/python.exe -m pip install . --prefer-binary
             ./python_env/python.exe -m pip install . --prefer-binary
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
