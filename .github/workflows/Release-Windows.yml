@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   
   pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+    branches: [main]
 
 permissions:
   contents: write
@@ -16,6 +16,7 @@ jobs:
   build-windows:
     runs-on: windows-latest
     env:
+      GITHUB_REF: refs/tags/v0.1.0-beta # Disable, just for testing
       TARGET: x86_64-pc-windows-msvc
       BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-win-x86_64
       

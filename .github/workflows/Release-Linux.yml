@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+    branches: [main]
   
 permissions:
   contents: write
@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
+      GITHUB_REF: refs/tags/v0.1.0-beta # Disable, just for testing
       TARGET: x86_64-unknown-linux-gnu
       BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-linux-x86_64-unknown-linux-gnu
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
@@ -89,18 +90,20 @@ jobs:
           cp adqa-tui/target/${{ env.TARGET }}/release/adqa-tui ${{ env.BINARY_NAME }}/
           cp adqa-tui/target/${{ env.TARGET }}/release/adqa-cli ${{ env.BINARY_NAME }}/
           cp -r python_env ${{ env.BINARY_NAME }}/python
+
           rm -rf ${{ env.BINARY_NAME }}/python/share ${{ env.BINARY_NAME }}/python/include
           find ${{ env.BINARY_NAME }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
-          tar -czf ${{ env.BINARY_NAME }}.tar.gz ${{ env.BINARY_NAME }}/
+
+          tar -I 'zstd -19' -cf "${{ env.BINARY_NAME }}.tar.zst" "${{ env.BINARY_NAME }}/"
       
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
         uses: actions/upload-artifact@v6
         with:
           name: ${{ env.BINARY_NAME }}
-          path: ${{ env.BINARY_NAME }}.tar.gz
+          path: ${{ env.BINARY_NAME }}.tar.zst
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
-          files: ${{ env.BINARY_NAME }}.tar.gz
+          files: ${{ env.BINARY_NAME }}.tar.zst

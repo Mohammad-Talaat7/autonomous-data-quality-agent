@@ -14,6 +14,8 @@ permissions:
 
 jobs:
   build-macos:
+    env: 
+      GITHUB_REF: refs/tags/v0.1.0-beta # Disable, just for testing
     strategy:
       matrix:
         include:
@@ -47,8 +49,8 @@ jobs:
           # checksum check
           echo "${{ matrix.PYTHON_SHA256 }}  python.tar.gz" | sha256sum -c -
 
-          tar -xf python.tar.zst
-          mv python/install ../python_env
+          tar -xf python.tar.gz
+          mv python/ ../python_env
           cd ..
           chmod +x python_env/bin/python3
 
@@ -81,26 +83,27 @@ jobs:
       - name: Prepare Standalone Package
         shell: bash
         run: |
-          mkdir -p adqa-tui-bundle
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui adqa-tui-bundle/
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli adqa-tui-bundle/
+          mkdir -p ${{ matrix.binary_name }}
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui ${{ matrix.binary_name }}/
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli ${{ matrix.binary_name }}/
+          cp -r python_env ${{ matrix.binary_name }}/python
 
-          cp -r python_env adqa-tui-bundle/python
-          find adqa-tui-bundle/python -name "__pycache__" -type d -exec rm -rf {} + || true
+          rm -rf ${{ matrix.binary_name }}/python/share ${{ matrix.binary_name }}/python/include
+          find ${{ matrix.binary_name }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
           
           # Fix rpath so the binary finds the bundled dylib
-          install_name_tool -add_rpath "@executable_path/python/lib" adqa-tui-bundle/${{ matrix.binary_name }} || true
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ matrix.binary_name }}/${{ matrix.binary_name }} || true
           
-          tar -czf ${{ matrix.binary_name }}.tar.gz adqa-tui-bundle/
+          tar -I 'zstd -19' -cf "${{ matrix.binary_name }}.tar.zst" "${{ matrix.binary_name }}/"
       
       # Disable later, just for testing builds manual without publish tags
       - name: Upload Artifact
         uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.binary_name }}
-          path: ${{ matrix.binary_name }}.tar.gz
+          path: ${{ matrix.binary_name }}.tar.zst
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v4
         with:
-          files: ${{ matrix.binary_name }}.tar.gz
+          files: ${{ matrix.binary_name }}.tar.zst
