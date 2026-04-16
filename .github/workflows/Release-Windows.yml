@@ -6,8 +6,8 @@ on:
       - 'v*'
   workflow_dispatch:
 
-  pull_request:
-    branches: [main]
+  pull_request:  # fires on every push to any open PR branch
+    branches: [main_disable]
 
 permissions:
   contents: write
@@ -74,9 +74,6 @@ jobs:
         run: |
           curl -L -o arm_wheels.zip https://github.com/cgohlke/win_arm64-wheels/releases/download/v2024.6.15/2024.6.15-experimental-cp312-win_arm64.whl.zip
           unzip arm_wheels.zip -d ./local_wheels
-          
-          # ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
-          # ./python_env/python.exe -m pip install "meson==1.10.0"
           
           ./python_env/python.exe -m pip install . --find-links ./local_wheels --prefer-binary
 
@@ -149,7 +146,7 @@ jobs:
       - name: Upload MSI to Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: "v0.1.0-beta"
+          #tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}-installer.msi
-          draft: true
+          #draft: true
           prerelease: true

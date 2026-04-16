@@ -123,8 +123,8 @@ jobs:
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: "v0.1.0-beta" # Disable later
+          #tag_name: "v0.1.0-beta" # Disable later
           files: ${{ env.BINARY_NAME }}.dmg
-          draft: true
+          #draft: true
           prerelease: true
 
