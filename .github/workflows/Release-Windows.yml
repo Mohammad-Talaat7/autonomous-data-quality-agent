@@ -119,7 +119,7 @@ jobs:
             echo $PWD
             wix extension add --global WixToolset.UI.wixext/5.0.2
             Copy-Item ./distribution/win/adqa-installer.wxs ./adqa-installer.wxs
-            Copy-Item ./distribution/win/LICENSE.rtf ./LICENSE.rtf
+            # Copy-Item ./distribution/win/LICENSE.rtf ./LICENSE.rtf
             wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o "${{ env.BINARY_NAME }}-installer.msi"
 
       # Disable later, just for testing builds manual without publish tags

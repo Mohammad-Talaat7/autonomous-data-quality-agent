@@ -11,7 +11,7 @@
     <ComponentGroupRef Id="AppComponents" />
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/Mohammad-Talaat7/autonomous-data-quality-agent" />
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
-    <WixVariable Id="WixUILicenseRtf" Value="./LICENSE.rtf" />
+    <WixVariable Id="WixUILicenseRtf" Value="./distribution/win/LICENSE.rtf" />
 
   </Package>
 
