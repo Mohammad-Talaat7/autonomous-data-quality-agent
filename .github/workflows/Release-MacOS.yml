@@ -102,7 +102,7 @@ jobs:
           path: ${{ matrix.binary_name }}.tar.zst
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v4
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: "v0.1.0-beta" # Disable later
           files: ${{ matrix.binary_name }}.tar.zst
