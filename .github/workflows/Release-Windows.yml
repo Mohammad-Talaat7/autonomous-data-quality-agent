@@ -58,7 +58,7 @@ jobs:
       - name: Install Backend Packages into Bundled Python
         shell: bash
         run: |
-            ./python_env/python.exe -m pip install .
+            ./python_env/python.exe -m pip install . --prefer-binary
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
 
