@@ -41,18 +41,18 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Setup MSVC for ARM64
-        if: matrix.arch == 'arm64'
-        uses: TheMrMilchmann/setup-msvc-dev@v4
-        with:
-          arch: arm64
+      # - name: Setup MSVC for ARM64
+      #   if: matrix.arch == 'arm64'
+      #   uses: TheMrMilchmann/setup-msvc-dev@v4
+      #   with:
+      #     arch: arm64
 
-      - name: Fix PATH (prioritize MSVC over Git)
-        if: matrix.arch == 'arm64'
-        shell: cmd
-        run: |
-          set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
-          ren "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
+      # - name: Fix PATH (prioritize MSVC over Git)
+      #   if: matrix.arch == 'arm64'
+      #   shell: cmd
+      #   run: |
+      #     set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
+      #     ren "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
 
       - name: Setup Standalone Python
         shell: bash
@@ -75,7 +75,7 @@ jobs:
           curl -L -o arm_wheels.zip https://github.com/cgohlke/win_arm64-wheels/releases/download/v2024.6.15/2024.6.15-experimental-cp312-win_arm64.whl.zip
           unzip arm_wheels.zip -d ./local_wheels
           
-          ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
+          # ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
           # ./python_env/python.exe -m pip install "meson==1.10.0"
           
           ./python_env/python.exe -m pip install . --find-links ./local_wheels --prefer-binary
@@ -86,10 +86,8 @@ jobs:
 
       - name: Install Backend Packages x86_64
         if: matrix.arch == 'x64'
-        working-directory: .
         shell: bash
         run: |
-            echo $PWD
             ./python_env/python.exe -m pip install .
 
             mv ./python_env/python.exe ./python_env/python.exe_disable
