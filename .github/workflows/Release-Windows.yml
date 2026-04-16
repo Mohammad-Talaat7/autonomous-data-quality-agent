@@ -73,11 +73,13 @@ jobs:
         run: |
             ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
             ./python_env/python.exe -m pip install "meson==1.10.0"
-            
-            #set PIP_NO_BUILD_ISOLATION=1
-            set PIP_NO_BUILD_ISOLATION=1 && ./python_env/python.exe -m pip install .
 
-            #./python_env/python.exe -m pip install . --prefer-binary --no-build-isolation
+            ./python_env/python.exe -m pip install poetry-core poetry-dynamic-versioning
+            
+            # set PIP_NO_BUILD_ISOLATION=1
+            # set PIP_NO_BUILD_ISOLATION=1 && ./python_env/python.exe -m pip install .
+            ./python_env/python.exe -m pip install . --prefer-binary --no-build-isolation
+
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
             set PIP_NO_BUILD_ISOLATION=
