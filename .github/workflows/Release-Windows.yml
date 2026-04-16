@@ -67,22 +67,31 @@ jobs:
           tar -xf python.tar.gz
           mv python/ ../python_env
           cd ..
+     
+      - name: Install Backend Packages aarch64
+        if: matrix.arch == 'arm64'
+        shell: cmd
+        run: |
+          curl -L -o arm_wheels.zip https://github.com/cgohlke/win_arm64-wheels/releases/download/v2024.6.15/2024.6.15-experimental-cp312-win_arm64.whl.zip
+          unzip arm_wheels.zip -d ./local_wheels
+          
+          ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
+          # ./python_env/python.exe -m pip install "meson==1.10.0"
+          
+          ./python_env/python.exe -m pip install . --no-index --find-links ./local_wheels --prefer-binary
 
-      - name: Install Backend Packages into Bundled Python
+          mv ./python_env/python.exe ./python_env/python.exe_disable
+          mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
+
+
+      - name: Install Backend Packages x86_64
         shell: bash
         run: |
-            ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
-            ./python_env/python.exe -m pip install "meson==1.10.0"
-
-            ./python_env/python.exe -m pip install poetry-core poetry-dynamic-versioning
-            
-            # set PIP_NO_BUILD_ISOLATION=1
-            # set PIP_NO_BUILD_ISOLATION=1 && ./python_env/python.exe -m pip install .
-            ./python_env/python.exe -m pip install . --prefer-binary --no-build-isolation
+            ./python_env/python.exe -m pip install .
 
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
-            set PIP_NO_BUILD_ISOLATION=
+
 
       - name: Build TUI
         working-directory: adqa-tui
