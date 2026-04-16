@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+    branches: [main]
 
 permissions:
   contents: write
@@ -93,13 +93,6 @@ jobs:
 
           tar --use-compress-program='zstd -19' -cf "${{ matrix.binary_name }}.tar.zst" "${{ matrix.binary_name }}/"
       
-      # Disable later, just for testing builds manual without publish tags
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ matrix.binary_name }}
-          path: ${{ matrix.binary_name }}.tar.zst
-
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
@@ -107,3 +100,29 @@ jobs:
           files: ${{ matrix.binary_name }}.tar.zst
           draft: true
           prerelease: true
+      
+      # Create dmg
+      - name: Code sign
+        shell: bash
+        run: |
+            # Ad-hoc sign the binaries (the '-' means no identity/self-signed)
+            codesign --force --deep --sign - ${{ matrix.binary_name }}/adqa-tui
+            codesign --force --deep --sign - ${{ matrix.binary_name }}/adqa-cli
+
+      - name: hdiutil
+        shell: bash
+        run: |
+          hdiutil create \
+            -volname "${{ matrix.binary_name }}" \
+            -srcfolder "${{ matrix.binary_name }}" \
+            -ov -format UDZO \
+            "${{ matrix.binary_name }}.dmg"
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: "v0.1.0-beta" # Disable later
+          files: ${{ matrix.binary_name }}.dmg
+          draft: true
+          prerelease: true
+

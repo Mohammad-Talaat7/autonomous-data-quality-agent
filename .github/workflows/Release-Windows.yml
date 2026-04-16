@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   
   pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+    branches: [main]
 
 permissions:
   contents: write
@@ -81,13 +81,6 @@ jobs:
             cd ..
             7z a -tzip '${{ env.BINARY_NAME }}.zip' './${{ env.BINARY_NAME }}/*'
 
-      # Disable later, just for testing builds manual without publish tags
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ env.BINARY_NAME }}
-          path: ${{ env.BINARY_NAME }}.zip
-
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
         with:
@@ -120,13 +113,6 @@ jobs:
             wix extension add --global WixToolset.UI.wixext/5.0.2
             Copy-Item ./distribution/win/adqa-installer.wxs ./adqa-installer.wxs
             wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o "${{ env.BINARY_NAME }}-installer.msi"
-
-      # Disable later, just for testing builds manual without publish tags
-      - name: Upload MSI as artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: ${{ env.BINARY_NAME }}-installer.msi
-          path: ${{ env.BINARY_NAME }}-installer.msi
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
