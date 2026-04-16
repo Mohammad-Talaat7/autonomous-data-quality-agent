@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main]
+    branches: [main_disable]
   
 permissions:
   contents: write
@@ -16,6 +16,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     env:
+      # PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
       TARGET: x86_64-unknown-linux-gnu
       BINARY_NAME: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-linux-x86_64-unknown-linux-gnu
       PYTHON_URL: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
@@ -78,7 +79,7 @@ jobs:
           # Use shared linking and set RPATH so the binary finds libpython3.12.so in the bundle
           # $ORIGIN refers to the directory containing the executable
           export RUSTFLAGS="-L $LIB_DIR -Clink-arg=-Wl,-rpath,\$ORIGIN/python/lib"
-          
+                    
           cargo build --release --target ${{ env.TARGET }}
 
       - name: Prepare Standalone Package

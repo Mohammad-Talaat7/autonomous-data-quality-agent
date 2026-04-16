@@ -111,12 +111,12 @@ jobs:
 
       - name: Build MSI Installer
         run: |
-            $env:VERSION = if ($env:BINARY_NAME -match 'v(\d+\.\d+\.\d+)') { $matches[1] }
+            $env:VERSION = if (${{ env.BINARY_NAME }} -match 'v(\d+\.\d+\.\d+)') { $matches[1] }
             echo $env:VERSION
             echo $PWD
             wix extension add --global WixToolset.UI.wixext/5.0.2
             Copy-Item ./distribution/win/adqa-installer.wxs ./adqa-installer.wxs
-            wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o "$env:BINARY_NAME-installer.msi"
+            wix build ./adqa-installer.wxs -ext WixToolset.UI.wixext -o "${{ env.BINARY_NAME }}-installer.msi"
 
       # Disable later, just for testing builds manual without publish tags
       - name: Upload MSI as artifact

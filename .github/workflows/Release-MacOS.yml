@@ -6,6 +6,9 @@ on:
       - 'v*'
   workflow_dispatch:
 
+  pull_request:  # fires on every push to any open PR branch
+    branches: [main]
+
 permissions:
   contents: write
 
@@ -15,11 +18,15 @@ jobs:
       matrix:
         include:
           - target: x86_64-apple-darwin
-            binary_name: adqa-tui-macos-x86_64
-            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-x86_64-apple-darwin-pgo+lto-full.tar.zst"
+            binary_name: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-macos-x86_64
+            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.11.14+20260211-x86_64-apple-darwin-install_only_stripped.tar.gz"
+            PYTHON_SHA256: "7d335ad1c055fcc307723ae016018d8f861b0d49a80f43d5d4d595e7092dcae5"
+
           - target: aarch64-apple-darwin
-            binary_name: adqa-tui-macos-arm64
-            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20240107/cpython-3.12.1+20240107-aarch64-apple-darwin-pgo+lto-full.tar.zst"
+            binary_name: adqa-${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.0.0' }}-macos-arm64
+            python_url: "https://github.com/astral-sh/python-build-standalone/releases/download/20260211/cpython-3.12.12+20260211-aarch64-apple-darwin-install_only_stripped.tar.gz"
+            PYTHON_SHA256: "22625deaf5757e7c266cf1a096c9151a06b598b1e14632a2ec9993d58ec5fe84"
+    
     runs-on: macos-latest
     env:
       PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
@@ -35,7 +42,11 @@ jobs:
         run: |
           mkdir -p standalone_python
           cd standalone_python
-          curl -sfSL "${{ matrix.python_url }}" -o python.tar.zst
+          curl -sfSL "${{ matrix.python_url }}" -o python.tar.gz
+          
+          # checksum check
+          echo "${{ matrix.PYTHON_SHA256 }}  python.tar.gz" | sha256sum -c -
+
           tar -xf python.tar.zst
           mv python/install ../python_env
           cd ..
@@ -43,15 +54,6 @@ jobs:
 
       - name: Install Backend Packages into Bundled Python
         run: ./python_env/bin/python3 -m pip install .
-
-      - name: Sync Cargo.toml version
-        working-directory: adqa-tui
-        shell: bash
-        run: |
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-            sed "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml > Cargo.toml.tmp && mv Cargo.toml.tmp Cargo.toml
-          fi
 
       - name: Build TUI
         working-directory: adqa-tui
@@ -80,7 +82,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p adqa-tui-bundle
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui adqa-tui-bundle/${{ matrix.binary_name }}
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui adqa-tui-bundle/
+          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli adqa-tui-bundle/
+
           cp -r python_env adqa-tui-bundle/python
           find adqa-tui-bundle/python -name "__pycache__" -type d -exec rm -rf {} + || true
           
