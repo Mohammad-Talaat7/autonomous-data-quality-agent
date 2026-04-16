@@ -45,13 +45,14 @@ jobs:
         if: matrix.arch == 'arm64'
         uses: TheMrMilchmann/setup-msvc-dev@v4
         with:
-          arch: amd64_arm64
+          arch: arm64
 
       - name: Fix PATH (prioritize MSVC over Git)
         if: matrix.arch == 'arm64'
         shell: cmd
         run: |
           set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
+          set LINK=link.exe
           where link
 
       - name: Setup Standalone Python
@@ -71,7 +72,7 @@ jobs:
       - name: Install Backend Packages into Bundled Python
         shell: bash
         run: |
-            ./python_env/python.exe -m pip install --upgrade pip setuptools wheel
+            ./python_env/python.exe -m pip install --upgrade pip setuptools wheel meson ninja
             ./python_env/python.exe -m pip install . --prefer-binary
             mv ./python_env/python.exe ./python_env/python.exe_disable
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
