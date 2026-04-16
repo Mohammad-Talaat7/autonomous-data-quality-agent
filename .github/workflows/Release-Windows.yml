@@ -86,8 +86,10 @@ jobs:
 
       - name: Install Backend Packages x86_64
         if: matrix.arch == 'x64'
+        working-directory: .
         shell: bash
         run: |
+            echo $PWD
             ./python_env/python.exe -m pip install .
 
             mv ./python_env/python.exe ./python_env/python.exe_disable
