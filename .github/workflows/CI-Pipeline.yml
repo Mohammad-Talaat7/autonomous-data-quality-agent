@@ -10,7 +10,7 @@ on:
       - "v*"
   pull_request:
     branches:
-      - main
+      - main_disable
       - "phase-*"
       
 jobs:

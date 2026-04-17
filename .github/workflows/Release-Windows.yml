@@ -41,18 +41,18 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      # - name: Setup MSVC for ARM64
-      #   if: matrix.arch == 'arm64'
-      #   uses: TheMrMilchmann/setup-msvc-dev@v4
-      #   with:
-      #     arch: arm64
+      - name: Setup MSVC for ARM64
+        if: matrix.arch == 'arm64'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64
 
-      # - name: Fix PATH (prioritize MSVC over Git)
-      #   if: matrix.arch == 'arm64'
-      #   shell: cmd
-      #   run: |
-      #     set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
-      #     ren "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
+      - name: Fix PATH (prioritize MSVC over Git)
+        if: matrix.arch == 'arm64'
+        shell: cmd
+        run: |
+          set PATH=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.44.35207\bin\HostARM64\arm64;%PATH%
+          ren "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
 
       - name: Setup Standalone Python
         shell: bash
