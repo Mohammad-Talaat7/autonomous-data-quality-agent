@@ -70,7 +70,7 @@ jobs:
      
       - name: Install Backend Packages aarch64
         if: matrix.arch == 'arm64'
-        shell: cmd
+        shell: bash
         run: |
           curl -L -o arm_wheels.zip https://github.com/cgohlke/win_arm64-wheels/releases/download/v2024.6.15/2024.6.15-experimental-cp312-win_arm64.whl.zip
           unzip arm_wheels.zip -d ./local_wheels
