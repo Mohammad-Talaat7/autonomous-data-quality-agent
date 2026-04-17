@@ -120,9 +120,9 @@ jobs:
       - name: Upload Zip to Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: "v0.1.0-beta"
+          # tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}.zip
-          draft: true
+          # draft: true
           prerelease: true
       
       - name: Setup .NET
