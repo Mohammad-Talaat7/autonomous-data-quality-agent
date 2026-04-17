@@ -22,7 +22,7 @@ readme = "README.md"
 # Version is controlled dynamically via Git tags.
 # Ensure it is set to 0.0.0 before pushing to GitHub.
 # # Why? This acts as a placeholder for the dynamic versioning plugin to update.
-version = "0.1.3-post.5+2987bb4"
+version = "0.0.0"
 
 packages = [{ include = "adqa", from = "src" }]
 
@@ -183,7 +183,7 @@ adqa = "adqa.cli:main"
 # ============================================================
 
 [tool.poetry-dynamic-versioning]
-enable = false
+enable = true
 vcs = "git"
 style = "semver"
 dirty = true # If you have uncommitted changes, it will append a "post" or "dev" suffix instead of failing
