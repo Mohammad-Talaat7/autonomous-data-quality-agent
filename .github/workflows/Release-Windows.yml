@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
   pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+    branches: [main]
 
 permissions:
   contents: write
