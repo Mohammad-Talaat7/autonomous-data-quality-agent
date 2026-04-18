@@ -71,12 +71,12 @@ python = ">=3.12,<4.0"
 # -----------------------------
 # Core data stack (always installed)
 # -----------------------------
-pandas = "2.2.2"
-polars = "0.20.31"
-numpy = "2.0.0"
+pandas = "2.2.3"
+polars = "1.26.0"
+numpy = "2.2.4"
 
-sqlalchemy = "2.0"
-pydantic = "1.10.16"
+sqlalchemy = "2.0.40"
+pydantic = "^2.6"
 rich = "^13.7"
 loguru = "^0.7"
 
