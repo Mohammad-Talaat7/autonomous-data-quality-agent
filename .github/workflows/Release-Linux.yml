@@ -94,6 +94,10 @@ jobs:
           cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli ${{ env.BINARY_NAME }}/
           cp -r python_env ${{ env.BINARY_NAME }}/python
 
+          cp README.md LICENSE ${{ env.BINARY_NAME }}/
+          mkdir -p ${{ env.BINARY_NAME }}/samples
+          cp -r samples/* ./${{ env.BINARY_NAME }}/samples
+
           rm -rf ${{ env.BINARY_NAME }}/python/share ${{ env.BINARY_NAME }}/python/include
           find ${{ env.BINARY_NAME }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
 
