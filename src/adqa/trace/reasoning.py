@@ -28,6 +28,66 @@ class ReasonCode(str):
     RULE_VIOLATION: str = "rule_violation"
     METRIC_THRESHOLD_EXCEEDED: str = "metric_threshold_exceeded"
     CRITICAL_COLUMN: str = "critical_column"
+    MISSING_VALUES: str = "missing_values"
+    DUPLICATE_ROWS: str = "duplicate_rows"
+    CONSTANT_COLUMN: str = "constant_column"
+    OUTLIERS: str = "outliers"
+    HIGH_SKEWNESS: str = "high_skewness"
+    HIGH_CORRELATION: str = "high_correlation"
+    RANGE_VIOLATION: str = "range_violation"
+    PATTERN_VIOLATION: str = "pattern_violation"
+    PII_DETECTED: str = "pii_detected"
+    ANOMALY_SCORE: str = "anomaly_score"
+
+
+DETECTION_REASON_CODE_MAP: dict[str, str] = {
+    "missing_values": ReasonCode.MISSING_VALUES,
+    "duplicate_rows": ReasonCode.DUPLICATE_ROWS,
+    "constant_column": ReasonCode.CONSTANT_COLUMN,
+    "outliers": ReasonCode.OUTLIERS,
+    "high_skewness": ReasonCode.HIGH_SKEWNESS,
+    "high_correlation": ReasonCode.HIGH_CORRELATION,
+    "range_violation": ReasonCode.RANGE_VIOLATION,
+    "pattern_violation": ReasonCode.PATTERN_VIOLATION,
+    "pii_detected": ReasonCode.PII_DETECTED,
+    "anomaly_score": ReasonCode.ANOMALY_SCORE,
+}
+
+ML_REASON_CODE_MAP: dict[str, str] = {
+    "pii_detected": ReasonCode.PII_DETECTED,
+    "anomaly_score": ReasonCode.ANOMALY_SCORE,
+}
+
+
+def reason_code_for_issue(issue_type: str) -> str:
+    return DETECTION_REASON_CODE_MAP.get(issue_type, ReasonCode.RULE_VIOLATION)
+
+
+def collect_reason_codes(bundle: object | None) -> list[str]:
+    if bundle is None:
+        return []
+
+    seen: set[str] = set()
+    ordered: list[str] = []
+
+    detections = getattr(bundle, "detections", ())
+    for detection in detections:
+        code = reason_code_for_issue(getattr(detection, "issue_type", ""))
+        if code not in seen:
+            seen.add(code)
+            ordered.append(code)
+
+    ml_evidence = getattr(bundle, "ml_evidence", ())
+    for evidence in ml_evidence:
+        code = ML_REASON_CODE_MAP.get(
+            getattr(evidence, "signal_type", ""),
+            ReasonCode.METRIC_THRESHOLD_EXCEEDED,
+        )
+        if code not in seen:
+            seen.add(code)
+            ordered.append(code)
+
+    return ordered
 
 
 @dataclass

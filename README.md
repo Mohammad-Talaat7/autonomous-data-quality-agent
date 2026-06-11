@@ -43,7 +43,7 @@ Detailed guides, architecture deep-dives, and full API references are available 
 
 ## ✨ Key Features
 
-- **🔍 Multi-Source Ingress:** Direct support for CSV, Parquet, Excel, SQL (Postgres, MySQL, etc.), S3, and **300+ SaaS sources** via Airbyte.
+- **🔍 Multi-Source Ingress:** Direct support for CSV, Parquet, Excel, SQL (Postgres, MySQL, etc.), S3, and **600+ SaaS sources** via Airbyte.
 - **🧠 Intelligent Profiling:** 
     - **Structural:** Automated type inference and null-ratio analysis.
     - **Behavioral:** Outlier detection (Z-score/IQR), skewness, and cardinality.

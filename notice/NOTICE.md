@@ -4,3 +4,4 @@
 
 - [PyAirbyte](https://github.com/airbytehq/PyAirbyte) (Elastic License 2.0 (ELv2))
 - [litellm](https://github.com/BerriAI/litellm) (MIT License)
+- [WebSocketReflectorX](https://github.com/XDSEC/WebSocketReflectorX) (MIT License)

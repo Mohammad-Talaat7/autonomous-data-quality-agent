@@ -9,6 +9,7 @@ import pandas as pd
 
 if TYPE_CHECKING:
     from ..detection.results import DetectionResultBundle
+    from ..explanation.models import ADQAExplanation
     from ..execution.models import Action, ActionPlan
     from ..profiling.models.profiling_result import ProfilingResult
     from ..scoring.models import AggregatedScore, QualityDecision
@@ -37,6 +38,8 @@ class ADQAResult:
     # Human-in-the-loop
     plan: ActionPlan | None = None
     approval_payload: dict[str, Any] | None = None
+    explanation: ADQAExplanation | None = None
+    warnings: list[str] | None = None
 
     # Trace references (never raw trace data)
     trace_id: str | None = None
@@ -96,6 +99,10 @@ class ADQAResult:
             "detections": self.detections.to_dict() if self.detections else None,
             "plan": self.plan.to_dict() if self.plan else None,
             "actions": [a.to_dict() for a in self.actions] if self.actions else None,
+            "explanation": (
+                self.explanation.model_dump(mode="json") if self.explanation else None
+            ),
+            "warnings": self.warnings,
         }
 
     def save_json(self, file_path: str) -> None:

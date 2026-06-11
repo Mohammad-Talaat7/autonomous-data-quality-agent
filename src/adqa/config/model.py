@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any, ClassVar, Literal
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .errors import ConfigError
 
@@ -109,6 +109,29 @@ class ExecutionConfig(BaseModel):
     stop_on_block: bool = True
 
 
+class LLMConfig(BaseModel):
+    enabled: bool = False
+    provider: str = "litellm"
+    model: str | None = None
+    temperature: float = 0.0
+    timeout_seconds: int = 30
+    max_input_chars: int = Field(default=12000, le=50000)
+    redact_samples: bool = True
+    api_key: str | None = None
+    api_base: str | None = None
+    service_tier: str | None = None
+
+    @model_validator(mode="after")
+    def validate_llm_config(self) -> LLMConfig:
+        if self.enabled and not self.model:
+            raise ConfigError("LLM enabled configuration requires a model")
+
+        if not 0.0 <= self.temperature <= 0.3:
+            raise ConfigError("LLM temperature must be between 0.0 and 0.3")
+
+        return self
+
+
 class ADQAConfig(BaseModel):
     Mode: ClassVar[type[ExecutionMode]] = ExecutionMode
     TraceStore: ClassVar[type[TraceStoreType]] = TraceStoreType
@@ -149,6 +172,7 @@ class ADQAConfig(BaseModel):
     detection: DetectionConfig = DetectionConfig()
     scoring: ScoringConfig = ScoringConfig()
     execution: ExecutionConfig = ExecutionConfig()
+    llm: LLMConfig = LLMConfig()
 
     @classmethod
     def from_cli_args(

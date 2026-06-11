@@ -1,0 +1,119 @@
+import { Styles } from "../widgets/styles.slint";
+import { Button } from "../widgets/button.slint";
+import { AdqaBridge } from "../blocks/bridges.slint";
+
+export component ExplainPage inherits Rectangle {
+    background: transparent;
+
+    VerticalLayout {
+        padding: Styles.sizes.p-xl * 2;
+        spacing: Styles.sizes.s-lg;
+
+        HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            Text {
+                text: "LLM Explanation";
+                font-size: Styles.sizes.font * 1.3;
+                font-weight: 700;
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+            }
+
+            Rectangle { horizontal-stretch: 1; background: transparent; }
+
+            Button {
+                text: "LLM Explain";
+                icon: @image-url("../assets/code.svg");
+                icon-color: Styles.palette.info-bg;
+                clicked => {
+                    AdqaBridge.run-explain();
+                    AdqaBridge.run-llm-explain();
+                }
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        if !AdqaBridge.llm-enabled: Rectangle {
+            background: Styles.palette.layer-1;
+            border-radius: Styles.sizes.r-md;
+            height: Styles.sizes.h-md * 2;
+
+            Text {
+                text: "LLM is not enabled. Go to Settings to configure an LLM provider.";
+                color: Styles.palette.warn-bg;
+                vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+
+        if AdqaBridge.llm-enabled: VerticalLayout {
+            spacing: Styles.sizes.s-lg;
+
+            // ── Root Cause Analysis ──
+            Text {
+                text: "Root Cause Analysis:";
+                color: Styles.palette.window-fg;
+                font-weight: 600;
+            }
+
+            explain-area := Rectangle {
+                background: Styles.palette.layer-1;
+                border-radius: Styles.sizes.r-md;
+                horizontal-stretch: 1;
+                height: 200px;
+                clip: true;
+
+                Flickable {
+                    VerticalLayout {
+                        padding: Styles.sizes.p-md;
+                        spacing: Styles.sizes.s-sm;
+
+                        Text {
+                            text: AdqaBridge.result-explain == "" ? "No root cause analysis yet. Click \"LLM Explain\" to generate one." : AdqaBridge.result-explain;
+                            font-family: "Reverier Mono";
+                            font-size: Styles.sizes.font * 0.8;
+                            color: AdqaBridge.result-explain == "" ? Styles.palette.window-alter-fg : Styles.palette.window-fg;
+                            wrap: TextWrap.word-wrap;
+                            width: explain-area.width - Styles.sizes.p-md * 2;
+                        }
+                    }
+                }
+            }
+
+            Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+            // ── LLM Explanation ──
+            Text {
+                text: "LLM Explanation:";
+                color: Styles.palette.window-fg;
+                font-weight: 600;
+            }
+
+            llm-explain-area := Rectangle {
+                background: Styles.palette.layer-1;
+                border-radius: Styles.sizes.r-md;
+                vertical-stretch: 1;
+                horizontal-stretch: 1;
+                min-height: 200px;
+                clip: true;
+
+                Flickable {
+                    VerticalLayout {
+                        padding: Styles.sizes.p-md;
+                        spacing: Styles.sizes.s-sm;
+
+                        Text {
+                            text: AdqaBridge.result-llm-explain == "" ? "No LLM explanation yet. Click \"LLM Explain\" to generate one." : AdqaBridge.result-llm-explain;
+                            font-family: "Reverier Mono";
+                            font-size: Styles.sizes.font * 0.8;
+                            color: AdqaBridge.result-llm-explain == "" ? Styles.palette.window-alter-fg : Styles.palette.window-fg;
+                            wrap: TextWrap.word-wrap;
+                            width: llm-explain-area.width - Styles.sizes.p-md * 2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

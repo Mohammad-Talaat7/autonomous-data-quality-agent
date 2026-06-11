@@ -77,6 +77,6 @@ source = DataSource.airbyte(
 
 ## Why use Airbyte with ADQA?
 
-1. **Broad Connectivity**: Access 300+ SaaS platforms and databases.
+1. **Broad Connectivity**: Access 600+ SaaS platforms and databases.
 2. **Standardization**: Airbyte handles the complexity of API pagination, rate limiting, and schema discovery.
 3. **Seamless Integration**: Once configured as a `DataSource`, the data flows through ADQA's profiling and detection engines like any other local file.

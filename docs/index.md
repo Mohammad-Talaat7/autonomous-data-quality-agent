@@ -29,7 +29,7 @@ pip install ".[ml]"
 ### Using the Python API
 
 ```python
-from adqa import ADQA, ADQAConfig, DataSource
+from adqa import ADQA, ADQAConfig
 
 # 1. Initialize with a data source
 agent = ADQA.from_path("sample_data.csv")

@@ -29,7 +29,6 @@ theme:
     - content.code.copy
 
 nav:
-  - Home: index.md
   - Guide:
       - Getting Started: index.md
       - Data Ingress: ingress.md
@@ -43,8 +42,9 @@ nav:
       - Configuration: api/config.md
       - Detection: api/detection.md
       - Profiling: api/profiling.md
-  - About:
+  - Third-Party Integrations:
       - PyAirByte Integration: PyAirByte.md
+      - LiteLLM AI Integration: ai-integration.md
 
 plugins:
   - search

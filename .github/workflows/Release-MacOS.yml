@@ -6,8 +6,8 @@ on:
       - 'v*'
   workflow_dispatch:
 
-  pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+  # pull_request:  # fires on every push to any open PR branch
+  #   branches: [main]
 
 permissions:
   contents: write
@@ -53,8 +53,8 @@ jobs:
       - name: Install Backend Packages into Bundled Python
         run: ./python_env/bin/python3 -m pip install .
 
-      - name: Build TUI
-        working-directory: adqa-tui
+      - name: Build Binaries  
+        working-directory: rust
         shell: bash
         run: |
           PYTHON_ROOT_DIR=$(realpath "../python_env")
@@ -80,8 +80,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p ${{ env.BINARY_NAME }}
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui ${{ env.BINARY_NAME }}/
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli ${{ env.BINARY_NAME }}/
+          cp rust/target/${{ matrix.target }}/release/adqa-cli ${{ env.BINARY_NAME }}/
+          cp rust/target/${{ matrix.target }}/release/adqa-tui ${{ env.BINARY_NAME }}/
+          cp rust/target/${{ matrix.target }}/release/adqa-slint ${{ env.BINARY_NAME }}/
           cp -r python_env ${{ env.BINARY_NAME }}/python
 
           cp README.md LICENSE ${{ env.BINARY_NAME }}/
@@ -92,8 +93,9 @@ jobs:
           find ${{ env.BINARY_NAME }}/python -name "__pycache__" -type d -exec rm -rf {} + || true
           
           # Fix rpath so the binary finds the bundled dylib
-          install_name_tool -add_rpath "@executable_path/python/lib" ${{ env.BINARY_NAME }}/adqa-tui || true
           install_name_tool -add_rpath "@executable_path/python/lib" ${{ env.BINARY_NAME }}/adqa-cli || true
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ env.BINARY_NAME }}/adqa-tui || true
+          install_name_tool -add_rpath "@executable_path/python/lib" ${{ env.BINARY_NAME }}/adqa-slint || true
 
           tar --use-compress-program='zstd -19' -cf "${{ env.BINARY_NAME }}.tar.zst" "${{ env.BINARY_NAME }}/"
       
@@ -103,7 +105,7 @@ jobs:
           # tag_name: "v0.1.0-beta" # Disable later
           files: ${{ env.BINARY_NAME }}.tar.zst
           # draft: true
-          prerelease: true
+          # prerelease: true
       
       # Create dmg
       # You have to sign your .dmg files by pay 99$/year to apple or will be blocked by gatekeeper.
@@ -111,8 +113,9 @@ jobs:
         shell: bash
         run: |
             # Ad-hoc sign the binaries (the '-' means no identity/self-signed)
-            codesign --force --deep --sign - ${{ env.BINARY_NAME }}/adqa-tui
             codesign --force --deep --sign - ${{ env.BINARY_NAME }}/adqa-cli
+            codesign --force --deep --sign - ${{ env.BINARY_NAME }}/adqa-tui
+            codesign --force --deep --sign - ${{ env.BINARY_NAME }}/adqa-slint
 
       - name: hdiutil
         shell: bash
@@ -130,5 +133,5 @@ jobs:
           # tag_name: "v0.1.0-beta" # Disable later
           files: ${{ env.BINARY_NAME }}.dmg
           # draft: true
-          prerelease: true
+          # prerelease: true
 

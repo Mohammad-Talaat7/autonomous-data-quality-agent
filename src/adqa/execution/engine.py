@@ -35,6 +35,10 @@ class ExecutionEngine:
         # -------- policy evaluation --------
         plan = self.policy.evaluate(decision, config)
 
+        # -------- self-healing auto-approval --------
+        from .self_healing import SelfHealingController
+        plan = SelfHealingController.auto_approve_low_risk(plan, decision)
+
         if self.tracer:
             self.tracer.trace(
                 "ACTION_PLAN",

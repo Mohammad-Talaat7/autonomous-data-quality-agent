@@ -1,0 +1,125 @@
+import { Styles } from "../widgets/styles.slint";
+import { Button } from "../widgets/button.slint";
+import { AdqaBridge } from "../blocks/bridges.slint";
+
+export component RemediationPage inherits Rectangle {
+    background: transparent;
+
+    VerticalLayout {
+        padding: Styles.sizes.p-xl * 2;
+        spacing: Styles.sizes.s-lg;
+
+        HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            Text {
+                text: "Remediation + Healing Data";
+                font-size: Styles.sizes.font * 1.3;
+                font-weight: 700;
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+            }
+
+            Rectangle { horizontal-stretch: 1; background: transparent; }
+
+            Button {
+                text: "Remediate";
+                icon: @image-url("../assets/arrow-sync.svg");
+                icon-color: Styles.palette.warn-bg;
+                clicked => { AdqaBridge.run-remediation(); }
+            }
+
+            Button {
+                text: "Heal Data";
+                icon: @image-url("../assets/checkmark-circle.svg");
+                icon-color: Styles.palette.success-bg;
+                clicked => { AdqaBridge.run-heal(); }
+            }
+
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        if AdqaBridge.result-healed-path != "": HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            Text {
+                text: "Output path: " + AdqaBridge.result-healed-path;
+                color: Styles.palette.info-bg;
+                font-size: Styles.sizes.font * 0.9;
+                vertical-alignment: center;
+            }
+        }
+
+        // ── Top: Proposed Actions preview ──
+        Text {
+            text: "Proposed Actions:";
+            color: Styles.palette.window-fg;
+            font-weight: 600;
+        }
+
+        remediation-area := Rectangle {
+            background: Styles.palette.layer-1;
+            border-radius: Styles.sizes.r-md;
+            horizontal-stretch: 1;
+            height: 240px;
+            clip: true;
+
+            Flickable {
+                VerticalLayout {
+                    padding: Styles.sizes.p-md;
+                    spacing: Styles.sizes.s-sm;
+
+                    Text {
+                        text: AdqaBridge.result-remediation == "" ? "No remediation proposals yet. Click \"Remediate\" to generate them." : AdqaBridge.result-remediation;
+                        font-family: "Reverier Mono";
+                        font-size: Styles.sizes.font * 0.8;
+                        color: AdqaBridge.result-remediation == "" ? Styles.palette.window-alter-fg : Styles.palette.window-fg;
+                        wrap: TextWrap.word-wrap;
+                        width: remediation-area.width - Styles.sizes.p-md * 2;
+                    }
+                }
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        if AdqaBridge.result-healed-preview == "": Rectangle {
+            background: Styles.palette.layer-1;
+            border-radius: Styles.sizes.r-md;
+            height: 200px;
+            horizontal-stretch: 1;
+
+            Text {
+                text: "No healed data yet. Run analysis and remediation first.";
+                color: Styles.palette.window-fg;
+                opacity: 0.5;
+                vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+
+        if AdqaBridge.result-healed-preview != "": healed-area := Rectangle {
+            background: Styles.palette.layer-1;
+            border-radius: Styles.sizes.r-md;
+            vertical-stretch: 1;
+            horizontal-stretch: 1;
+            min-height: 200px;
+            clip: true;
+
+            Flickable {
+                VerticalLayout {
+                    padding: Styles.sizes.p-md;
+                    spacing: Styles.sizes.s-sm;
+
+                    Text {
+                        text: AdqaBridge.result-healed-preview;
+                        font-family: "Reverier Mono";
+                        font-size: Styles.sizes.font * 0.8;
+                        color: Styles.palette.window-fg;
+                        wrap: TextWrap.word-wrap;
+                        width: healed-area.width - Styles.sizes.p-md * 2;
+                    }
+                }
+            }
+        }
+    }
+}

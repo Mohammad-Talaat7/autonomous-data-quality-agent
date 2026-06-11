@@ -35,7 +35,11 @@ ADQA operates in three distinct modes to balance autonomy with safety:
 ```python
 from adqa import ADQA, ADQAConfig, ExecutionMode
 
-config = ADQAConfig(execution_mode=ExecutionMode.AUTOMATIC)
+config = ADQAConfig(
+    execution_mode=ExecutionMode.AUTOMATIC,
+    tracing_enabled=True
+)
+
 agent = ADQA.from_path("dirty_data.csv", config=config)
 
 # This will detect issues and apply fixes in one call
@@ -43,4 +47,6 @@ result = agent.analyze()
 
 # result.dataframe now contains the healed data
 healed_df = result.dataframe
+print(result)
+
 ```

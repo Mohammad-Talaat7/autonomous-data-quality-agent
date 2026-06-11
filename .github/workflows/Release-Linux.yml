@@ -6,8 +6,8 @@ on:
       - 'v*'
   workflow_dispatch:
 
-  pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+  # pull_request:  # fires on every push to any open PR branch
+  #   branches: [main]
 
 permissions:
   contents: write
@@ -57,8 +57,8 @@ jobs:
       - name: Install Backend Packages into Bundled Python
         run: ./python_env/bin/python3 -m pip install .
 
-      - name: Build TUI
-        working-directory: adqa-tui
+      - name: Build Binaries
+        working-directory: rust
         shell: bash
         run: |
           PYTHON_ROOT_DIR=$(realpath "../python_env")
@@ -90,8 +90,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p ${{ env.BINARY_NAME }}
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui ${{ env.BINARY_NAME }}/
-          cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli ${{ env.BINARY_NAME }}/
+          cp rust/target/${{ matrix.target }}/release/adqa-cli ${{ env.BINARY_NAME }}/
+          cp rust/target/${{ matrix.target }}/release/adqa-tui ${{ env.BINARY_NAME }}/
+          cp rust/target/${{ matrix.target }}/release/adqa-slint ${{ env.BINARY_NAME }}/
           cp -r python_env ${{ env.BINARY_NAME }}/python
 
           cp README.md LICENSE ${{ env.BINARY_NAME }}/
@@ -109,4 +110,4 @@ jobs:
           # tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}.tar.zst
           # draft: true
-          prerelease: true
+          # prerelease: true

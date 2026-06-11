@@ -1,0 +1,116 @@
+import "fonts/reverier-mono-regular.ttf";
+
+import { Styles } from "widgets/styles.slint";
+import { SideBar } from "blocks/side-bar.slint";
+
+import { WindowControlBridge, SystemInfoBridge, SettingsBridge, AdqaBridge } from "blocks/bridges.slint";
+import { FramelessWindow } from "widgets/frameless-window.slint";
+import { TitleBar } from "blocks/title-bar.slint";
+import { UiState } from "blocks/globals.slint";
+import { Stack } from "blocks/stack.slint";
+
+export { WindowControlBridge, SystemInfoBridge, SettingsBridge, AdqaBridge, UiState }
+
+export component MainWindow inherits FramelessWindow {
+    title: "ADQA - Autonomous Data Quality Agent";
+    default-font-family: Styles.font-family;
+    default-font-size: Styles.sizes.font;
+    preferred-width: 1200px;
+    preferred-height: 750px;
+    min-width: 900px;
+    min-height: 600px;
+    icon: SystemInfoBridge.os == "windows" ? @image-url("assets/logo.png") : @image-url("assets/logo.svg");
+    border-radius: (SystemInfoBridge.os == "windows" || self.maximized) ? 0 : Styles.sizes.r-lg;
+    no-frame: SystemInfoBridge.os == "macos" ? false : true;
+
+    in-out property <bool> main-window-maximized <=> self.maximized;
+    in-out property <bool> main-window-minimized <=> self.minimized;
+
+    callback main-window-resize(string);
+
+    resize(e) => {
+        main-window-resize(e);
+    }
+
+    border-color: Styles.palette.layer-3;
+    forward-focus: global-shortcut-handler;
+
+    global-shortcut-handler := FocusScope {
+        key-pressed(event) => {
+            // Ctrl + Q to quit
+            if (event.text == "q" && event.modifiers.control) {
+                WindowControlBridge.close();
+            }
+            accept
+        }
+    }
+
+    VerticalLayout {
+        spacing: 0;
+        padding: 0;
+
+        HorizontalLayout {
+            spacing: 0;
+            padding: 0;
+
+            side-bar := SideBar {
+                maximized: root.maximized;
+                width: UiState.show-sidebar ? 256px : 0px;
+            }
+
+            VerticalLayout {
+                spacing: 0;
+                padding: 0;
+
+                title-bar := TitleBar {
+                    maximized: root.maximized;
+                    minimized: root.minimized;
+                    vertical-stretch: 0;
+                    horizontal-stretch: 1;
+                }
+
+                Stack {
+                    vertical-stretch: 1;
+                }
+
+                // ── Bottom status bar: Cost & Context ──
+                if AdqaBridge.llm-enabled || AdqaBridge.cost-info != "": Rectangle {
+                    background: Styles.palette.layer-1;
+                    height: Styles.sizes.h-sm;
+                    horizontal-stretch: 1;
+
+                    HorizontalLayout {
+                        padding-left: Styles.sizes.p-md;
+                        padding-right: Styles.sizes.p-md;
+                        spacing: Styles.sizes.s-lg;
+
+                        if AdqaBridge.cost-info != "": Text {
+                            text: AdqaBridge.cost-info;
+                            color: Styles.palette.info-bg;
+                            font-size: Styles.sizes.font * 0.75;
+                            vertical-alignment: center;
+                        }
+
+                        if AdqaBridge.context-info != "": Text {
+                            text: AdqaBridge.context-info;
+                            color: Styles.palette.window-fg;
+                            opacity: 0.6;
+                            font-size: Styles.sizes.font * 0.75;
+                            vertical-alignment: center;
+                        }
+
+                        Rectangle { horizontal-stretch: 1; background: transparent; }
+
+                        Text {
+                            text: AdqaBridge.status-message;
+                            color: Styles.palette.window-fg;
+                            opacity: 0.5;
+                            font-size: Styles.sizes.font * 0.75;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,171 @@
+import { Styles } from "../widgets/styles.slint";
+import { Button } from "../widgets/button.slint";
+import { LineEdit } from "../widgets/line-edit.slint";
+import { AdqaBridge, ChatMessage } from "../blocks/bridges.slint";
+
+export component ChatPage inherits Rectangle {
+    background: transparent;
+
+    VerticalLayout {
+        padding: Styles.sizes.p-xl * 2;
+        spacing: Styles.sizes.s-lg;
+
+        HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            Text {
+                text: "Chat with ADQA";
+                font-size: Styles.sizes.font * 1.3;
+                font-weight: 700;
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+            }
+
+            Rectangle { horizontal-stretch: 1; background: transparent; }
+
+            Button {
+                text: "Clear";
+                icon: @image-url("../assets/dismiss.svg");
+                icon-color: Styles.palette.window-fg;
+                flat: true;
+                clicked => {
+                    AdqaBridge.chat-history = "";
+                    AdqaBridge.chat-messages = [];
+                    AdqaBridge.reset-chat-session();
+                }
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        if !AdqaBridge.llm-enabled: Rectangle {
+            background: Styles.palette.layer-1;
+            border-radius: Styles.sizes.r-md;
+            height: Styles.sizes.h-md * 2;
+
+            Text {
+                text: "LLM is not enabled. Go to Settings to configure an LLM provider.";
+                color: Styles.palette.warn-bg;
+                vertical-alignment: center;
+                horizontal-alignment: center;
+            }
+        }
+
+        if AdqaBridge.llm-enabled: VerticalLayout {
+            spacing: Styles.sizes.s-md;
+
+            // Chat history area
+            chat-area := Rectangle {
+                background: Styles.palette.layer-1;
+                border-radius: Styles.sizes.r-md;
+                vertical-stretch: 1;
+                horizontal-stretch: 1;
+                min-height: 200px;
+                clip: true;
+
+                Flickable {
+                    viewport-height: chat-messages-layout.preferred-height;
+                    viewport-width: self.width;
+
+                    VerticalLayout {
+                        chat-messages-layout := VerticalLayout {
+                            padding: Styles.sizes.p-md;
+                            spacing: Styles.sizes.s-md;
+                            alignment: start;
+
+                            for msg in AdqaBridge.chat-messages: HorizontalLayout {
+                                alignment: msg.is-user ? end : start;
+                                spacing: Styles.sizes.s-sm;
+
+                                // Copy button on author's side of the bubble
+                                if msg.is-user: Rectangle {
+                                    background: transparent;
+                                    width: Styles.sizes.icon;
+                                    height: Styles.sizes.icon;
+                                    y: Styles.sizes.p-sm;
+
+                                    copy-touch-left := TouchArea {
+                                        mouse-cursor: MouseCursor.pointer;
+                                        clicked => {
+                                            AdqaBridge.copy-to-clipboard(msg.text);
+                                        }
+                                    }
+
+                                    Image {
+                                        width: parent.width;
+                                        height: parent.height;
+                                        source: @image-url("../assets/copy.svg");
+                                        colorize: copy-touch-left.has-hover ? Styles.palette.primary-bg : Styles.palette.window-fg;
+                                        opacity: copy-touch-left.has-hover ? 0.9 : 0.35;
+                                    }
+                                }
+
+                                msg-bubble := Rectangle {
+                                    width: Math.min(parent.width * 0.7, msg-text.preferred-width + Styles.sizes.p-xl * 2);
+                                    height: msg-text.preferred-height + Styles.sizes.p-md * 2;
+                                    background: msg.is-user ? Styles.palette.primary-bg : Styles.palette.layer-4;
+                                    border-radius: Styles.sizes.r-md;
+
+                                    msg-text := Text {
+                                        x: Styles.sizes.p-lg;
+                                        y: Styles.sizes.p-sm;
+                                        width: parent.width - Styles.sizes.p-xl * 2;
+                                        text: msg.text;
+                                        font-family: "Reverier Mono";
+                                        font-size: Styles.sizes.font * 0.85;
+                                        color: msg.is-user ? Styles.palette.primary-fg : Styles.palette.window-fg;
+                                        wrap: TextWrap.word-wrap;
+                                    }
+                                }
+
+                                if !msg.is-user: Rectangle {
+                                    background: transparent;
+                                    width: Styles.sizes.icon;
+                                    height: Styles.sizes.icon;
+                                    y: Styles.sizes.p-sm;
+
+                                    copy-touch-right := TouchArea {
+                                        mouse-cursor: MouseCursor.pointer;
+                                        clicked => {
+                                            AdqaBridge.copy-to-clipboard(msg.text);
+                                        }
+                                    }
+
+                                    Image {
+                                        width: parent.width;
+                                        height: parent.height;
+                                        source: @image-url("../assets/copy.svg");
+                                        colorize: copy-touch-right.has-hover ? Styles.palette.primary-bg : Styles.palette.window-fg;
+                                        opacity: copy-touch-right.has-hover ? 0.9 : 0.35;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Input area
+            HorizontalLayout {
+                spacing: Styles.sizes.s-md;
+
+                chat-input-field := LineEdit {
+                    text <=> AdqaBridge.chat-input;
+                    horizontal-stretch: 1;
+                    placeholder-text: "Ask about the data quality results...";
+                    accepted => {
+                        AdqaBridge.send-chat();
+                    }
+                }
+
+                Button {
+                    text: "Send";
+                    icon: @image-url("../assets/send.svg");
+                    icon-color: Styles.palette.primary-bg;
+                    clicked => {
+                        AdqaBridge.send-chat();
+                    }
+                }
+            }
+        }
+    }
+}

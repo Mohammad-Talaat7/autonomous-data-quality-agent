@@ -1,0 +1,472 @@
+import { Styles } from "../widgets/styles.slint";
+import { Button } from "../widgets/button.slint";
+import { LineEdit } from "../widgets/line-edit.slint";
+import { SystemInfoBridge, SettingsBridge, AdqaBridge } from "../blocks/bridges.slint";
+
+export component SettingsPage inherits Rectangle {
+    background: transparent;
+
+    Flickable {
+        width: parent.width;
+        height: parent.height;
+        VerticalLayout {
+        padding: Styles.sizes.p-xl * 2;
+        spacing: Styles.sizes.s-lg;
+
+        // ── Header ──
+        HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            Image {
+                source: @image-url("../assets/logo-stroked.svg");
+                width: 48px;
+                height: 48px;
+            }
+            Text {
+                text: "ADQA Settings";
+                font-size: Styles.sizes.font * 1.5;
+                font-weight: 700;
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        // ── LLM Section ──
+        Text {
+            text: "LLM Configuration";
+            font-size: Styles.sizes.font * 1.1;
+            font-weight: 600;
+            color: Styles.palette.window-fg;
+        }
+
+        // LLM Toggle
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Enable LLM:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            Button {
+                flat: true;
+                text: AdqaBridge.llm-enabled ? "Enabled" : "Disabled";
+                icon: AdqaBridge.llm-enabled ? @image-url("../assets/checkmark-circle.svg") : @image-url("../assets/dismiss.svg");
+                icon-color: AdqaBridge.llm-enabled ? Styles.palette.success-bg : Styles.palette.window-fg;
+                clicked => {
+                    AdqaBridge.llm-enabled = !AdqaBridge.llm-enabled;
+                }
+            }
+        }
+
+        // Provider dropdown
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Provider:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+
+            provider-btn := Button {
+                text: AdqaBridge.llm-provider;
+                icon: @image-url("../assets/globe.svg");
+                icon-color: Styles.palette.primary-bg;
+                flat: true;
+                alignment: start;
+                preferred-width: 200px;
+
+                clicked => { provider-popup.show(); }
+
+                provider-popup := PopupWindow {
+                    width: parent.width + Styles.sizes.p-md * 2;
+                    height: 480px;
+                    x: -Styles.sizes.p-md;
+                    y: parent.height + Styles.sizes.s-md;
+
+                    Rectangle {
+                        background: Styles.palette.window-alter-bg;
+                        border-color: Styles.palette.window-border;
+                        border-width: 1px;
+                        border-radius: Styles.sizes.r-lg;
+                        clip: true;
+
+                        Flickable {
+                            VerticalLayout {
+                                spacing: 0;
+                                padding: Styles.sizes.p-md;
+
+                                for provider in [
+                                    "openai", "azure", "anthropic", "cohere",
+                                    "mistral", "groq", "together_ai",
+                                    "deepseek", "openrouter", "perplexity",
+                                    "vertex_ai", "bedrock", "fireworks_ai",
+                                    "replicate", "huggingface", "deepinfra",
+                                    "anyscale", "vllm", "ollama",
+                                    "sagemaker", "databricks", "cloudflare",
+                                    "voyage", "watsonx", "xinference",
+                                    "ai21", "baseten", "nlp_cloud",
+                                    "petals", "maritalk", "clarifai",
+                                    "triton", "predibase", "custom"
+                                ]: Button {
+                                    text: provider;
+                                    flat: true;
+                                    alignment: start;
+                                    clicked => {
+                                        AdqaBridge.llm-provider = provider;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Model
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Model:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            model-edit := LineEdit {
+                text <=> AdqaBridge.llm-model;
+                width: 300px;
+                placeholder-text: "e.g. gpt-4o, claude-3-opus...";
+                edited => { AdqaBridge.calculate-cost(); }
+            }
+        }
+
+        // API Key
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "API Key:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            LineEdit {
+                text <=> AdqaBridge.llm-api-key;
+                width: 300px;
+                placeholder-text: "sk-... (or set env var)";
+                input-type: InputType.password;
+                edited(text) => {
+                    AdqaBridge.apply-llm-credentials(text, AdqaBridge.llm-api-base);
+                }
+                accepted(text) => {
+                    AdqaBridge.apply-llm-credentials(text, AdqaBridge.llm-api-base);
+                }
+            }
+        }
+
+        // API Base URL
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "API Base URL:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            LineEdit {
+                text <=> AdqaBridge.llm-api-base;
+                width: 300px;
+                placeholder-text: "https://api.openai.com/v1";
+                edited(text) => {
+                    AdqaBridge.apply-llm-credentials(AdqaBridge.llm-api-key, text);
+                }
+                accepted(text) => {
+                    AdqaBridge.apply-llm-credentials(AdqaBridge.llm-api-key, text);
+                }
+            }
+        }
+
+        // Flex processing (GPT-5 models only)
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Flex (x0.5 cost for GPT-5 models):";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            Button {
+                text: AdqaBridge.llm-flex ? "Enabled" : "Disabled";
+                icon: AdqaBridge.llm-flex ? @image-url("../assets/checkmark-circle.svg") : @image-url("../assets/dismiss.svg");
+                icon-color: AdqaBridge.llm-flex ? Styles.palette.success-bg : Styles.palette.window-fg;
+                flat: true;
+                clicked => { AdqaBridge.llm-flex = !AdqaBridge.llm-flex; AdqaBridge.calculate-cost(); }
+            }
+        }
+
+        // Timeout
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Timeout (s):";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            timeout-edit := LineEdit {
+                text: AdqaBridge.llm-timeout;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-llm-timeout(text);
+                }
+            }
+        }
+
+        // Max input chars
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Max Input Chars:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            maxchars-edit := LineEdit {
+                text: AdqaBridge.llm-max-input-chars;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-llm-max-input-chars(text);
+                }
+            }
+        }
+
+        // Redaction toggle
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Redact Samples:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            Button {
+                flat: true;
+                text: AdqaBridge.llm-redact ? "Yes" : "No";
+                icon: AdqaBridge.llm-redact ? @image-url("../assets/checkmark-circle.svg") : @image-url("../assets/dismiss.svg");
+                icon-color: AdqaBridge.llm-redact ? Styles.palette.success-bg : Styles.palette.window-fg;
+                clicked => {
+                    AdqaBridge.llm-redact = !AdqaBridge.llm-redact;
+                }
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        // ── LLM Cost ──
+        Text {
+            text: "LLM Cost";
+            font-size: Styles.sizes.font * 1.1;
+            font-weight: 600;
+            color: Styles.palette.window-fg;
+        }
+
+        if AdqaBridge.cost-info != "": Rectangle {
+            background: Styles.palette.layer-1;
+            border-radius: Styles.sizes.r-md;
+
+            Text {
+                text: AdqaBridge.cost-info;
+                font-family: "Reverier Mono";
+                font-size: Styles.sizes.font * 0.8;
+                color: Styles.palette.info-bg;
+                wrap: TextWrap.word-wrap;
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        // ── Detection Thresholds ──
+        Text {
+            text: "Detection Thresholds";
+            font-size: Styles.sizes.font * 1.1;
+            font-weight: 600;
+            color: Styles.palette.window-fg;
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Missing Values:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            missing-edit := LineEdit {
+                text: round(AdqaBridge.missing-threshold * 100) / 100;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-missing-threshold(text);
+                }
+            }
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Outlier Ratio:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            outlier-edit := LineEdit {
+                text: round(AdqaBridge.outlier-threshold * 100) / 100;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-outlier-threshold(text);
+                }
+            }
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Duplicate Rows:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            dup-edit := LineEdit {
+                text: round(AdqaBridge.duplicate-threshold * 100) / 100;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-duplicate-threshold(text);
+                }
+            }
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Imbalance:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            imb-edit := LineEdit {
+                text: round(AdqaBridge.imbalance-threshold * 100) / 100;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-imbalance-threshold(text);
+                }
+            }
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Skewness:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            skew-edit := LineEdit {
+                text: round(AdqaBridge.skewness-threshold * 100) / 100;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-skewness-threshold(text);
+                }
+            }
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "Correlation:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+            }
+            corr-edit := LineEdit {
+                text: round(AdqaBridge.correlation-threshold * 100) / 100;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-correlation-threshold(text);
+                }
+            }
+        }
+
+        // ── Analysis toggles ──
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        Text {
+            text: "Analysis Features";
+            font-size: Styles.sizes.font * 1.1;
+            font-weight: 600;
+            color: Styles.palette.window-fg;
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            spacing: Styles.sizes.s-md;
+            Text { text: "Tracing:"; color: Styles.palette.window-fg; vertical-alignment: center; }
+            Button {
+                flat: true; text: AdqaBridge.tracing-enabled ? "On" : "Off";
+                icon: AdqaBridge.tracing-enabled ? @image-url("../assets/checkmark-circle.svg") : @image-url("../assets/dismiss.svg");
+                icon-color: AdqaBridge.tracing-enabled ? Styles.palette.success-bg : Styles.palette.window-fg;
+                preferred-width: 80px;
+                clicked => { AdqaBridge.tracing-enabled = !AdqaBridge.tracing-enabled; }
+            }
+            Text { text: "ML:"; color: Styles.palette.window-fg; vertical-alignment: center; }
+            Button {
+                flat: true; text: AdqaBridge.ml-enabled ? "On" : "Off";
+                icon: AdqaBridge.ml-enabled ? @image-url("../assets/checkmark-circle.svg") : @image-url("../assets/dismiss.svg");
+                icon-color: AdqaBridge.ml-enabled ? Styles.palette.success-bg : Styles.palette.window-fg;
+                preferred-width: 80px;
+                clicked => { AdqaBridge.ml-enabled = !AdqaBridge.ml-enabled; }
+            }
+            Text { text: "Lineage:"; color: Styles.palette.window-fg; vertical-alignment: center; }
+            Button {
+                flat: true; text: AdqaBridge.lineage-enabled ? "On" : "Off";
+                icon: AdqaBridge.lineage-enabled ? @image-url("../assets/checkmark-circle.svg") : @image-url("../assets/dismiss.svg");
+                icon-color: AdqaBridge.lineage-enabled ? Styles.palette.success-bg : Styles.palette.window-fg;
+                preferred-width: 80px;
+                clicked => { AdqaBridge.lineage-enabled = !AdqaBridge.lineage-enabled; }
+            }
+        }
+
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text { text: "Sample Size:"; color: Styles.palette.window-fg; vertical-alignment: center; }
+            sample-edit := LineEdit {
+                text: AdqaBridge.sample-size;
+                width: 100px;
+                accepted(text) => {
+                    AdqaBridge.set-sample-size(text);
+                }
+            }
+            Text { text: "Rounding Precision:"; color: Styles.palette.window-fg; vertical-alignment: center; }
+            round-edit := LineEdit {
+                text: AdqaBridge.rounding-precision;
+                width: 80px;
+                accepted(text) => {
+                    AdqaBridge.set-rounding-precision(text);
+                }
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        // ── Version info ──
+        HorizontalLayout {
+            padding-left: Styles.sizes.p-lg;
+            Text {
+                text: "ADQA Version: " + SystemInfoBridge.version;
+                color: Styles.palette.window-fg;
+                opacity: 0.6;
+            }
+        }
+
+    }
+    }
+}

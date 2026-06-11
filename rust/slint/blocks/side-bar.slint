@@ -1,0 +1,176 @@
+import { Styles } from "../widgets/styles.slint";
+import { Button } from "../widgets/button.slint";
+import { WindowControlBridge, SystemInfoBridge, SettingsBridge, AdqaBridge } from "bridges.slint";
+import { ButtonIndicator } from "button-indicator.slint";
+import { UiState } from "globals.slint";
+
+export component SideBar inherits Rectangle {
+    in property <bool> maximized;
+
+    background: Styles.palette.layer-1;
+    clip: true;
+
+    animate width {
+        duration: Styles.durations.long;
+        easing: ease-out-expo;
+    }
+
+    VerticalLayout {
+        spacing: 0;
+        padding: 0;
+
+        if SystemInfoBridge.os != "macos" || root.maximized: HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            padding: Styles.sizes.p-md;
+
+            Button {
+                text: "ADQA";
+                icon: @image-url("../assets/logo-stroked.svg");
+                colored: true;
+                flat: true;
+                border-radius: 0;
+                font-weight: 700;
+                alignment: LayoutAlignment.start;
+                background: transparent;
+                horizontal-stretch: 1;
+            }
+        }
+
+        VerticalLayout {
+            spacing: Styles.sizes.s-md;
+            padding: Styles.sizes.p-md;
+            horizontal-stretch: 1;
+
+            Rectangle {
+                height: SystemInfoBridge.os != "macos" || root.maximized ? Styles.sizes.s-md : Styles.sizes.h-sm;
+            }
+
+            ButtonIndicator {
+                text: "Data";
+                icon: @image-url("../assets/home.svg");
+                colored: false;
+                flat: true;
+                alignment: LayoutAlignment.start;
+                active: UiState.page == "data";
+
+                clicked => {
+                    UiState.page = "data";
+                }
+            }
+
+            ButtonIndicator {
+                text: "Advisory Results";
+                icon: @image-url("../assets/globe-star.svg");
+                colored: false;
+                flat: true;
+                alignment: LayoutAlignment.start;
+                active: UiState.page == "advisory";
+
+                clicked => {
+                    UiState.page = "advisory";
+                }
+            }
+
+            ButtonIndicator {
+                text: "Remediation + Healing Data";
+                icon: @image-url("../assets/arrow-sync.svg");
+                colored: false;
+                flat: true;
+                alignment: LayoutAlignment.start;
+                active: UiState.page == "remediation";
+
+                clicked => {
+                    UiState.page = "remediation";
+                }
+            }
+
+            ButtonIndicator {
+                text: "LLM Explain";
+                icon: @image-url("../assets/code.svg");
+                colored: false;
+                flat: true;
+                alignment: LayoutAlignment.start;
+                active: UiState.page == "explain";
+
+                clicked => {
+                    UiState.page = "explain";
+                }
+            }
+
+            ButtonIndicator {
+                text: "Chat";
+                icon: @image-url("../assets/send.svg");
+                colored: false;
+                flat: true;
+                alignment: LayoutAlignment.start;
+                active: UiState.page == "chat";
+
+                clicked => {
+                    UiState.page = "chat";
+                }
+            }
+
+            Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+            ButtonIndicator {
+                text: "Settings";
+                icon: @image-url("../assets/settings.svg");
+                flat: true;
+                alignment: LayoutAlignment.start;
+                active: UiState.page == "settings";
+
+                clicked => {
+                    UiState.page = "settings";
+                }
+            }
+
+            Rectangle {
+                background: transparent;
+                vertical-stretch: 1;
+            }
+
+            // ── Status indicator ──
+            if AdqaBridge.status == "running": Rectangle {
+                background: Styles.palette.info-bg;
+                border-radius: Styles.sizes.r-md;
+
+                VerticalLayout {
+                    padding: Styles.sizes.p-md;
+                    Text {
+                        text: "Running...";
+                        color: Styles.palette.info-fg;
+                        font-size: Styles.sizes.font * 0.8;
+                    }
+                }
+            }
+
+            if AdqaBridge.status == "done": Rectangle {
+                background: Styles.palette.success-bg;
+                border-radius: Styles.sizes.r-md;
+
+                VerticalLayout {
+                    padding: Styles.sizes.p-md;
+                    Text {
+                        text: "Analysis Complete";
+                        color: Styles.palette.success-fg;
+                        font-size: Styles.sizes.font * 0.8;
+                    }
+                }
+            }
+
+            if AdqaBridge.status == "error": Rectangle {
+                background: Styles.palette.error-bg;
+                border-radius: Styles.sizes.r-md;
+
+                VerticalLayout {
+                    padding: Styles.sizes.p-md;
+                    Text {
+                        text: "Error";
+                        color: Styles.palette.error-fg;
+                        font-size: Styles.sizes.font * 0.8;
+                    }
+                }
+            }
+        }
+    }
+}

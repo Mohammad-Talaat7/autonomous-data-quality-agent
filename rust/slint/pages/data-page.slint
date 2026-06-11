@@ -1,0 +1,200 @@
+import { Styles } from "../widgets/styles.slint";
+import { Button } from "../widgets/button.slint";
+import { LineEdit } from "../widgets/line-edit.slint";
+import { AdqaBridge } from "../blocks/bridges.slint";
+import { UiState } from "../blocks/globals.slint";
+
+export component DataPage inherits Rectangle {
+    background: transparent;
+
+    VerticalLayout {
+        padding: Styles.sizes.p-xl * 2;
+        spacing: Styles.sizes.s-lg;
+
+        // ── Header ──
+        HorizontalLayout {
+            spacing: Styles.sizes.s-md;
+            Text {
+                text: "Data Upload & Preview";
+                font-size: Styles.sizes.font * 1.3;
+                font-weight: 700;
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        // ── File picker area ──
+        HorizontalLayout {
+            spacing: Styles.sizes.s-lg;
+            alignment: center;
+
+            Text {
+                text: "Data Path:";
+                color: Styles.palette.window-fg;
+                vertical-alignment: center;
+            }
+
+            path-input := LineEdit {
+                text <=> AdqaBridge.data-path;
+                horizontal-stretch: 1;
+            }
+
+            Button {
+                text: "Load Data";
+                icon: @image-url("../assets/send.svg");
+                icon-color: Styles.palette.primary-bg;
+                clicked => {
+                    AdqaBridge.upload-data();
+                }
+            }
+        }
+
+        // ── Stats info line ──
+        if AdqaBridge.data-stats != "": Text {
+            text: AdqaBridge.data-stats;
+            color: Styles.palette.success-bg;
+            font-size: Styles.sizes.font * 0.9;
+            wrap: TextWrap.word-wrap;
+        }
+
+        // ── Mode selector + thresholds ──
+        HorizontalLayout {
+            spacing: Styles.sizes.s-lg;
+
+            // Text {
+            //     text: "Mode:";
+            //     color: Styles.palette.window-fg;
+            //     vertical-alignment: center;
+            // }
+
+            // advisory-btn := Button {
+            //     text: "Advisory";
+            //     flat: true;
+            //     colored: AdqaBridge.mode == "advisory";
+            //     clicked => { AdqaBridge.mode = "advisory"; }
+            // }
+            // automatic-btn := Button {
+            //     text: "Automatic";
+            //     flat: true;
+            //     colored: AdqaBridge.mode == "automatic";
+            //     clicked => { AdqaBridge.mode = "automatic"; }
+            // }
+            // human-btn := Button {
+            //     text: "Human-in-Loop";
+            //     flat: true;
+            //     colored: AdqaBridge.mode == "human";
+            //     clicked => { AdqaBridge.mode = "human"; }
+            // }
+
+            Rectangle { horizontal-stretch: 1; background: transparent; }
+
+            Button {
+                text: "Run Analysis";
+                icon: @image-url("../assets/send.svg");
+                icon-color: Styles.palette.success-bg;
+                clicked => {
+                    AdqaBridge.run-analysis();
+                    UiState.page = "advisory";
+                }
+            }
+        }
+
+        Rectangle { height: 1px; background: Styles.palette.layer-3; }
+
+        // ── Schema + preview panels (always at the bottom, scrollable) ──
+        VerticalLayout {
+            spacing: Styles.sizes.s-md;
+            vertical-stretch: 1;
+
+            // Schema panel: column, type, missing count + %
+            schema-rect := Rectangle {
+                background: Styles.palette.layer-1;
+                border-radius: Styles.sizes.r-md;
+                horizontal-stretch: 1;
+                height: 220px;
+                clip: true;
+
+                Flickable {
+                    // No explicit viewport - let it auto-size to the inner
+                    // content so wide tables scroll horizontally.
+                    VerticalLayout {
+                        padding: Styles.sizes.p-md;
+                        spacing: Styles.sizes.s-sm;
+
+                        Text {
+                            text: "Schema";
+                            color: Styles.palette.info-bg;
+                            font-weight: 700;
+                            font-size: Styles.sizes.font * 0.9;
+                        }
+
+                        // Real schema (when loaded) - no horizontal-stretch
+                        // so the text keeps its natural width and the
+                        // Flickable can scroll horizontally if needed.
+                        Text {
+                            text: AdqaBridge.data-schema;
+                            font-family: "Reverier Mono";
+                            font-size: Styles.sizes.font * 0.8;
+                            color: Styles.palette.window-fg;
+                            wrap: TextWrap.no-wrap;
+                            visible: AdqaBridge.data-schema != "";
+                        }
+
+                        // Placeholder (when nothing loaded yet)
+                        Text {
+                            text: "(load a data file to see its schema)";
+                            font-family: "Reverier Mono";
+                            font-size: Styles.sizes.font * 0.8;
+                            color: Styles.palette.window-alter-fg;
+                            font-italic: true;
+                            visible: AdqaBridge.data-schema == "";
+                        }
+                    }
+                }
+            }
+
+            // Head preview panel: first 20 rows of the dataset
+            preview-rect := Rectangle {
+                background: Styles.palette.layer-1;
+                border-radius: Styles.sizes.r-md;
+                vertical-stretch: 1;
+                horizontal-stretch: 1;
+                clip: true;
+
+                Flickable {
+                    VerticalLayout {
+                        padding: Styles.sizes.p-md;
+                        spacing: Styles.sizes.s-sm;
+
+                        Text {
+                            text: "Preview  (first 20 rows)";
+                            color: Styles.palette.info-bg;
+                            font-weight: 700;
+                            font-size: Styles.sizes.font * 0.9;
+                        }
+
+                        preview-text := Text {
+                            text: AdqaBridge.data-preview;
+                            font-family: "Reverier Mono";
+                            font-size: Styles.sizes.font * 0.8;
+                            color: Styles.palette.window-fg;
+                            wrap: TextWrap.no-wrap;
+                            visible: AdqaBridge.data-preview != "";
+                        }
+
+                        Text {
+                            text: "(load a data file to see a preview of its first rows)";
+                            font-family: "Reverier Mono";
+                            font-size: Styles.sizes.font * 0.8;
+                            color: Styles.palette.window-alter-fg;
+                            font-italic: true;
+                            visible: AdqaBridge.data-preview == "";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

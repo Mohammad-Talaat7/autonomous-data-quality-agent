@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 import pandas as pd
@@ -27,6 +27,9 @@ from ..trace.noop import NoOpLineageRecorder, NoOpTraceEmitter
 from ..trace.store import InMemoryTraceStore, JSONTraceStore
 from .result import ADQAResult
 
+if TYPE_CHECKING:
+    from ..llm.client import BaseLLMClient
+
 
 class ADQA:
     """
@@ -42,12 +45,14 @@ class ADQA:
         tags: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
         historical_profiles: Any | None = None,
+        llm_client: BaseLLMClient | None = None,
     ):
         self._config: ADQAConfig = config or ADQAConfig()
         self._data_source: DataSource = data_source
         self._tags = tags or []
         self._metadata = metadata or {}
         self._historical_profiles = historical_profiles
+        self._llm_client = llm_client
 
         # Build reader early → fail fast
         self._reader: DataReader = DataReaderFactory.create(self._data_source)
@@ -71,6 +76,24 @@ class ADQA:
         if self._config.ml_enabled and self._config.detection.enable_ml:
             ml_detectors = registry.create_ml_detectors(thresholds=thresholds)
 
+        # Optional LLM semantic classifier augmenter
+        if (
+            self._config.llm.enabled
+            and self._config.ml_enabled
+            and self._config.detection.enable_ml
+        ):
+            from ..detection.ml_detectors.llm_semantic import LLMSemanticClassifier
+            from ..detection.ml_detectors.anomalous_schema import AnomalousSchemaDetector
+            from ..llm.client import LiteLLMClient
+
+            llm_semantic_client = self._llm_client or LiteLLMClient()
+            ml_detectors.append(
+                LLMSemanticClassifier(client=llm_semantic_client, model=self._config.llm.model or "", enabled=True)
+            )
+            ml_detectors.append(
+                AnomalousSchemaDetector(client=llm_semantic_client, model=self._config.llm.model or "", enabled=True)
+            )
+
         self._detection_engine = DetectionEngine(
             rule_detectors=registry.create_rule_detectors(thresholds=thresholds),
             ml_detectors=ml_detectors,
@@ -86,6 +109,9 @@ class ADQA:
         # Execution setup
         self._execution_engine = ExecutionEngine(lineage=self._lineage)
 
+        # Optional explanation setup
+        self._explanation_engine = self._init_explanation_engine()
+
     @staticmethod
     def from_path(
         path: str,
@@ -93,6 +119,7 @@ class ADQA:
         tags: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
         historical_profiles: Any | None = None,
+        llm_client: BaseLLMClient | None = None,
     ) -> ADQA:
         """
         Quick-start from a local or remote path.
@@ -104,6 +131,7 @@ class ADQA:
             tags=tags,
             metadata=metadata,
             historical_profiles=historical_profiles,
+            llm_client=llm_client,
         )
 
     @staticmethod
@@ -113,6 +141,7 @@ class ADQA:
         tags: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
         historical_profiles: Any | None = None,
+        llm_client: BaseLLMClient | None = None,
     ) -> ADQA:
         """
         Quick-start from an existing pandas DataFrame.
@@ -124,6 +153,7 @@ class ADQA:
             tags=tags,
             metadata=metadata,
             historical_profiles=historical_profiles,
+            llm_client=llm_client,
         )
 
     def on_action(self, action_type: str, handler: Any) -> ADQA:
@@ -149,6 +179,7 @@ class ADQA:
         trace_id, trace_emitter, snapshot = self._initialize_trace_session()
 
         hist = historical_profiles or self._historical_profiles
+        warnings: list[str] = []
 
         with trace_emitter.span("ADQA_ANALYZE", component=TraceComponent.TRACE):
             # ---- Data ingress ----
@@ -177,6 +208,7 @@ class ADQA:
                     trace_id=str(trace_id),
                     config_hash=snapshot.hash(),
                     error=str(e),
+                    warnings=warnings,
                 )
 
             trace_emitter.emit(
@@ -236,6 +268,17 @@ class ADQA:
                 scoring_result.decision, self._config, df=df
             )
 
+            explanation = self._build_explanation(
+                trace_id=str(trace_id),
+                trace_emitter=trace_emitter,
+                profiling_result=profiling_result,
+                detections=detections,
+                scores=scoring_result.aggregated,
+                decision=scoring_result.decision,
+                plan=execution_result.plan,
+                warnings=warnings,
+            )
+
             return ADQAResult(
                 dataframe=remediated_df if remediated_df is not None else df,
                 profiles=profiling_result,
@@ -247,6 +290,8 @@ class ADQA:
                 blocked=execution_result.blocked,
                 plan=execution_result.plan,
                 approval_payload=execution_result.approval_payload,
+                explanation=explanation,
+                warnings=warnings,
                 trace_id=str(trace_id),
                 config_hash=snapshot.hash(),
             )
@@ -345,3 +390,54 @@ class ADQA:
         adapter = InMemoryLineageAdapter()
         recorder = LineageRecorder(adapter=adapter, enabled=True)
         return recorder
+
+    def _init_explanation_engine(self) -> Any | None:
+        if not self._config.llm.enabled:
+            return None
+
+        from ..explanation.engine import ExplanationEngine
+        from ..llm.client import LiteLLMClient
+
+        client = self._llm_client or LiteLLMClient()
+        return ExplanationEngine(client=client, config=self._config.llm)
+
+    def _build_explanation(
+        self,
+        *,
+        trace_id: str,
+        trace_emitter: NoOpTraceEmitter | TraceEmitter,
+        profiling_result: Any,
+        detections: Any,
+        scores: Any,
+        decision: Any,
+        plan: ActionPlan | None,
+        warnings: list[str],
+    ) -> Any | None:
+        if self._explanation_engine is None:
+            return None
+
+        try:
+            explanation = self._explanation_engine.explain(
+                trace_id=trace_id,
+                tracer=trace_emitter,
+                decision=decision,
+                scores=scores,
+                detections=detections,
+                dataset_profile=profiling_result.dataset_profile,
+                action_plan=plan,
+            )
+        except Exception as exc:
+            warning = f"LLM explanation failed: {exc}"
+            warnings.append(warning)
+            trace_emitter.trace("LLM_EXPLANATION_FAILED", {"error": str(exc)})
+            return None
+
+        trace_emitter.trace(
+            "LLM_EXPLANATION_GENERATED",
+            {
+                "provider": explanation.provider,
+                "model": explanation.model,
+                "prompt_version": explanation.prompt_version,
+            },
+        )
+        return explanation

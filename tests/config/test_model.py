@@ -4,7 +4,6 @@ import pytest
 from pydantic import ValidationError
 
 from adqa.config import ADQAConfig, ExecutionMode, TraceStoreType
-from adqa.data_ingress.datasource import DataSource
 
 
 class TestADQAConfig:
@@ -16,7 +15,6 @@ class TestADQAConfig:
             ml_enabled=True,
             trace_store="in_memory",
             execution_mode="automatic",
-            data_source=DataSource.csv(path="dummy.csv"),
         )
         assert config.tracing_enabled is True
         assert config.lineage_enabled is True
@@ -27,7 +25,6 @@ class TestADQAConfig:
     def test_valid_minimal_config(self):
         """Test a valid minimal configuration with defaults."""
         config = ADQAConfig(
-            data_source=DataSource.csv(path="dummy.csv"),
         )
         assert config.tracing_enabled is False
         assert config.lineage_enabled is False
@@ -39,7 +36,6 @@ class TestADQAConfig:
         """Test that enabling tracing without a store defaults to in_memory."""
         config = ADQAConfig(
             tracing_enabled=True,
-            data_source=DataSource.csv(path="dummy.csv"),
         )
         assert config.trace_store == TraceStoreType.IN_MEMORY
 
@@ -48,7 +44,6 @@ class TestADQAConfig:
         config = ADQAConfig(
             tracing_enabled=False,
             trace_store="jsonl",
-            data_source=DataSource.csv(path="dummy.csv"),
         )
         assert config.trace_store is None
 
@@ -61,7 +56,6 @@ class TestADQAConfig:
                 ml_enabled=False,
                 trace_store=None,
                 execution_mode=ExecutionMode.ADVISORY,
-                data_source=DataSource.csv(path="dummy.csv"),
             )
         assert "Lineage cannot be enabled without tracing" in str(exc_info.value)
 
@@ -74,7 +68,6 @@ class TestADQAConfig:
                 ml_enabled=False,
                 trace_store=None,
                 execution_mode=ExecutionMode.AUTOMATIC,
-                data_source=DataSource.csv(path="dummy.csv"),
             )
         assert "Automatic execution requires tracing" in str(exc_info.value)
 
@@ -87,7 +80,6 @@ class TestADQAConfig:
                 ml_enabled=False,
                 trace_store=None,
                 execution_mode=ExecutionMode.HUMAN_IN_LOOP,
-                data_source=DataSource.csv(path="dummy.csv"),
             )
         assert "Human-in-loop execution requires tracing" in str(exc_info.value)
 
@@ -99,7 +91,25 @@ class TestADQAConfig:
             ml_enabled=False,
             trace_store=TraceStoreType.IN_MEMORY,
             execution_mode=ExecutionMode.ADVISORY,
-            data_source=DataSource.csv(path="dummy.csv"),
         )
         with pytest.raises(ValidationError):
             config.tracing_enabled = False
+
+    def test_llm_defaults_to_disabled(self):
+        config = ADQAConfig()
+
+        assert config.llm.enabled is False
+        assert config.llm.model is None
+        assert config.llm.redact_samples is True
+
+    def test_llm_enabled_with_model_is_valid(self):
+        config = ADQAConfig(llm={"enabled": True, "model": "gpt-4o-mini"})
+
+        assert config.llm.enabled is True
+        assert config.llm.model == "gpt-4o-mini"
+
+    def test_llm_enabled_without_model_fails(self):
+        with pytest.raises(ValidationError) as exc_info:
+            ADQAConfig(llm={"enabled": True})
+
+        assert "requires a model" in str(exc_info.value)

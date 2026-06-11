@@ -25,7 +25,7 @@ source = DataSource.csv(path="data.csv")
 ### Example: SQL
 
 ```python
-source = DataSource.sql(
+source = DataSource.load(
     uri="postgresql://user:pass@localhost/db",
     query="SELECT * FROM my_table"
 )

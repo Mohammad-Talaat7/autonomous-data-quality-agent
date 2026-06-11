@@ -6,8 +6,8 @@ on:
       - 'v*'
   workflow_dispatch:
 
-  pull_request:  # fires on every push to any open PR branch
-    branches: [main_disable]
+  # pull_request:  # fires on every push to any open PR branch
+  #   branches: [main]
 
 permissions:
   contents: write
@@ -95,7 +95,7 @@ jobs:
             mv ./python_env/pythonw.exe ./python_env/pythonw.exe_disable
 
       - name: Build TUI
-        working-directory: adqa-tui
+        working-directory: rust
         shell: bash
         run: cargo build --release --target ${{ matrix.target }}
 
@@ -104,8 +104,10 @@ jobs:
         run: |
             mkdir -p ${{ env.BINARY_NAME }}/bin
             cp -r python_env/* ${{ env.BINARY_NAME }}/bin
-            cp adqa-tui/target/${{ matrix.target }}/release/adqa-tui.exe ${{ env.BINARY_NAME }}/bin/
-            cp adqa-tui/target/${{ matrix.target }}/release/adqa-cli.exe ${{ env.BINARY_NAME }}/bin/
+            cp rust/target/${{ matrix.target }}/release/adqa-cli.exe ${{ env.BINARY_NAME }}/bin/
+            cp rust/target/${{ matrix.target }}/release/adqa-tui.exe ${{ env.BINARY_NAME }}/bin/
+            cp rust/target/${{ matrix.target }}/release/adqa-slint.exe ${{ env.BINARY_NAME }}/bin/
+
             cp README.md LICENSE ${{ env.BINARY_NAME }}/
             mkdir -p ${{ env.BINARY_NAME }}/samples
             cp -r samples/* ./${{ env.BINARY_NAME }}/samples
@@ -126,7 +128,7 @@ jobs:
           # tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}.zip
           # draft: true
-          prerelease: true
+          # prerelease: true
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -152,4 +154,4 @@ jobs:
           # tag_name: "v0.1.0-beta"
           files: ${{ env.BINARY_NAME }}-installer.msi
           # draft: true
-          prerelease: true
+          # prerelease: true

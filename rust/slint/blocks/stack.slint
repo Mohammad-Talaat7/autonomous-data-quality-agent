@@ -1,0 +1,45 @@
+import { Styles } from "../widgets/styles.slint";
+import { SettingsPage } from "../pages/settings.slint";
+import { DataPage } from "../pages/data-page.slint";
+import { AdvisoryPage } from "../pages/advisory-page.slint";
+import { ExplainPage } from "../pages/explain-page.slint";
+import { RemediationPage } from "../pages/remediation-page.slint";
+import { ChatPage } from "../pages/chat-page.slint";
+import { UiState } from "globals.slint";
+
+export component Stack inherits Rectangle {
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+    background: transparent;
+
+    if (UiState.page == "data"):
+        DataPage {
+        width: 100%;
+        height: 100%;
+    }
+    if (UiState.page == "advisory"):
+        AdvisoryPage {
+        width: 100%;
+        height: 100%;
+    }
+    if (UiState.page == "remediation"):
+        RemediationPage {
+        width: 100%;
+        height: 100%;
+    }
+    if (UiState.page == "explain"):
+        ExplainPage {
+        width: 100%;
+        height: 100%;
+    }
+    if (UiState.page == "chat"):
+        ChatPage {
+        width: 100%;
+        height: 100%;
+    }
+    if (UiState.page == "settings"):
+        SettingsPage {
+        width: 100%;
+        height: 100%;
+    }
+}

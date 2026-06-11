@@ -20,6 +20,16 @@ class TestReasonCode(unittest.TestCase):
             ReasonCode.METRIC_THRESHOLD_EXCEEDED, "metric_threshold_exceeded"
         )
         self.assertEqual(ReasonCode.CRITICAL_COLUMN, "critical_column")
+        self.assertEqual(ReasonCode.MISSING_VALUES, "missing_values")
+        self.assertEqual(ReasonCode.DUPLICATE_ROWS, "duplicate_rows")
+        self.assertEqual(ReasonCode.CONSTANT_COLUMN, "constant_column")
+        self.assertEqual(ReasonCode.OUTLIERS, "outliers")
+        self.assertEqual(ReasonCode.HIGH_SKEWNESS, "high_skewness")
+        self.assertEqual(ReasonCode.HIGH_CORRELATION, "high_correlation")
+        self.assertEqual(ReasonCode.RANGE_VIOLATION, "range_violation")
+        self.assertEqual(ReasonCode.PATTERN_VIOLATION, "pattern_violation")
+        self.assertEqual(ReasonCode.PII_DETECTED, "pii_detected")
+        self.assertEqual(ReasonCode.ANOMALY_SCORE, "anomaly_score")
 
 
 class TestReasoningTraceEvent(unittest.TestCase):

@@ -1,0 +1,126 @@
+
+export global WindowControlBridge {
+    pure callback start_drag;
+    pure callback close;
+    pure callback minimize;
+    pure callback maximize;
+}
+
+export global SystemInfoBridge {
+    in-out property <string> version;
+    in-out property <string> os;
+    in-out property <string> info;
+    callback open-link(url: string);
+}
+
+export global SettingsBridge {
+    in-out property <string> theme;
+    in-out property <string> language;
+    in-out property <bool> running-in-tray;
+    in-out property <int> api-port: 0;
+    callback change-language(lang: string);
+}
+
+export struct ChatMessage {
+    text: string,
+    is-user: bool,
+}
+
+// ── ADQA-specific bridges ──
+
+export global AdqaBridge {
+    // --- LLM Settings ---
+    in-out property <bool> llm-enabled: false;
+    in-out property <string> llm-provider: "openai";
+    in-out property <string> llm-model: "";
+    in-out property <string> llm-api-key: "";
+    in-out property <string> llm-api-base: "";
+    in-out property <int> llm-timeout: 30;
+    in-out property <int> llm-max-input-chars: 12000;
+    in-out property <bool> llm-redact: true;
+    in-out property <bool> llm-flex: false;
+    
+    // --- Numeric setters (for LineEdit accepted callbacks) ---
+    callback set-llm-timeout(text: string);
+    callback set-llm-max-input-chars(text: string);
+    
+    // --- Analysis Settings ---
+    in-out property <string> data-path: "";
+    // in-out property <string> mode: "advisory";
+    in-out property <string> output-path: "";
+    in-out property <bool> tracing-enabled: true;
+    in-out property <bool> ml-enabled: false;
+    in-out property <bool> lineage-enabled: false;
+    in-out property <int> sample-size: 10000;
+    in-out property <int> rounding-precision: 4;
+    
+    // --- Numeric setters for analysis ---
+    callback set-sample-size(text: string);
+    callback set-rounding-precision(text: string);
+    
+    // --- Thresholds ---
+    in-out property <float> missing-threshold: 0.2;
+    in-out property <float> outlier-threshold: 0.05;
+    in-out property <float> constant-threshold: 1.0;
+    in-out property <float> duplicate-threshold: 0.1;
+    in-out property <float> imbalance-threshold: 0.9;
+    in-out property <float> skewness-threshold: 1.0;
+    in-out property <float> correlation-threshold: 0.9;
+    in-out property <float> pattern-threshold: 0.8;
+    
+    // --- Numeric setters for thresholds ---
+    callback set-missing-threshold(text: string);
+    callback set-outlier-threshold(text: string);
+    callback set-constant-threshold(text: string);
+    callback set-duplicate-threshold(text: string);
+    callback set-imbalance-threshold(text: string);
+    callback set-skewness-threshold(text: string);
+    callback set-correlation-threshold(text: string);
+    callback set-pattern-threshold(text: string);
+    
+    // --- Status ---
+    in-out property <string> status: "idle";
+    in-out property <string> status-message: "Ready.";
+    in-out property <float> progress: 0.0;
+    
+    // --- Results ---
+    in-out property <string> result-summary: "";
+    in-out property <string> result-advisory: "";
+    in-out property <string> result-explain: "";
+    in-out property <string> result-llm-explain: "";
+    in-out property <string> result-remediation: "";
+    in-out property <string> result-healed-preview: "";
+    in-out property <string> result-healed-path: "";
+    
+    // --- Data preview ---
+    in-out property <string> data-preview: "";
+    in-out property <string> data-schema: "";
+    in-out property <string> data-stats: "";
+
+    // --- Chat ---
+    in-out property <[ChatMessage]> chat-messages: [];
+    in-out property <string> chat-input: "";
+    in-out property <string> chat-output: "";
+    in-out property <string> chat-history: "";
+
+    // --- Cost ---
+    in-out property <string> cost-info: "";
+    in-out property <string> context-info: "";
+
+    // --- Callbacks ---
+    callback run-analysis();
+    callback run-explain();
+    callback run-llm-explain();
+    callback run-remediation();
+    callback run-heal();
+    callback send-chat();
+    callback reset-chat-session();
+    callback upload-data();
+    callback refresh-providers();
+    callback calculate-cost();
+    callback copy-to-clipboard(text: string);
+    // Propagate the API key/base from Settings into the process env so
+    // that litellm/openai see them even when the call path doesn't
+    // forward the values explicitly.
+    callback apply-llm-credentials(api-key: string, api-base: string);
+}
