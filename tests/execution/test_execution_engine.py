@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 
 import pytest
-
 from adqa.execution.engine import ExecutionEngine
 from adqa.execution.models import ExecutionMode
 from adqa.scoring.models import QualityDecision

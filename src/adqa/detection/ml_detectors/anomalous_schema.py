@@ -16,6 +16,7 @@ class AnomalousSchemaDetector(BaseMLDetector):
 
     name = "AnomalousSchemaDetector"
     dimension = QualityDimension.ACCURACY
+
     def __init__(
         self,
         *,

@@ -107,9 +107,7 @@ class RootCauseEngine:
             confidence=min(1.0, len(dets) * 0.10),
             evidence=evidence,
             detector_ids=ids,
-            caveats=[
-                "Review upstream deduplication logic or join conditions."
-            ],
+            caveats=["Review upstream deduplication logic or join conditions."],
         )
 
     def _outlier_cause(
@@ -134,16 +132,16 @@ class RootCauseEngine:
             evidence=evidence,
             affected_columns=cols,
             detector_ids=ids,
-            caveats=[
-                "Outliers may be valid extreme values; review before treatment."
-            ],
+            caveats=["Outliers may be valid extreme values; review before treatment."],
         )
 
     def _pii_cause(
         self, bundle: DetectionResultBundle
     ) -> Iterator[RootCauseHypothesis]:
         dets = [
-            e for e in bundle.ml_evidence if getattr(e, "signal_type", "") == "pii_detected"
+            e
+            for e in bundle.ml_evidence
+            if getattr(e, "signal_type", "") == "pii_detected"
         ]
         if not dets:
             return
@@ -168,7 +166,9 @@ class RootCauseEngine:
         self, bundle: DetectionResultBundle
     ) -> Iterator[RootCauseHypothesis]:
         dets = [
-            e for e in bundle.ml_evidence if getattr(e, "signal_type", "") == "anomaly_score"
+            e
+            for e in bundle.ml_evidence
+            if getattr(e, "signal_type", "") == "anomaly_score"
         ]
         if not dets:
             return
@@ -183,7 +183,9 @@ class RootCauseEngine:
             confidence=min(1.0, len(dets) * 0.08),
             evidence=evidence,
             detector_ids=ids,
-            caveats=["Isolation Forest anomalies may indicate data drift or corruption."],
+            caveats=[
+                "Isolation Forest anomalies may indicate data drift or corruption."
+            ],
         )
 
     @staticmethod

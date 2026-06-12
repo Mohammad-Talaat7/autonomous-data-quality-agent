@@ -4,7 +4,6 @@ import json
 from hashlib import sha256
 
 import pandas as pd
-
 from adqa.config import ADQAConfig
 from adqa.core.api import ADQA
 from adqa.llm.client import BaseLLMClient

@@ -99,17 +99,21 @@ class ChatSession:
             from ..explanation.root_cause import RootCauseEngine
 
             engine = RootCauseEngine()
-            causes = list(engine.analyse(
-                detections=self._result.detections,
-                scores=self._result.scores,
-                dataset_profile=self._result.profiles.dataset_profile,
-            ))
+            causes = list(
+                engine.analyse(
+                    detections=self._result.detections,
+                    scores=self._result.scores,
+                    dataset_profile=self._result.profiles.dataset_profile,
+                )
+            )
             if not causes:
                 return "No root causes identified."
             lines = []
             for c in causes:
                 evidence = "; ".join(c.evidence[:2])
-                lines.append(f"- {c.cause} (confidence: {c.confidence:.2f}): {evidence}")
+                lines.append(
+                    f"- {c.cause} (confidence: {c.confidence:.2f}): {evidence}"
+                )
             return "Possible causes:\n" + "\n".join(lines)
         except Exception as exc:
             return f"Root cause analysis failed: {exc}"
@@ -120,6 +124,7 @@ class ChatSession:
         context_text = "No analysis context available."
         if self._result and self._result.decision:
             import json
+
             context_text = "Analysis result context:\n" + json.dumps(
                 self._result.decision.to_dict(), default=str
             )
@@ -134,6 +139,7 @@ class ChatSession:
             api_key = None
             api_base = None
             # Forward credentials when the engine was built with an LLMConfig
+            service_tier = None
             config = (
                 getattr(self._explanation, "_config", None)
                 if self._explanation

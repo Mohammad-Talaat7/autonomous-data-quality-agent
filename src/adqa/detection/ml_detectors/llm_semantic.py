@@ -8,7 +8,6 @@ from ...llm.client import BaseLLMClient
 from ...llm.models import SemanticClassificationRequest, SemanticClassificationResponse
 from ...llm.redaction import sanitize_payload
 from ..base import BaseMLDetector, DetectionContext, QualityDimension
-from ..context import DetectionContext
 from ..results import MLEvidence
 
 
@@ -91,7 +90,8 @@ class LLMSemanticClassifier(BaseMLDetector):
         SYSTEM_INSTRUCTION = (
             "You are a semantic column classifier for data quality. "
             "Given a column name, type, and summary statistics, assign exactly one "
-            "label from the allowed list. Return strict JSON with keys: label, rationale."
+            "label from the allowed list. Return strict JSON with keys: "
+            "label, rationale."
         )
         return LLMRequest(
             provider="litellm",

@@ -38,6 +38,7 @@ class ExecutionEngine:
 
         # -------- self-healing auto-approval --------
         from .self_healing import SelfHealingController
+
         plan = SelfHealingController.auto_approve_low_risk(plan, decision)
 
         if self.tracer:

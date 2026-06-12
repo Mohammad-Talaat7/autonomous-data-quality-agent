@@ -2,10 +2,8 @@
 
 """Tests for RootCauseEngine."""
 
-from unittest.mock import MagicMock
-
 from adqa.detection.results import DetectionResult, DetectionResultBundle, MLEvidence
-from adqa.explanation.root_cause import RootCauseEngine, RootCauseHypothesis
+from adqa.explanation.root_cause import RootCauseEngine
 from adqa.profiling.models.dataset_profile import DatasetMetadata, DatasetProfile
 from adqa.scoring.models import AggregatedScore
 
@@ -41,7 +39,11 @@ def test_missing_values_cause():
         raw_scores=[],
     )
 
-    causes = list(engine.analyse(detections=bundle, scores=scores, dataset_profile=_make_profile()))
+    causes = list(
+        engine.analyse(
+            detections=bundle, scores=scores, dataset_profile=_make_profile()
+        )
+    )
 
     missing = [c for c in causes if c.cause == "missing_values"]
     assert len(missing) == 1
@@ -60,7 +62,11 @@ def test_no_detections_returns_empty():
         raw_scores=[],
     )
 
-    causes = list(engine.analyse(detections=bundle, scores=scores, dataset_profile=_make_profile()))
+    causes = list(
+        engine.analyse(
+            detections=bundle, scores=scores, dataset_profile=_make_profile()
+        )
+    )
 
     assert len(causes) == 0
 
@@ -84,7 +90,11 @@ def test_pii_cause():
         raw_scores=[],
     )
 
-    causes = list(engine.analyse(detections=bundle, scores=scores, dataset_profile=_make_profile()))
+    causes = list(
+        engine.analyse(
+            detections=bundle, scores=scores, dataset_profile=_make_profile()
+        )
+    )
 
     pii = [c for c in causes if c.cause == "pii_detected"]
     assert len(pii) == 1
@@ -111,7 +121,11 @@ def test_correlation_cause():
         raw_scores=[],
     )
 
-    causes = list(engine.analyse(detections=bundle, scores=scores, dataset_profile=_make_profile()))
+    causes = list(
+        engine.analyse(
+            detections=bundle, scores=scores, dataset_profile=_make_profile()
+        )
+    )
 
     corr = [c for c in causes if c.cause == "high_correlation"]
     assert len(corr) == 1

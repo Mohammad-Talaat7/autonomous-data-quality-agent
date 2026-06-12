@@ -82,16 +82,26 @@ class ADQA:
             and self._config.ml_enabled
             and self._config.detection.enable_ml
         ):
+            from ..detection.ml_detectors.anomalous_schema import (
+                AnomalousSchemaDetector,
+            )
             from ..detection.ml_detectors.llm_semantic import LLMSemanticClassifier
-            from ..detection.ml_detectors.anomalous_schema import AnomalousSchemaDetector
             from ..llm.client import LiteLLMClient
 
             llm_semantic_client = self._llm_client or LiteLLMClient()
             ml_detectors.append(
-                LLMSemanticClassifier(client=llm_semantic_client, model=self._config.llm.model or "", enabled=True)
+                LLMSemanticClassifier(
+                    client=llm_semantic_client,
+                    model=self._config.llm.model or "",
+                    enabled=True,
+                )
             )
             ml_detectors.append(
-                AnomalousSchemaDetector(client=llm_semantic_client, model=self._config.llm.model or "", enabled=True)
+                AnomalousSchemaDetector(
+                    client=llm_semantic_client,
+                    model=self._config.llm.model or "",
+                    enabled=True,
+                )
             )
 
         self._detection_engine = DetectionEngine(

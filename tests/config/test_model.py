@@ -1,9 +1,8 @@
 # tests/config/test_model.py
 
 import pytest
-from pydantic import ValidationError
-
 from adqa.config import ADQAConfig, ExecutionMode, TraceStoreType
+from pydantic import ValidationError
 
 
 class TestADQAConfig:
@@ -24,8 +23,7 @@ class TestADQAConfig:
 
     def test_valid_minimal_config(self):
         """Test a valid minimal configuration with defaults."""
-        config = ADQAConfig(
-        )
+        config = ADQAConfig()
         assert config.tracing_enabled is False
         assert config.lineage_enabled is False
         assert config.ml_enabled is False

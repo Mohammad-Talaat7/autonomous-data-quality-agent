@@ -12,7 +12,8 @@ You are ADQA's explanation layer.
 Explain only the deterministic findings provided.
 Do not invent detectors, scores, or actions.
 Return strict JSON with these keys:
-short_summary, top_issues, affected_columns, why_decision, recommended_next_steps, uncertainty.
+short_summary, top_issues, affected_columns, why_decision,
+recommended_next_steps, uncertainty.
 """.strip()
 
 

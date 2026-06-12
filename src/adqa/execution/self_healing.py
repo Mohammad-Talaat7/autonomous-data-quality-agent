@@ -1,7 +1,7 @@
 # adqa/execution/self_healing.py
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from .models import Action, ActionPlan
 
@@ -15,16 +15,18 @@ class SelfHealingController:
 
     LOW_RISK_DECISIONS = frozenset({"PASS", "WARN"})
     LOW_RISK_SEVERITY = frozenset({"LOW", "MEDIUM"})
-    AUTO_HEAL_ACTIONS = frozenset({
-        "impute",
-        "clip",
-        "log_transform",
-        "group_rare",
-        "cast_type",
-        "flag_nulls",
-        "remove_anomalies",
-        "remove_duplicates",
-    })
+    AUTO_HEAL_ACTIONS = frozenset(
+        {
+            "impute",
+            "clip",
+            "log_transform",
+            "group_rare",
+            "cast_type",
+            "flag_nulls",
+            "remove_anomalies",
+            "remove_duplicates",
+        }
+    )
 
     @staticmethod
     def can_auto_heal(decision: QualityDecision) -> bool:
@@ -34,7 +36,9 @@ class SelfHealingController:
         )
 
     @staticmethod
-    def auto_approve_low_risk(plan: ActionPlan, decision: QualityDecision) -> ActionPlan:
+    def auto_approve_low_risk(
+        plan: ActionPlan, decision: QualityDecision
+    ) -> ActionPlan:
         if not SelfHealingController.can_auto_heal(decision):
             return plan
 

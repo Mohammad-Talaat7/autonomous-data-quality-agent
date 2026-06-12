@@ -44,7 +44,7 @@ class TraceSummarizer:
         report_lines.append(f"Trace ID: {context.trace_id}")
         report_lines.append(f"Timestamp: {context.created_at.isoformat()}")
         report_lines.append(f"Execution Mode: {context.mode}")
-        
+
         if context.dataset_id:
             report_lines.append(f"Dataset ID: {context.dataset_id}")
         report_lines.append("-" * 40)

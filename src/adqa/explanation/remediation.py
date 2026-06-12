@@ -41,20 +41,24 @@ class RemediationProposal:
 class RemediationProposalBundle:
     proposals: list[RemediationProposal] = field(default_factory=list)
 
+
 PROMPT_VERSION = "adqa.remediation.v1"
 REMEDIATION_SYSTEM = (
     "You are ADQA's remediation agent. "
-    "Given a data quality issue and affected columns, propose concrete code-based fixes. "
-    "Return strict JSON with keys: proposals (list of strings), risk_level (low/medium/high), "
+    "Given a data quality issue and affected columns, propose concrete "
+    "code-based fixes. "
+    "Return strict JSON with keys: proposals (list of strings), risk_level "
+    "(low/medium/high), "
     "requires_human_review (boolean)."
 )
+
 
 class RemediationAgent:
     """LLM-powered remediation proposal generator."""
 
     def __init__(self, *, client: BaseLLMClient, config: Any = None) -> None:
         self._client = client
-        self._model = model
+        self._model = ""
         self._config = config
 
     def propose(
@@ -131,6 +135,7 @@ class RemediationAgent:
         )
 
         import json
+
         response = self._client.complete(llm_request)
         data = json.loads(response.content)
 
@@ -152,7 +157,8 @@ class RemediationAgent:
         return {
             "action": descriptions.get(issue_type),
             "risk_level": data.get("risk_level", "medium"),
-            "description": "; ".join(data.get("proposals", [])) or RemediationProposalEngine._description_for_issue(issue_type, columns),
+            "description": "; ".join(data.get("proposals", []))
+            or RemediationProposalEngine._description_for_issue(issue_type, columns),
         }
 
 
@@ -212,9 +218,7 @@ class RemediationProposalEngine:
             operational_mapping=mapped if mapped in ALLOWED_ACTIONS else None,
             column=columns[0] if columns else None,
             risk_level=self._risk_from_severity(severity, decision),
-            requires_approval=(
-                action_plan.requires_human if action_plan else True
-            ),
+            requires_approval=(action_plan.requires_human if action_plan else True),
             plain_language=self._description_for_issue(issue_type, columns),
         )
 

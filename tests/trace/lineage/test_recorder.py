@@ -3,7 +3,6 @@
 from uuid import uuid4
 
 import pytest
-
 from adqa.trace.lineage.memory import InMemoryLineageAdapter
 from adqa.trace.lineage.recorder import LineageRecorder
 

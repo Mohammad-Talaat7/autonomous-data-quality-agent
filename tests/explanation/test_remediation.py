@@ -4,7 +4,6 @@
 
 from adqa.explanation.remediation import (
     RemediationProposalEngine,
-    RemediationProposalBundle,
 )
 from adqa.scoring.models import QualityDecision
 

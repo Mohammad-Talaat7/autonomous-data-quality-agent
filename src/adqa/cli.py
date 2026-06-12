@@ -88,7 +88,9 @@ def render_result(result: object, *, require_explanation: bool) -> int:
             )
 
         for evidence in result.detections.ml_evidence:
-            table.add_row(f"ML: {evidence.signal_type}", "DATASET", f"{evidence.score:.2f}")
+            table.add_row(
+                f"ML: {evidence.signal_type}", "DATASET", f"{evidence.score:.2f}"
+            )
 
         console.print(table)
 
@@ -141,7 +143,9 @@ def run_analysis_command(
 
         if config.llm.enabled:
             console.print(
-                "[bold yellow]LLM Enabled: Don't use any sensitive information, as the data may be sent to the LLM provider you are using.[/bold yellow]"
+                "[bold yellow]LLM Enabled: Don't use any sensitive information, "
+                "as the data may be sent to the LLM provider you are using."
+                "[/bold yellow]"
             )
 
         adqa = ADQA.from_path(args.path, config=config)
@@ -318,6 +322,8 @@ def add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Show verbose errors"
     )
+
+
 def run_explain_chat(args: argparse.Namespace) -> int:
     """Run analysis then launch interactive chat for explain --mode chat."""
     try:
@@ -325,12 +331,13 @@ def run_explain_chat(args: argparse.Namespace) -> int:
 
         console.print("[bold blue]ADQA Analysis + Chat[/bold blue]")
         console.print(f"Source: [green]{args.path}[/green]")
-        console.print(f"Mode: [yellow]chat[/yellow]")
+        console.print("Mode: [yellow]chat[/yellow]")
 
         if config.llm.enabled:
             console.print(
                 "[bold yellow]LLM Enabled: Don't use any sensitive information,"
-                "as the data may be sent to the LLM provider you are using.[/bold yellow]"
+                "as the data may be sent to the LLM provider you are using."
+                "[/bold yellow]"
             )
 
         adqa = ADQA.from_path(args.path, config=config)
@@ -399,10 +406,10 @@ def run_explain_chat(args: argparse.Namespace) -> int:
     except Exception as e:
         console.print(f"[bold red]Unexpected Error:[/bold red] {str(e)}")
         import traceback
+
         if args.verbose:
             traceback.print_exc()
         return 1
-
 
 
 def run_chat(args: argparse.Namespace) -> int:
@@ -411,9 +418,7 @@ def run_chat(args: argparse.Namespace) -> int:
         # Force LLM on for chat command
         args.llm_enabled = True
         if not args.llm_model:
-            console.print(
-                "[bold red]Error: chat requires --llm-model[/bold red]"
-            )
+            console.print("[bold red]Error: chat requires --llm-model[/bold red]")
             return 1
 
         config = build_config(args)
@@ -440,7 +445,9 @@ def run_chat(args: argparse.Namespace) -> int:
         from adqa.llm.client import LiteLLMClient
 
         client = LiteLLMClient()
-        session = ChatSession(client=client, model=config.llm.model or "", result=result)
+        session = ChatSession(
+            client=client, model=config.llm.model or "", result=result
+        )
         session.inject_result(result)
 
         console.print(
@@ -472,11 +479,13 @@ def run_chat(args: argparse.Namespace) -> int:
                 continue
             if user_input.lower() == "explain":
                 if result.explanation:
-                    console.print(Panel(
-                        result.explanation.short_summary,
-                        title="[bold]LLM Explanation[/bold]",
-                        expand=False,
-                    ))
+                    console.print(
+                        Panel(
+                            result.explanation.short_summary,
+                            title="[bold]LLM Explanation[/bold]",
+                            expand=False,
+                        )
+                    )
                 else:
                     console.print("[dim]No explanation available.[/dim]")
                 continue
@@ -488,10 +497,10 @@ def run_chat(args: argparse.Namespace) -> int:
     except Exception as e:
         console.print(f"[bold red]Unexpected Error:[/bold red] {str(e)}")
         import traceback
+
         if args.verbose:
             traceback.print_exc()
         return 1
-
 
 
 def main() -> None:

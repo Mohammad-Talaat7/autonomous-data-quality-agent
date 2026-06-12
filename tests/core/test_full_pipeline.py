@@ -1,7 +1,6 @@
 # tests/core/test_full_pipeline.py
 import pandas as pd
 import pytest
-
 from adqa.config import ADQAConfig, ExecutionMode
 from adqa.core.api import ADQA
 from adqa.data_ingress.datasource import DataSource

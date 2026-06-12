@@ -1,5 +1,10 @@
 # tests/llm/test_models.py
-from adqa.llm.models import ExplanationRequest, ExplanationResponse, LLMMessage, LLMRequest
+from adqa.llm.models import (
+    ExplanationRequest,
+    ExplanationResponse,
+    LLMMessage,
+    LLMRequest,
+)
 
 
 def test_llm_request_hash_is_stable():

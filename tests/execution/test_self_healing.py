@@ -63,7 +63,7 @@ def test_auto_approve_reduces_approval_requirements():
 
     # impute should be auto-approved, mask_pii still needs approval
     assert result.actions[0].requires_approval is False  # impute auto-approved
-    assert result.actions[1].requires_approval is True   # mask_pii stays
+    assert result.actions[1].requires_approval is True  # mask_pii stays
     assert result.requires_human is True  # still needs human for mask_pii
     assert result.approved is False
 

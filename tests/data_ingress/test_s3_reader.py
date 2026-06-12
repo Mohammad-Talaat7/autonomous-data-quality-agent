@@ -4,7 +4,6 @@ from unittest.mock import MagicMock, patch
 
 import pandas as pd
 import pytest
-
 from adqa.data_ingress.readers.s3 import S3Reader
 
 

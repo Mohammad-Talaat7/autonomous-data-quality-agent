@@ -5,8 +5,8 @@
 import json
 from hashlib import sha256
 
-from adqa.detection.ml_detectors.anomalous_schema import AnomalousSchemaDetector
 from adqa.detection.context import DetectionContext
+from adqa.detection.ml_detectors.anomalous_schema import AnomalousSchemaDetector
 from adqa.llm.client import BaseLLMClient
 from adqa.llm.models import LLMRequest, LLMResponse
 from adqa.profiling.models.column_profile import ColumnProfile, LogicalType
@@ -20,10 +20,14 @@ class AnomalyMockClient(BaseLLMClient):
         self._anomaly = anomaly
 
     def complete(self, request: LLMRequest) -> LLMResponse:
-        content = json.dumps({
-            "anomaly_detected": self._anomaly,
-            "description": "Column appears nearly empty." if self._anomaly else "ok",
-        })
+        content = json.dumps(
+            {
+                "anomaly_detected": self._anomaly,
+                "description": (
+                    "Column appears nearly empty." if self._anomaly else "ok"
+                ),
+            }
+        )
         return LLMResponse(
             provider=request.provider,
             model=request.model,

@@ -58,6 +58,7 @@ def _mode(value: str) -> ExecutionMode:
 
 # ── Analysis ──────────────────────────────────────────────────────────
 
+
 def run_analysis(cfg: dict) -> str:
     """Run a full ADQA analysis. Returns JSON string of result summary."""
     global _last_result, _last_config
@@ -118,8 +119,12 @@ def run_analysis(cfg: dict) -> str:
 
 # ── Cost info from litellm ──────────────────────────────────────────────
 
-def get_cost_info(provider: str | None = None, model_str: str | None = None,
-                  flex_enabled: bool = False) -> str:
+
+def get_cost_info(
+    provider: str | None = None,
+    model_str: str | None = None,
+    flex_enabled: bool = False,
+) -> str:
     """Return a formatted cost string for the selected model/provider."""
     try:
         import litellm
@@ -142,7 +147,6 @@ def get_cost_info(provider: str | None = None, model_str: str | None = None,
         return "Cost: N/A"
 
 
-
 def ping() -> str:
     """Lightweight health check used by the Rust UI at startup.
 
@@ -151,16 +155,20 @@ def ping() -> str:
     when the Python environment is mis-configured.
     """
     import sys
+
     try:
         from importlib.metadata import version
+
         ver = version("adqa")
     except Exception:
         ver = "unknown"
-    return json.dumps({
-        "ok": True,
-        "version": ver,
-        "python": sys.executable,
-    })
+    return json.dumps(
+        {
+            "ok": True,
+            "version": ver,
+            "python": sys.executable,
+        }
+    )
 
 
 def _result_summary(result: ADQAResult) -> dict:
@@ -202,42 +210,56 @@ def _result_summary(result: ADQAResult) -> dict:
 
 # ── Root cause / Explain ──────────────────────────────────────────────
 
+
 def run_explain() -> str:
     """Run root cause analysis on the last result. Returns JSON list of causes."""
     global _last_result
     if _last_result is None:
-        return json.dumps({"error": "No analysis result available. Run analysis first."})
+        return json.dumps(
+            {"error": "No analysis result available. Run analysis first."}
+        )
 
     if _last_result.detections is None or _last_result.scores is None:
         return json.dumps({"error": "No detections/scores available."})
 
     try:
         engine = RootCauseEngine()
-        profile = getattr(
-            _last_result.profiles, "dataset_profile", None
-        ) if _last_result.profiles else None
+        profile = (
+            getattr(_last_result.profiles, "dataset_profile", None)
+            if _last_result.profiles
+            else None
+        )
 
-        causes = list(engine.analyse(
-            detections=_last_result.detections,
-            scores=_last_result.scores,
-            dataset_profile=profile,
-        ))
-        return json.dumps([
-            {
-                "cause": c.cause,
-                "confidence": c.confidence,
-                "evidence": list(c.evidence[:3]),
-            }
-            for c in causes
-        ])
+        causes = list(
+            engine.analyse(
+                detections=_last_result.detections,
+                scores=_last_result.scores,
+                dataset_profile=profile,
+            )
+        )
+        return json.dumps(
+            [
+                {
+                    "cause": c.cause,
+                    "confidence": c.confidence,
+                    "evidence": list(c.evidence[:3]),
+                }
+                for c in causes
+            ]
+        )
     except Exception as e:
         return json.dumps({"error": str(e)})
 
 
 # ── LLM Explanation (natural language) ──────────────────────────────────
 
-def run_llm_explain(api_key: str | None = None, api_base: str | None = None,
-                    provider: str | None = None, model: str | None = None) -> str:
+
+def run_llm_explain(
+    api_key: str | None = None,
+    api_base: str | None = None,
+    provider: str | None = None,
+    model: str | None = None,
+) -> str:
     """Generate a natural-language explanation of the analysis using the LLM."""
     global _last_result
 
@@ -248,22 +270,35 @@ def run_llm_explain(api_key: str | None = None, api_base: str | None = None,
         llm_cfg_dict = (_last_config or {}).get("llm", {})
         provider = provider or llm_cfg_dict.get("provider", "litellm")
         model = model or llm_cfg_dict.get("model") or "gpt-5.4-nano"
-        api_key = api_key or os.environ.get("OPENAI_API_KEY") or llm_cfg_dict.get("api_key")
-        api_base = api_base or os.environ.get("OPENAI_API_BASE") or llm_cfg_dict.get("api_base")
+        api_key = (
+            api_key or os.environ.get("OPENAI_API_KEY") or llm_cfg_dict.get("api_key")
+        )
+        api_base = (
+            api_base
+            or os.environ.get("OPENAI_API_BASE")
+            or llm_cfg_dict.get("api_base")
+        )
         service_tier = llm_cfg_dict.get("service_tier") or None
 
         import json
-        decision_dict = _last_result.decision.to_dict() if hasattr(_last_result.decision, "to_dict") else str(_last_result.decision)
+
+        decision_dict = (
+            _last_result.decision.to_dict()
+            if hasattr(_last_result.decision, "to_dict")
+            else str(_last_result.decision)
+        )
 
         prompt = (
-            "You are a data quality analyst. Explain the following analysis result in clear, "
+            "You are a data quality analyst. Explain the following analysis "
+            "result in clear, "
             "plain English that a non-technical user can understand. "
-            "Describe what was found, why it matters, and what actions are recommended.\n\n"
+            "Describe what was found, why it matters, and what actions are "
+            "recommended.\n\n"
             f"Analysis result:\n{json.dumps(decision_dict, default=str, indent=2)}"
         )
 
-        from .llm.models import LLMMessage, LLMRequest
         from .llm.client import LiteLLMClient
+        from .llm.models import LLMMessage, LLMRequest
 
         request = LLMRequest(
             provider=provider,
@@ -286,11 +321,14 @@ def run_llm_explain(api_key: str | None = None, api_base: str | None = None,
 
 # ── Remediation ───────────────────────────────────────────────────────
 
+
 def run_remediation() -> str:
     """Run remediation proposals on the last result. Returns JSON list."""
     global _last_result
     if _last_result is None:
-        return json.dumps({"error": "No analysis result available. Run analysis first."})
+        return json.dumps(
+            {"error": "No analysis result available. Run analysis first."}
+        )
 
     if _last_result.decision is None:
         return json.dumps({"error": "No decision available."})
@@ -301,15 +339,17 @@ def run_remediation() -> str:
             decision=_last_result.decision,
             action_plan=_last_result.plan,
         )
-        return json.dumps([
-            {
-                "issue_type": p.issue_type,
-                "action": p.operational_mapping or p.proposed_action or "review",
-                "risk_level": p.risk_level,
-                "requires_approval": p.requires_approval,
-            }
-            for p in bundle.proposals
-        ])
+        return json.dumps(
+            [
+                {
+                    "issue_type": p.issue_type,
+                    "action": p.operational_mapping or p.proposed_action or "review",
+                    "risk_level": p.risk_level,
+                    "requires_approval": p.requires_approval,
+                }
+                for p in bundle.proposals
+            ]
+        )
     except Exception as e:
         return json.dumps({"error": str(e)})
 
@@ -318,8 +358,14 @@ def run_remediation() -> str:
 
 _chat_session = None
 
-def run_chat(question: str, api_key: str | None = None, api_base: str | None = None,
-           provider: str | None = None, model: str | None = None) -> str:
+
+def run_chat(
+    question: str,
+    api_key: str | None = None,
+    api_base: str | None = None,
+    provider: str | None = None,
+    model: str | None = None,
+) -> str:
     """Send a chat question. Returns the reply string."""
     global _last_result, _chat_session
 
@@ -368,6 +414,7 @@ def run_chat(question: str, api_key: str | None = None, api_base: str | None = N
 
 # ── Session helpers ───────────────────────────────────────────────────
 
+
 def reset_chat_session() -> str:
     """Forget the cached ChatSession so the next call rebuilds it.
 
@@ -381,21 +428,28 @@ def reset_chat_session() -> str:
 
 # ── Heal data with LLM ─────────────────────────────────────────────────
 
-def run_heal(api_key: str | None = None, api_base: str | None = None,
-             provider: str | None = None, model: str | None = None) -> str:
+
+def run_heal(
+    api_key: str | None = None,
+    api_base: str | None = None,
+    provider: str | None = None,
+    model: str | None = None,
+) -> str:
     """Heal the last result's dataframe using LLM-powered remediation."""
     global _last_result
 
     if _last_result is None or _last_result.dataframe is None:
-        return json.dumps({"error": "No analysis result available. Run analysis first."})
+        return json.dumps(
+            {"error": "No analysis result available. Run analysis first."}
+        )
 
     if _last_result.decision is None or _last_result.plan is None:
         return json.dumps({"error": "No decision/plan available."})
 
     try:
-        from .explanation.remediation import RemediationProposalEngine
         from .execution.engine import ExecutionEngine
         from .execution.self_healing import SelfHealingController
+        from .explanation.remediation import RemediationProposalEngine
 
         # 1. Generate remediation proposals
         engine = RemediationProposalEngine()
@@ -406,17 +460,23 @@ def run_heal(api_key: str | None = None, api_base: str | None = None,
 
         # 2. Build an ActionPlan from proposals that LLM can auto-heal
         from .execution.models import Action, ActionPlan
+
         actions: list[Action] = []
         for p in bundle.proposals:
-            action = SelfHealingController.build_healing_proposal(p, _last_result.decision)
+            action = SelfHealingController.build_healing_proposal(
+                p, _last_result.decision
+            )
             if action is not None:
                 actions.append(action)
 
         if not actions:
-            return json.dumps({
-                "message": "No auto-healable actions found. Review proposals manually.",
-                "preview": _dataframe_preview(_last_result.dataframe),
-            })
+            return json.dumps(
+                {
+                    "message": "No auto-healable actions found. Review proposals "
+                    "manually.",
+                    "preview": _dataframe_preview(_last_result.dataframe),
+                }
+            )
 
         plan = ActionPlan(
             summary="LLM-driven auto-healing",
@@ -432,16 +492,20 @@ def run_heal(api_key: str | None = None, api_base: str | None = None,
         if healed_df is not None:
             _last_result.dataframe = healed_df
             preview = _dataframe_preview(healed_df)
-            return json.dumps({
-                "message": f"Healed {len(actions)} issues.",
-                "preview": preview,
-                "path": "",
-            })
+            return json.dumps(
+                {
+                    "message": f"Healed {len(actions)} issues.",
+                    "preview": preview,
+                    "path": "",
+                }
+            )
 
-        return json.dumps({
-            "message": "Healing completed but no dataframe returned.",
-            "preview": "",
-        })
+        return json.dumps(
+            {
+                "message": "Healing completed but no dataframe returned.",
+                "preview": "",
+            }
+        )
 
     except Exception as e:
         return json.dumps({"error": str(e)})
@@ -449,9 +513,11 @@ def run_heal(api_key: str | None = None, api_base: str | None = None,
 
 # ── Save healed ───────────────────────────────────────────────────────
 
+
 def _dataframe_preview(df: pd.DataFrame) -> str:
     """Return a short text preview of the dataframe."""
     import io
+
     buf = io.StringIO()
     df.head(20).to_csv(buf, index=False)
     return buf.getvalue()
@@ -468,28 +534,31 @@ def save_healed(path: str) -> str:
 
     try:
         _last_result.dataframe.to_csv(path, index=False)
-        return json.dumps({
-            "ok": True,
-            "path": path,
-            "rows": _last_result.dataframe.shape[0],
-            "cols": _last_result.dataframe.shape[1],
-        })
+        return json.dumps(
+            {
+                "ok": True,
+                "path": path,
+                "rows": _last_result.dataframe.shape[0],
+                "cols": _last_result.dataframe.shape[1],
+            }
+        )
     except Exception as e:
         return json.dumps({"error": str(e)})
 
 
 # ── Data preview ──────────────────────────────────────────────────────
 
+
 def preview_data(path: str) -> str:
     """Preview a data file. Returns JSON with shape, columns, dtypes, head."""
     if not path or not path.strip():
-        return json.dumps({"error": "No data path provided. Type a file path or pick a sample."})
+        return json.dumps(
+            {"error": "No data path provided. Type a file path or pick a sample."}
+        )
 
     resolved = os.path.abspath(os.path.expanduser(path.strip()))
     if not os.path.exists(resolved):
-        return json.dumps({
-            "error": f"File not found: {resolved} (cwd: {os.getcwd()})"
-        })
+        return json.dumps({"error": f"File not found: {resolved} (cwd: {os.getcwd()})"})
 
     try:
         source = DataSource.load(resolved)
@@ -515,20 +584,27 @@ def preview_data(path: str) -> str:
 
         # Head: 20 rows with widened display so columns don't wrap unnecessarily
         with pd.option_context(
-            "display.max_columns", None,
-            "display.width", 240,
-            "display.max_colwidth", 48,
+            "display.max_columns",
+            None,
+            "display.width",
+            240,
+            "display.max_colwidth",
+            48,
         ):
             head_str = df.head(20).to_string()
 
-        return json.dumps({
-            "rows": int(df.shape[0]),
-            "cols": int(df.shape[1]),
-            "columns": list(df.columns),
-            "dtypes": {str(c): str(t) for c, t in zip(df.columns, df.dtypes, strict=False)},
-            "schema": schema_str,
-            "head": head_str,
-            "resolved_path": resolved,
-        })
+        return json.dumps(
+            {
+                "rows": int(df.shape[0]),
+                "cols": int(df.shape[1]),
+                "columns": list(df.columns),
+                "dtypes": {
+                    str(c): str(t) for c, t in zip(df.columns, df.dtypes, strict=False)
+                },
+                "schema": schema_str,
+                "head": head_str,
+                "resolved_path": resolved,
+            }
+        )
     except Exception as e:
         return json.dumps({"error": f"{type(e).__name__}: {e}"})

@@ -4,17 +4,13 @@
 
 import json
 from hashlib import sha256
-from unittest.mock import MagicMock
 
-import pandas as pd
-
-from adqa.detection.ml_detectors.llm_semantic import LLMSemanticClassifier
 from adqa.detection.context import DetectionContext
+from adqa.detection.ml_detectors.llm_semantic import LLMSemanticClassifier
 from adqa.llm.client import BaseLLMClient
 from adqa.llm.models import (
     LLMRequest,
     LLMResponse,
-    SemanticClassificationResponse,
 )
 from adqa.profiling.models.column_profile import ColumnProfile, LogicalType
 from adqa.profiling.models.dataset_profile import DatasetMetadata, DatasetProfile
@@ -30,10 +26,12 @@ class FakeSemanticLLMClient(BaseLLMClient):
     def complete(self, request: LLMRequest) -> LLMResponse:
         if self._fail:
             raise RuntimeError("provider down")
-        content = json.dumps({
-            "label": self._label,
-            "rationale": f"Column matches {self._label} pattern.",
-        })
+        content = json.dumps(
+            {
+                "label": self._label,
+                "rationale": f"Column matches {self._label} pattern.",
+            }
+        )
         return LLMResponse(
             provider=request.provider,
             model=request.model,

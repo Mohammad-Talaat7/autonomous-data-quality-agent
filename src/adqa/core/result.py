@@ -9,8 +9,8 @@ import pandas as pd
 
 if TYPE_CHECKING:
     from ..detection.results import DetectionResultBundle
-    from ..explanation.models import ADQAExplanation
     from ..execution.models import Action, ActionPlan
+    from ..explanation.models import ADQAExplanation
     from ..profiling.models.profiling_result import ProfilingResult
     from ..scoring.models import AggregatedScore, QualityDecision
 

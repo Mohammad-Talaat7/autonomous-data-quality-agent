@@ -39,8 +39,13 @@ class BaseLLMClient(ABC):
 
         payload = json.loads(response.content)
         # Coerce scalar-to-list for known response fields the LLM may flatten
-        for field in ("why_decision", "recommended_next_steps", "top_issues",
-                       "affected_columns", "proposals"):
+        for field in (
+            "why_decision",
+            "recommended_next_steps",
+            "top_issues",
+            "affected_columns",
+            "proposals",
+        ):
             if field in payload and isinstance(payload[field], str):
                 payload[field] = [payload[field]]
         data = {
@@ -114,7 +119,8 @@ class LiteLLMClient(BaseLLMClient):
 
         # litellm.set_verbose=True
 
-        # Classification/remediation tasks use json_object; chat & explain use plain text.
+        # Classification/remediation tasks use json_object; chat & explain
+        # use plain text.
         # Free-form chat uses plain text.
         use_json = request.metadata.get("task") not in ("chat", "explain")
 

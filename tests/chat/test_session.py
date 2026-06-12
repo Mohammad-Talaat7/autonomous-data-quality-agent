@@ -1,7 +1,6 @@
 # tests/chat/test_session.py
 """Tests for ChatSession."""
 
-import json
 from hashlib import sha256
 
 from adqa.chat.session import ChatSession
@@ -18,7 +17,7 @@ class EchoLLMClient(BaseLLMClient):
             prompt_version=request.prompt_version,
             trace_id=request.trace_id,
             input_hash=request.input_hash(),
-            output_hash=sha256(f"Echo: {last_msg}".encode("utf-8")).hexdigest(),
+            output_hash=sha256(f"Echo: {last_msg}".encode()).hexdigest(),
             content=f"Echo: {last_msg}",
         )
 
