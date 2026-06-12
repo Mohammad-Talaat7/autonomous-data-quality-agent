@@ -16,6 +16,7 @@ Exposed entry points (called from Rust):
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import os
 from typing import Any
@@ -59,7 +60,7 @@ def _mode(value: str) -> ExecutionMode:
 # ── Analysis ──────────────────────────────────────────────────────────
 
 
-def run_analysis(cfg: dict) -> str:
+def run_analysis(cfg: dict[str, Any]) -> str:
     """Run a full ADQA analysis. Returns JSON string of result summary."""
     global _last_result, _last_config
     _last_config = cfg
@@ -171,7 +172,7 @@ def ping() -> str:
     )
 
 
-def _result_summary(result: ADQAResult) -> dict:
+def _result_summary(result: ADQAResult) -> dict[str, Any]:
     """Build a JSON-safe summary from the ADQAResult."""
     summary: dict[str, Any] = {
         "error": result.error,
@@ -230,6 +231,8 @@ def run_explain() -> str:
             else None
         )
 
+        if profile is None:
+            return json.dumps([])
         causes = list(
             engine.analyse(
                 detections=_last_result.detections,
@@ -490,7 +493,7 @@ def run_heal(
         _, healed_df = exec_engine.execute_plan(plan, _last_result.dataframe)
 
         if healed_df is not None:
-            _last_result.dataframe = healed_df
+            _last_result = dataclasses.replace(_last_result, dataframe=healed_df)
             preview = _dataframe_preview(healed_df)
             return json.dumps(
                 {

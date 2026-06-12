@@ -6,8 +6,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from adqa.config.model import ADQAConfig
+from adqa.config.model import ADQAConfig, LLMConfig
 from adqa.core.api import ADQA
+from adqa.core.result import ADQAResult
 
 console = Console()
 
@@ -48,19 +49,19 @@ def build_config(args: argparse.Namespace) -> ADQAConfig:
 
     return ADQAConfig(
         **base,
-        llm={
-            "enabled": args.command == "explain" or args.llm_enabled,
-            "provider": args.llm_provider,
-            "model": args.llm_model,
-            "temperature": args.llm_temperature,
-            "timeout_seconds": args.llm_timeout_seconds,
-            "max_input_chars": args.llm_max_input_chars,
-            "redact_samples": not args.no_llm_redaction,
-        },
+        llm=LLMConfig(
+            enabled=args.command == "explain" or args.llm_enabled,
+            provider=args.llm_provider,
+            model=args.llm_model,
+            temperature=args.llm_temperature,
+            timeout_seconds=args.llm_timeout_seconds,
+            max_input_chars=args.llm_max_input_chars,
+            redact_samples=not args.no_llm_redaction,
+        ),
     )
 
 
-def render_result(result: object, *, require_explanation: bool) -> int:
+def render_result(result: ADQAResult, *, require_explanation: bool) -> int:
     summary = result.summary()
     console.print(Panel(summary, title="[bold]Analysis Result[/bold]", expand=False))
 

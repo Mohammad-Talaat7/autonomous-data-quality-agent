@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from ..llm.client import BaseLLMClient
 from ..llm.models import LLMMessage, LLMRequest
@@ -43,7 +43,9 @@ class ChatSession:
     def inject_result(self, result: ADQAResult) -> None:
         self._result = result
 
-    def add_message(self, role: str, content: str) -> None:
+    def add_message(
+        self, role: Literal["system", "user", "assistant"], content: str
+    ) -> None:
         self._history.append(LLMMessage(role=role, content=content))
 
     def send(self, user_message: str) -> str:
@@ -99,6 +101,12 @@ class ChatSession:
             from ..explanation.root_cause import RootCauseEngine
 
             engine = RootCauseEngine()
+            if (
+                not self._result.detections
+                or not self._result.scores
+                or not self._result.profiles
+            ):
+                return "No root causes identified (incomplete analysis)."
             causes = list(
                 engine.analyse(
                     detections=self._result.detections,

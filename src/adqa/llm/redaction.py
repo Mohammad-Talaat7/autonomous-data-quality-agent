@@ -29,8 +29,8 @@ def _redact_value(value: Any, *, max_rows: int) -> Any:
         return redact_text(value)
 
     if isinstance(value, list):
-        redacted = [_redact_value(item, max_rows=max_rows) for item in value]
-        return redacted[:max_rows]
+        redacted_list = [_redact_value(item, max_rows=max_rows) for item in value]
+        return redacted_list[:max_rows]
 
     if isinstance(value, dict):
         redacted = {
