@@ -1,3 +1,4 @@
+# tests/core/test_full_pipeline.py
 import pandas as pd
 import pytest
 

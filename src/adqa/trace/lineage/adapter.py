@@ -1,3 +1,4 @@
+# adqa/trace/lineage/adapter.py
 # src/adqa/trace/lineage/adapter.py
 
 from abc import ABC, abstractmethod

@@ -1,5 +1,4 @@
-# detection/registry.py
-
+# adqa/detection/registry.py
 
 from typing import Any
 

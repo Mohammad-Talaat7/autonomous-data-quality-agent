@@ -1,3 +1,4 @@
+# adqa/scoring/normalizer.py
 from typing import Any
 
 from .models import NormalizedDetection

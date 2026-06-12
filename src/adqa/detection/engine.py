@@ -1,4 +1,4 @@
-# detection/engine.py
+# adqa/detection/engine.py
 
 from typing import Any
 

@@ -1,3 +1,4 @@
+# adqa/scoring/scorers/base.py
 from abc import ABC, abstractmethod
 
 from ..models import NormalizedDetection, Score

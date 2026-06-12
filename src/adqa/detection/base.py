@@ -1,4 +1,4 @@
-# detection/base.py
+# adqa/detection/base.py
 
 from abc import ABC, abstractmethod
 from enum import StrEnum

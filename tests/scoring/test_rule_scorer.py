@@ -1,3 +1,4 @@
+# tests/scoring/test_rule_scorer.py
 from adqa.scoring.models import NormalizedDetection
 from adqa.scoring.scorers.rule_scorer import RuleScorer
 

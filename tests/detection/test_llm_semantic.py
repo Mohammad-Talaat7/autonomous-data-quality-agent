@@ -1,3 +1,5 @@
+# tests/detection/test_llm_semantic.py
+
 """Tests for LLMSemanticClassifier augmenter."""
 
 import json

@@ -1,3 +1,4 @@
+# adqa/detection/rule_detectors/semantic_boundary.py
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, DetectionContext, QualityDimension
 from ..results import DetectionResult

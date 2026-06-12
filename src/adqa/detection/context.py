@@ -1,4 +1,4 @@
-# detection/context.py
+# adqa/detection/context.py
 
 from dataclasses import dataclass
 from typing import Any

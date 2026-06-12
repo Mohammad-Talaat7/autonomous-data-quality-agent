@@ -1,4 +1,4 @@
-# adqa/result.py
+# adqa/core/result.py
 
 from __future__ import annotations
 

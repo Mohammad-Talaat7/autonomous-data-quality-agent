@@ -1,3 +1,5 @@
+# tests/detection/test_rule_detectors.py
+
 from __future__ import annotations
 
 from unittest.mock import MagicMock

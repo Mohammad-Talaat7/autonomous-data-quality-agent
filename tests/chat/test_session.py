@@ -1,3 +1,4 @@
+# tests/chat/test_session.py
 """Tests for ChatSession."""
 
 import json

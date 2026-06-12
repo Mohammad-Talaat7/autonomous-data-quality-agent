@@ -1,4 +1,5 @@
 # adqa/data_ingress/readers/database.py
+
 from typing import Any, override
 
 import pandas as pd

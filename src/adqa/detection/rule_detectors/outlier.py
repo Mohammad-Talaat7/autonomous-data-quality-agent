@@ -1,3 +1,4 @@
+# adqa/detection/rule_detectors/outlier.py
 # outlier.py
 
 from ...config.model import DetectionThresholds

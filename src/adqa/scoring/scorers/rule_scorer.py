@@ -1,3 +1,4 @@
+# adqa/scoring/scorers/rule_scorer.py
 from ..models import NormalizedDetection, Score
 from ..thresholds import Thresholds
 

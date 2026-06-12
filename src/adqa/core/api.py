@@ -1,4 +1,4 @@
-# adqa/api.py
+# adqa/core/api.py
 
 from __future__ import annotations
 

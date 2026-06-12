@@ -1,3 +1,4 @@
+# adqa/bridge.py
 """Bridge module for Rust ↔ Python ADQA interop via pyo3.
 
 Stores the last ADQAResult so subsequent calls (explain, remediate, chat, save)

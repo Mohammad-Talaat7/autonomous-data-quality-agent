@@ -1,3 +1,4 @@
+# adqa/profiling/structural/dataset_profiler.py
 from __future__ import annotations
 
 import pandas as pd

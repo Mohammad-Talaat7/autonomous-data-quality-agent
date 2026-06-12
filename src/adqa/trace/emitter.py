@@ -1,3 +1,4 @@
+# adqa/trace/emitter.py
 # src/adqa/trace/emitter.py
 
 from collections.abc import Iterator

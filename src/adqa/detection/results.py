@@ -1,4 +1,4 @@
-# detection/results.py
+# adqa/detection/results.py
 
 import uuid
 from dataclasses import dataclass, field

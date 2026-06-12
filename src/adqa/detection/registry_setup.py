@@ -1,4 +1,4 @@
-# detection/registry_setup.py
+# adqa/detection/registry_setup.py
 
 from .ml_detectors.bias import BiasDetector
 from .ml_detectors.isolation_forest import IsolationForestDetector

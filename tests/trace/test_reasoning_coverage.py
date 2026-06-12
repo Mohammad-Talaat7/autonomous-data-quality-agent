@@ -1,3 +1,5 @@
+# tests/trace/test_reasoning_coverage.py
+
 from adqa.detection.results import DetectionResult, DetectionResultBundle, MLEvidence
 from adqa.trace.reasoning import collect_reason_codes
 

@@ -1,4 +1,4 @@
-# adqa/data_ingress/readers/warehouse.py
+# adqa/data_ingress/readers/data_warehouses.py
 
 from typing import Any, override
 
