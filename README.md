@@ -36,6 +36,12 @@ ADQA solves this by providing an **autonomous loop**:
 
 ADQA combines a robust **Python backend** for seamless pipeline integration with a high-performance **Rust-based TUI** for interactive observability. It bridges the gap between fully automated data engineering and the critical need for human intuition in data quality.
 
+## Demo Video
+
+https://github.com/user-attachments/assets/be891862-cbd4-4d2a-9141-0481db9f6be2
+
+
+
 ## 📚 Documentation
 
 Detailed guides, architecture deep-dives, and full API references are available at:
