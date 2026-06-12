@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/outlier.py
-# outlier.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, DetectionContext, QualityDimension

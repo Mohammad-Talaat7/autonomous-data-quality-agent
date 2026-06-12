@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/duplicate.py
-# duplicate.py
 
 from ...config.model import DetectionThresholds
 from ..base import DatasetDetector, DetectionContext, QualityDimension

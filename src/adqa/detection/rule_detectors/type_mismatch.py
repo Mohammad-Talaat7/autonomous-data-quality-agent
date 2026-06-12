@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/type_mismatch.py
-# type_mismatch.py
 
 import pandas as pd
 

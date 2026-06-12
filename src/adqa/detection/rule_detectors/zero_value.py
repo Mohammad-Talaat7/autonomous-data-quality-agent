@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/zero_value.py
-# zero_value.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, QualityDimension

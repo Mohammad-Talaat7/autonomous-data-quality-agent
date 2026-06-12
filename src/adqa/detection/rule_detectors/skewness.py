@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/skewness.py
-# skewness.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, QualityDimension

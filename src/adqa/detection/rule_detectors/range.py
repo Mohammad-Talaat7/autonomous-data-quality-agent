@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/range.py
-# range.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, DetectionContext, QualityDimension

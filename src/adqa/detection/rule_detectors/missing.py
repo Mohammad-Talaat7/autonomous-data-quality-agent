@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/missing.py
-# missing.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, DetectionContext, QualityDimension

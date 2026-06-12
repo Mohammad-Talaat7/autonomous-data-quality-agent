@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/pattern.py
-# pattern.py
 
 import re
 

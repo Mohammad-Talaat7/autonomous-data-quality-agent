@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/correlation.py
-# correlation.py
 
 from ...config.model import DetectionThresholds
 from ..base import CrossColumnDetector, DetectionContext, QualityDimension

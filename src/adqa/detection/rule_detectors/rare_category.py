@@ -1,5 +1,4 @@
 # adqa/detection/rule_detectors/rare_category.py
-# rare_category.py
 
 from ...config.model import DetectionThresholds
 from ..base import ColumnDetector, QualityDimension
